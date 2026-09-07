@@ -7,6 +7,16 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  vite: {
+    build: {
+      // The Karate app has its own index.html and is built separately by copy-karate.mjs.
+      // Restrict the main Vite build to the SteelX entry so it does not auto-discover
+      // karate/index.html as another HTML entry.
+      rollupOptions: {
+        input: "./index.html",
+      },
+    },
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
