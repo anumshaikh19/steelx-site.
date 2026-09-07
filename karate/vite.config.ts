@@ -4,13 +4,15 @@ import tailwindcss from "@tailwindcss/vite";
 import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
+  root: fileURLToPath(new URL(".", import.meta.url)),
   base: "/karate/",
   plugins: [react(), tailwindcss()],
   resolve: {
-    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
   },
   build: {
-    // karate/ -> project root -> .karate-dist
     outDir: fileURLToPath(new URL("../.karate-dist", import.meta.url)),
     emptyOutDir: true,
   },
