@@ -6,7 +6,14 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+const isVercel = !!process.env.VERCEL;
+
 export default defineConfig({
+  // Lovable's wrapper defaults Nitro to its non-Vercel target. On Vercel,
+  // explicitly emit the Vercel Build Output so the app is actually served
+  // instead of falling back to the static Vite HTML shell.
+  nitro: isVercel ? { preset: "vercel" } : true,
+
   vite: {
     build: {
       // The Karate app has its own index.html and is built separately by copy-karate.mjs.
