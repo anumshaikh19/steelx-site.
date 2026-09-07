@@ -20,9 +20,6 @@ function Logo({ onClick }: { onClick?: () => void }) {
       <span className="mt-1 text-[0.5rem] tracking-[0.42em] text-muted-foreground">
         {studio.suffix}
       </span>
-      <span className="mt-2 text-[0.42rem] uppercase tracking-[0.22em] text-muted-foreground/70">
-        Powered by Nirmaan AI
-      </span>
     </Link>
   );
 }
