@@ -19,8 +19,10 @@ jobs:
         run: |
           set -euo pipefail
           test -f steelx-site.zip
+          rm -rf /tmp/steelx-site
           mkdir -p /tmp/steelx-site
           unzip -q steelx-site.zip -d /tmp/steelx-site
+          rm -rf /tmp/steelx-site/.git
           rsync -a \
             --exclude='.env' \
             --exclude='.env.*' \
@@ -35,6 +37,7 @@ jobs:
             /tmp/steelx-site/ ./
           rm -f steelx-site.zip
           rm -f .github/workflows/bootstrap-site.yml
+          rm -f BOOTSTRAP_TRIGGER.txt
           touch .env.example
           grep -qxF '.env' .gitignore || printf '\n# Local environment files\n.env\n.env.*\n!.env.example\n' >> .gitignore
 
