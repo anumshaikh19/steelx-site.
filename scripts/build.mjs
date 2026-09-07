@@ -1,6 +1,5 @@
-import { mkdir, rename, rm, cp } from "node:fs/promises";
+import { mkdir, rm, cp } from "node:fs/promises";
 import { resolve } from "node:path";
-import { tmpdir } from "node:os";
 import { execFileSync } from "node:child_process";
 
 const root = process.cwd();
@@ -8,12 +7,10 @@ const vite = resolve(root, "node_modules", ".bin", process.platform === "win32" 
 const karateSource = resolve(root, "karate");
 const karateDist = resolve(root, ".karate-dist");
 const karatePublic = resolve(root, "public", "karate");
-const hiddenSource = resolve(tmpdir(), `steelx-karate-${process.pid}`);
 const karateConfig = resolve(root, "karate", "vite.config.ts");
 
-// Build Karate completely separately from the SteelX/TanStack app.
-// Its Vite output is written to a temporary directory, then copied into
-// public/karate so Vercel serves it at /karate/.
+// Build Karate completely separately. Its output is staged outside public/
+// and then copied to public/karate for Vercel to serve at /karate/.
 await rm(karateDist, { recursive: true, force: true });
 await rm(karatePublic, { recursive: true, force: true });
 
@@ -22,15 +19,20 @@ await mkdir(resolve(root, "public"), { recursive: true });
 await cp(karateDist, karatePublic, { recursive: true });
 await rm(karateDist, { recursive: true, force: true });
 
-// The TanStack build discovers HTML files under the project tree. Move the
-// entire Karate source tree outside the project while SteelX is being built,
-// so it cannot become a second application entry point.
-await rename(karateSource, hiddenSource);
+// Do NOT rename karate outside the filesystem. Vercel's /tmp is a different
+// filesystem and causes EXDEV. Instead, temporarily rename it inside the repo.
+// The SteelX build therefore cannot discover karate/index.html as an entry.
+const hiddenSource = resolve(root, ".karate-source-hidden");
+await rm(hiddenSource, { recursive: true, force: true });
+await cp(karateSource, hiddenSource, { recursive: true });
+await rm(karateSource, { recursive: true, force: true });
 
 try {
   execFileSync(vite, ["build", ...process.argv.slice(2)], { stdio: "inherit" });
 } finally {
-  await rename(hiddenSource, karateSource);
+  await rm(karateSource, { recursive: true, force: true });
+  await cp(hiddenSource, karateSource, { recursive: true });
+  await rm(hiddenSource, { recursive: true, force: true });
 }
 
 console.log("SteelX and lowercase Karate builds completed successfully");
