@@ -114,7 +114,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
             </Link>
           </Magnetic>
           <a
-            href="/KARATE/"
+            href="/karate/"
             aria-label="Open KARATE website"
             className="hidden items-center gap-2 rounded-full border border-border px-4 py-2.5 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:border-champagne hover:text-champagne xl:inline-flex"
           >
@@ -199,7 +199,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
             ))}
           </ul>
           <a
-            href="/KARATE/"
+            href="/karate/"
             onClick={() => setOpen(false)}
             className="mt-8 flex w-full items-center justify-between border border-border px-6 py-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground hover:border-champagne hover:text-champagne"
           >
