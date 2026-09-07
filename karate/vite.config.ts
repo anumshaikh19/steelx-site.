@@ -10,7 +10,8 @@ export default defineConfig({
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
   build: {
-    outDir: fileURLToPath(new URL("../../.karate-dist", import.meta.url)),
+    // karate/ -> project root -> .karate-dist
+    outDir: fileURLToPath(new URL("../.karate-dist", import.meta.url)),
     emptyOutDir: true,
   },
 });
