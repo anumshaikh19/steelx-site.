@@ -7,6 +7,7 @@ import { DojoStatement } from "@/components/site/DojoStatement";
 import { Arts } from "@/components/site/Arts";
 import { OneStrike } from "@/components/site/OneStrike";
 import { Calisthenics } from "@/components/site/Calisthenics";
+import { KarateLibrary } from "@/components/site/KarateLibrary";
 import { Belts } from "@/components/site/Belts";
 import { Philosophy } from "@/components/site/Philosophy";
 import { Timings } from "@/components/site/Timings";
@@ -51,6 +52,7 @@ function Index() {
         <Arts />
         <OneStrike />
         <Calisthenics />
+        <KarateLibrary />
         <Belts />
         <Philosophy />
         <Timings />
