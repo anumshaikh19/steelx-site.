@@ -1,311 +1,96 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  ArrowDown,
-  ArrowUp,
-  Check,
-  Code2,
-  Copy,
-  Download,
-  Eye,
-  Image as ImageIcon,
-  Mail,
-  Monitor,
-  MousePointerClick,
-  Plus,
-  Quote,
-  Redo2,
-  Send,
-  Smartphone,
-  Sparkles,
-  Trash2,
-  Type,
-  Undo2,
+  AlignCenter, AlignLeft, AlignRight, ArrowDown, ArrowUp, Check, Code2, Copy, Download,
+  Eye, Image as ImageIcon, LayoutTemplate, Mail, Monitor, MousePointerClick, Plus,
+  Quote, Redo2, Send, Smartphone, Sparkles, Trash2, Type, Undo2, X, Columns2, Video,
+  Share2, Minus, Square, Menu as MenuIcon, ShoppingBag, PanelBottom, GripVertical,
 } from "lucide-react";
 import { PageShell } from "@/components/page-shell";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/email-template-builder")({
-  component: EmailTemplateBuilderPage,
-});
+export const Route = createFileRoute("/email-template-builder")({ component: EmailTemplateBuilderPage });
 
-type BlockType = "hero" | "text" | "image" | "button" | "divider" | "columns" | "quote";
+type BlockType = "header" | "hero" | "heading" | "text" | "image" | "button" | "divider" | "spacer" | "columns" | "quote" | "social" | "video" | "banner" | "product" | "menu" | "footer";
 type Align = "left" | "center" | "right";
-type EmailBlock = {
-  id: string;
-  type: BlockType;
-  eyebrow?: string;
-  heading?: string;
-  body?: string;
-  buttonText?: string;
-  buttonUrl?: string;
-  imageUrl?: string;
-  quote?: string;
-  author?: string;
-  align?: Align;
-};
+type Block = { id:string; type:BlockType; title?:string; text?:string; image?:string; url?:string; label?:string; align?:Align; bg?:string; color?:string; font?:string; size?:number; padding?:number; radius?:number; items?:string[] };
 
-type Palette = { name: string; accent: string; background: string; text: string };
-
-const palettes: Palette[] = [
-  { name: "Steel", accent: "#c9a96b", background: "#f5f3ee", text: "#161616" },
-  { name: "Obsidian", accent: "#d7b878", background: "#0b0b0b", text: "#f5f3ee" },
-  { name: "Ivory", accent: "#8d7651", background: "#fffdf8", text: "#25231f" },
+type Palette = {name:string; accent:string; bg:string; text:string; muted:string};
+const palettes:Palette[]=[
+  {name:"Steel",accent:"#c9a96b",bg:"#f5f3ee",text:"#161616",muted:"#67635b"},
+  {name:"Obsidian",accent:"#d7b878",bg:"#0b0b0b",text:"#f5f3ee",muted:"#aaa49a"},
+  {name:"Ivory",accent:"#8d7651",bg:"#fffdf8",text:"#25231f",muted:"#716b62"},
+  {name:"Coral",accent:"#ffffff",bg:"#ff4f59",text:"#ffffff",muted:"#ffe4e5"},
+];
+const starter:Block[]=[
+ {id:"h",type:"header",title:"PLAN.NET TECHNEST",text:"HOUSE OF COMMUNICATION",image:"https://dummyimage.com/90x90/efefef/111.png&text=LOGO"},
+ {id:"hero",type:"hero",title:"WORK ANNIVERSARY",text:"Celebrating the people who make great work happen.",label:"8 Years Anniversary",align:"center",bg:"#ff4f59",color:"#fff",size:54,padding:42},
+ {id:"ann8",type:"columns",title:"8 Years Anniversary",items:["Haridas Pillai|Development Services|Bangalore","Mala Mantangani|Development Services|Bangalore","Prateek Goel|Development Services|Bangalore"],bg:"#ff4f59",color:"#fff",padding:24},
+ {id:"ann5",type:"columns",title:"5 Years Anniversary",items:["Zeeshan Khan|HR|Mumbai","Junaid Ansari|Content Services|Mumbai","Kumari Chandni|Data Services|Mumbai","Anna Mercy|Data Services|Mumbai","Anandraj Venkateshan|Development Services|Mumbai","Gayatri Chandrasekharan|Data Services|Mumbai"],bg:"#ff4f59",color:"#fff",padding:24},
+ {id:"quote",type:"quote",title:"Great people build great teams!",text:"Thank you for your dedication, passion and hard work. Here's to many more years of success together.",align:"center",padding:42},
+ {id:"banner",type:"banner",title:"Together We Grow",text:"Every milestone is a celebration of your hard work, dedication and the positive impact you bring to our team and our journey.",image:"https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=80",color:"#fff",bg:"#102033",padding:34},
+ {id:"footer",type:"footer",title:"STEEL X",text:"Build · Create · Excel",align:"left",bg:"#102033",color:"#fff",padding:28},
 ];
 
-const starterBlocks: EmailBlock[] = [
-  {
-    id: "hero-1",
-    type: "hero",
-    eyebrow: "STEELX / FIELD NOTES",
-    heading: "The latest from the world of architectural metal.",
-    body: "New finishes, completed spaces and ideas worth specifying — delivered to your inbox.",
-    buttonText: "Explore the collection",
-    buttonUrl: "https://steelxdecor.com",
-    align: "left",
-  },
-  {
-    id: "text-1",
-    type: "text",
-    heading: "Designed for the details",
-    body: "This month we are looking at the surfaces that change how a room catches light. From PVD stainless steel to decorative mesh, discover materials made to become part of the architecture.",
-    align: "left",
-  },
-  {
-    id: "image-1",
-    type: "image",
-    imageUrl: "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1200&q=80",
-    heading: "Material / Light / Space",
-    body: "A closer look at our latest installation.",
-    align: "left",
-  },
-  {
-    id: "quote-1",
-    type: "quote",
-    quote: "The strongest spaces are often defined by the surface you notice last.",
-    author: "STEELX STUDIO",
-    align: "center",
-  },
-  {
-    id: "button-1",
-    type: "button",
-    buttonText: "View recent projects",
-    buttonUrl: "https://steelxdecor.com/projects",
-    align: "center",
-  },
-];
-
-const blockMeta: Record<BlockType, { label: string; icon: typeof Type }> = {
-  hero: { label: "Hero", icon: Sparkles },
-  text: { label: "Text", icon: Type },
-  image: { label: "Image", icon: ImageIcon },
-  button: { label: "Button", icon: MousePointerClick },
-  divider: { label: "Divider", icon: MinusIcon },
-  columns: { label: "Columns", icon: ColumnsIcon },
-  quote: { label: "Quote", icon: Quote },
+const meta:Record<BlockType,{label:string;icon:any;group:string}>={
+ header:{label:"Header",icon:LayoutTemplate,group:"Basic"},hero:{label:"Hero",icon:Sparkles,group:"Basic"},heading:{label:"Heading",icon:Type,group:"Basic"},text:{label:"Text",icon:Type,group:"Basic"},image:{label:"Image",icon:ImageIcon,group:"Basic"},button:{label:"Button",icon:MousePointerClick,group:"Basic"},divider:{label:"Divider",icon:Minus,group:"Basic"},spacer:{label:"Spacer",icon:Square,group:"Basic"},columns:{label:"Columns",icon:Columns2,group:"Layout"},quote:{label:"Quote",icon:Quote,group:"Content"},social:{label:"Social Icons",icon:Share2,group:"Advanced"},video:{label:"Video",icon:Video,group:"Advanced"},banner:{label:"Banner",icon:ImageIcon,group:"Advanced"},product:{label:"Product Card",icon:ShoppingBag,group:"Commerce"},menu:{label:"Menu",icon:MenuIcon,group:"Advanced"},footer:{label:"Footer",icon:PanelBottom,group:"Footer"},
 };
 
-function MinusIcon({ className }: { className?: string }) {
-  return <span className={cn("block h-px w-4 bg-current", className)} />;
+function makeBlock(type:BlockType):Block{
+ const id=`${type}-${Date.now()}-${Math.random().toString(36).slice(2,6)}`;
+ const base:Block={id,type,align:"left",bg:"#ffffff",color:"#202020",font:"Arial",size:16,padding:28,radius:0};
+ const data:Partial<Block>={
+  header:{title:"YOUR BRAND",text:"Newsletter · September 2026"},hero:{title:"Your headline goes here",text:"Introduce this edition with a strong opening message.",label:"Featured",align:"center",bg:"#ff4f59",color:"#fff",size:48},heading:{title:"A beautiful new section",size:32},text:{title:"Tell your story",text:"Add your newsletter copy here. You can control typography, alignment, spacing, colors and more from the inspector."},image:{title:"Featured image",text:"Add an image and supporting caption.",image:"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80"},button:{label:"Call to action",url:"#",align:"center"},divider:{},spacer:{padding:32},columns:{title:"Three columns",items:["First column|Supporting text","Second column|Supporting text","Third column|Supporting text"]},quote:{title:"A memorable quote",text:"Add a customer quote, testimonial or editorial pull quote.",align:"center"},social:{title:"Follow us",text:"LinkedIn · Instagram · YouTube",align:"center"},video:{title:"Watch the story",image:"https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80",url:"#"},banner:{title:"Announcement",text:"Highlight an important update.",image:"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",bg:"#102033",color:"#fff"},product:{title:"Featured product",text:"Product description · ₹12,500",image:"https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=900&q=80",label:"Shop now",url:"#"},menu:{text:"HOME  ·  ABOUT  ·  PROJECTS  ·  CONTACT",align:"center"},footer:{title:"STEEL X",text:"You received this email because you are part of our community."}}
+ }[type]||{};
+ return {...base,...data,id,type};
 }
 
-function ColumnsIcon({ className }: { className?: string }) {
-  return <span className={cn("grid h-4 w-4 grid-cols-2 gap-0.5", className)}><span className="rounded-sm bg-current" /><span className="rounded-sm bg-current" /></span>;
+function esc(v:string=""){return v.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");}
+function style(b:Block, extra=""){return `font-family:${b.font||"Arial"},Helvetica,sans-serif;font-size:${b.size||16}px;line-height:1.5;color:${b.color||"#202020"};background:${b.bg||"#ffffff"};padding:${b.padding??28}px;text-align:${b.align||"left"};${extra}`}
+function blockHtml(b:Block):string{
+ const s=style(b);
+ if(b.type==="header") return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="${s}padding-top:18px;padding-bottom:18px"><table role="presentation" width="100%"><tr><td style="font-size:22px;font-weight:700">${esc(b.title)}</td><td align="right" style="font-size:12px;font-weight:700;letter-spacing:1px;color:${b.color||"#777"}">${esc(b.text)}</td></tr></table></td></tr></table>`;
+ if(b.type==="hero") return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="${s}"><div style="font-size:12px;letter-spacing:2px;font-weight:700;margin-bottom:16px">${esc(b.label)}</div><div style="font-size:${b.size||48}px;line-height:1.02;font-weight:800;letter-spacing:1px">${esc(b.title)}</div><div style="margin-top:18px;font-size:18px">${esc(b.text)}</div></td></tr></table>`;
+ if(b.type==="heading") return `<table role="presentation" width="100%"><tr><td style="${s}font-size:${b.size||32}px;font-weight:700;line-height:1.15">${esc(b.title)}</td></tr></table>`;
+ if(b.type==="text") return `<table role="presentation" width="100%"><tr><td style="${s}"><div style="font-size:24px;font-weight:700;margin-bottom:10px">${esc(b.title)}</div><div>${esc(b.text)}</div></td></tr></table>`;
+ if(b.type==="image") return `<table role="presentation" width="100%"><tr><td style="${s}"><img src="${esc(b.image||"")}" width="100%" style="display:block;width:100%;height:auto;border:0;border-radius:${b.radius||0}px" alt="${esc(b.title)}"><div style="font-weight:700;margin-top:12px">${esc(b.title)}</div><div>${esc(b.text)}</div></td></tr></table>`;
+ if(b.type==="button") return `<table role="presentation" width="100%"><tr><td style="${s}"><a href="${esc(b.url||"#")}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:700;padding:14px 24px;border-radius:6px">${esc(b.label||"Call to action")}</a></td></tr></table>`;
+ if(b.type==="divider") return `<table role="presentation" width="100%"><tr><td style="padding:${b.padding??20}px"><div style="height:1px;background:${b.color||"#ddd"};font-size:1px;line-height:1px">&nbsp;</div></td></tr></table>`;
+ if(b.type==="spacer") return `<table role="presentation" width="100%"><tr><td style="height:${b.padding||32}px;line-height:${b.padding||32}px;font-size:1px">&nbsp;</td></tr></table>`;
+ if(b.type==="columns") return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>${(b.items||[]).map(x=>{const p=x.split("|");return `<td width="${Math.floor(100/(b.items?.length||1))}%" valign="top" style="${s}padding:18px 10px"><div style="width:74px;height:74px;border-radius:50%;background:#ddd;margin:0 auto 12px"></div><div style="font-weight:700;font-size:14px">${esc(p[0])}</div><div style="font-size:11px">${esc(p[1]||"")}</div><div style="font-size:11px;opacity:.8">⌖ ${esc(p[2]||"")}</div></td>`}).join("")}</tr></table>`;
+ if(b.type==="quote") return `<table role="presentation" width="100%"><tr><td style="${s}"><div style="font-size:42px;color:#ff4f59">“</div><div style="font-size:28px;font-weight:700;line-height:1.2">${esc(b.title)}</div><div style="margin-top:12px">${esc(b.text)}</div></td></tr></table>`;
+ if(b.type==="banner") return `<table role="presentation" width="100%"><tr><td style="padding:0;background:${b.bg||"#102033"};color:${b.color||"#fff"}"><table role="presentation" width="100%"><tr><td width="55%" valign="middle" style="padding:${b.padding||34}px;font-family:${b.font||"Arial"};font-size:${b.size||16}px;color:${b.color||"#fff"}"><div style="font-size:26px;font-weight:700">${esc(b.title)}</div><div style="margin-top:12px">${esc(b.text)}</div><a href="${esc(b.url||"#")}" style="display:inline-block;margin-top:18px;border:1px solid #ff4f59;color:#fff;padding:10px 16px;text-decoration:none">View all anniversaries →</a></td><td width="45%"><img src="${esc(b.image||"")}" width="100%" style="display:block;width:100%;height:auto" alt=""></td></tr></table></td></tr></table>`;
+ if(b.type==="social") return `<table role="presentation" width="100%"><tr><td style="${s}font-weight:700">${esc(b.title)}<div style="margin-top:10px;font-size:13px;letter-spacing:1px">${esc(b.text)}</div></td></tr></table>`;
+ if(b.type==="video") return `<table role="presentation" width="100%"><tr><td style="${s}"><a href="${esc(b.url||"#")}" style="text-decoration:none;color:inherit"><img src="${esc(b.image||"")}" width="100%" style="display:block;width:100%;height:auto" alt="${esc(b.title)}"><div style="font-weight:700;margin-top:10px">▶ ${esc(b.title)}</div></a></td></tr></table>`;
+ if(b.type==="product") return `<table role="presentation" width="100%"><tr><td style="${s}"><img src="${esc(b.image||"")}" width="100%" style="display:block;width:100%;height:auto"><div style="font-size:22px;font-weight:700;margin-top:12px">${esc(b.title)}</div><div>${esc(b.text)}</div><a href="${esc(b.url||"#")}" style="display:inline-block;margin-top:12px;background:#111;color:#fff;padding:12px 20px;text-decoration:none">${esc(b.label||"Shop now")}</a></td></tr></table>`;
+ if(b.type==="menu") return `<table role="presentation" width="100%"><tr><td style="${s}font-weight:700;font-size:12px;letter-spacing:1px">${esc(b.text)}</td></tr></table>`;
+ return `<table role="presentation" width="100%"><tr><td style="${s}"><div style="font-size:24px;font-weight:800">${esc(b.title)}</div><div style="margin-top:6px;font-size:12px">${esc(b.text)}</div><div style="margin-top:16px;font-size:11px">Unsubscribe &nbsp; | &nbsp; Manage preferences</div></td></tr></table>`;
+}
+function buildHtml(blocks:Block[],palette:Palette,subject:string){return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(subject)}</title></head><body style="margin:0;padding:0;background:#e9e9e9"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#e9e9e9"><tr><td align="center"><table role="presentation" width="680" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:680px;background:${palette.bg}">${blocks.map(blockHtml).join("")}</table></td></tr></table></body></html>`}
+
+function EmailTemplateBuilderPage(){
+ const [blocks,setBlocks]=useState< Block[]>(starter); const [selectedId,setSelectedId]=useState(starter[0].id); const [palette,setPalette]=useState(palettes[3]); const [subject,setSubject]=useState("Work Anniversary — Celebrating Our Amazing Team"); const [sender,setSender]=useState("SteelX Communications <hello@steelx.com>"); const [device,setDevice]=useState<"desktop"|"mobile">("desktop"); const [mode,setMode]=useState<"editor"|"preview"|"code">("editor"); const [history,setHistory]=useState<Block[][]>([]); const [future,setFuture]=useState<Block[][]>([]); const [dragId,setDragId]=useState<string|null>(null); const [notice,setNotice]=useState("");
+ const selected=blocks.find(b=>b.id===selectedId)||null; const html=useMemo(()=>buildHtml(blocks,palette,subject),[blocks,palette,subject]);
+ function commit(next:Block[]){setHistory(h=>[...h.slice(-19),blocks]);setFuture([]);setBlocks(next)}
+ function update(p:Partial<Block>){if(selected)commit(blocks.map(b=>b.id===selected.id?{...b,...p}:b))}
+ function add(type:BlockType){const b=makeBlock(type);commit([...blocks,b]);setSelectedId(b.id)}
+ function move(id:string,targetId:string){if(id===targetId)return;const a=blocks.findIndex(b=>b.id===id),z=blocks.findIndex(b=>b.id===targetId);if(a<0||z<0)return;const n=[...blocks];const [x]=n.splice(a,1);n.splice(z,0,x);commit(n)}
+ function duplicate(){if(!selected)return;const b={...selected,id:`${selected.type}-${Date.now()}`};const i=blocks.findIndex(x=>x.id===selected.id);const n=[...blocks];n.splice(i+1,0,b);commit(n);setSelectedId(b.id)}
+ function remove(){if(!selected)return;const i=blocks.findIndex(x=>x.id===selected.id);const n=blocks.filter(x=>x.id!==selected.id);commit(n);setSelectedId(n[Math.max(0,i-1)]?.id||"")}
+ function undo(){const p=history.at(-1);if(!p)return;setFuture(f=>[...f,blocks]);setHistory(h=>h.slice(0,-1));setBlocks(p)} function redo(){const n=future.at(-1);if(!n)return;setHistory(h=>[...h,blocks]);setFuture(f=>f.slice(0,-1));setBlocks(n)}
+ async function copyDesign(){const plain=blocks.map(b=>b.title||b.text||meta[b.type].label).join("\n");if(typeof ClipboardItem!=="undefined"&&navigator.clipboard?.write){await navigator.clipboard.write([new ClipboardItem({"text/html":new Blob([html],{type:"text/html"}),"text/plain":new Blob([plain],{type:"text/plain"})})]);}else await navigator.clipboard?.writeText(html);setNotice("Outlook-ready design copied");setTimeout(()=>setNotice(""),1800)}
+ function exportHtml(){const a=document.createElement("a"),u=URL.createObjectURL(new Blob([html],{type:"text/html;charset=utf-8"}));a.href=u;a.download="steelx-newsletter.html";a.click();URL.revokeObjectURL(u)}
+ return <PageShell><div className="min-h-screen bg-[#080a0d] text-white"><header className="border-b border-white/10 bg-[#0c0f13] px-4 py-4"><div className="mx-auto flex max-w-[1800px] items-center justify-between gap-3"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[.05] text-[#d7b878]"><Mail className="h-5 w-5"/></div><div><h1 className="text-xl font-semibold">Email Template Builder</h1><p className="text-[11px] text-white/40">Create beautiful newsletters with drag & drop</p></div></div><div className="flex items-center gap-2"><button className="toolbar-button" onClick={()=>setNotice("Figma import/export uses portable design JSON")}>Import Figma</button><button className="toolbar-button" onClick={()=>setNotice("Design JSON ready")}>Import Design</button><button className="toolbar-button" onClick={()=>setNotice("Draft saved")}>Save Draft</button><button className="gold-button" onClick={exportHtml}><Download className="h-4 w-4"/> Export HTML</button></div></div></header>
+ <div className="border-b border-white/10 bg-[#0c0f13] px-4 py-3"><div className="mx-auto grid max-w-[1800px] gap-2 md:grid-cols-[1fr_1fr_auto]"><label className="flex items-center gap-3"><span className="w-20 text-[9px] uppercase tracking-widest text-white/30">Subject</span><input value={subject} onChange={e=>setSubject(e.target.value)} className="w-full bg-transparent text-sm outline-none"/></label><label className="flex items-center gap-3"><span className="w-20 text-[9px] uppercase tracking-widest text-white/30">From</span><input value={sender} onChange={e=>setSender(e.target.value)} className="w-full bg-transparent text-sm outline-none"/></label><button className="gold-button" onClick={()=>setNotice("Test email prepared") }><Send className="h-4 w-4"/> Send test</button></div></div>
+ <div className="grid lg:grid-cols-[250px_minmax(0,1fr)_320px]">
+ <aside className="border-b border-white/10 bg-[#0b0e12] p-4 lg:border-b-0 lg:border-r"><div className="mb-4 flex items-center justify-between"><span className="section-label">Elements</span><span className="text-[10px] text-white/30">Drag to canvas</span></div>{["Basic","Layout","Advanced","Commerce","Content","Footer"].map(group=><div key={group} className="mb-5"><p className="mb-2 text-[9px] uppercase tracking-[.18em] text-white/30">{group} blocks</p><div className="grid grid-cols-2 gap-2">{(Object.keys(meta) as BlockType[]).filter(t=>meta[t].group===group).map(t=>{const Icon=meta[t].icon;return <button key={t} draggable onDragStart={e=>e.dataTransfer.setData("block-type",t)} onClick={()=>add(t)} className="rounded-xl border border-white/10 bg-white/[.025] p-3 text-left transition hover:border-[#d7b878]/40 hover:bg-white/[.06]"><Icon className="h-4 w-4 text-[#d7b878]"/><span className="mt-2 block text-[11px] text-white/70">{meta[t].label}</span></button>})}</div></div>)}<div className="border-t border-white/10 pt-4"><p className="section-label">Design</p><div className="mt-3 grid grid-cols-2 gap-2">{palettes.map(p=><button key={p.name} onClick={()=>setPalette(p)} className={cn("rounded-xl border p-2 text-left",palette.name===p.name?"border-[#d7b878]":"border-white/10")}><span className="mb-2 block h-5 rounded" style={{background:p.bg}}/><span className="text-[10px] text-white/60">{p.name}</span></button>)}</div></div></aside>
+ <main className="min-w-0 bg-[#15181d] p-4 sm:p-6"><div className="mx-auto max-w-[920px]"><div className="mb-4 flex items-center justify-between"><div><p className="section-label">Canvas</p><p className="mt-1 text-[11px] text-white/30">Drag sections to reorder · drop elements anywhere</p></div><div className="flex items-center gap-2"><button className="icon-button" disabled={!history.length} onClick={undo}><Undo2 className="h-4 w-4"/></button><button className="icon-button" disabled={!future.length} onClick={redo}><Redo2 className="h-4 w-4"/></button><div className="flex rounded-lg border border-white/10 p-1"><button onClick={()=>setDevice("desktop")} className={cn("rounded p-1.5",device==="desktop"?"bg-white/10":"text-white/30")}><Monitor className="h-4 w-4"/></button><button onClick={()=>setDevice("mobile")} className={cn("rounded p-1.5",device==="mobile"?"bg-white/10":"text-white/30")}><Smartphone className="h-4 w-4"/></button></div><button className="toolbar-button" onClick={()=>setMode(mode==="preview"?"editor":"preview")}><Eye className="h-4 w-4"/> Preview</button></div></div>
+ <div className={cn("mx-auto overflow-hidden rounded-xl bg-white shadow-2xl transition-all",device==="mobile"?"max-w-[390px]":"max-w-[680px]")} onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const type=e.dataTransfer.getData("block-type");if(type)add(type as BlockType)}}>{blocks.map((b,i)=><div key={b.id} draggable onDragStart={()=>setDragId(b.id)} onDragOver={e=>e.preventDefault()} onDrop={e=>{e.stopPropagation();if(dragId)move(dragId,b.id);setDragId(null)}} onClick={()=>setSelectedId(b.id)} className={cn("group relative cursor-pointer",selectedId===b.id?"ring-2 ring-inset ring-[#4d8dff]":"hover:ring-1 hover:ring-inset hover:ring-[#4d8dff]/50")}>{selectedId===b.id&&<div className="absolute right-2 top-2 z-10 flex gap-1 rounded-lg bg-[#111]/90 p-1"><button onClick={e=>{e.stopPropagation();if(i>0)move(b.id,blocks[i-1].id)}} className="p-1 text-white"><ArrowUp className="h-3 w-3"/></button><button onClick={e=>{e.stopPropagation();if(i<blocks.length-1)move(b.id,blocks[i+1].id)}} className="p-1 text-white"><ArrowDown className="h-3 w-3"/></button><button onClick={e=>{e.stopPropagation();duplicate()}} className="p-1 text-white"><Copy className="h-3 w-3"/></button><button onClick={e=>{e.stopPropagation();remove()}} className="p-1 text-red-300"><Trash2 className="h-3 w-3"/></button></div>}<div className="absolute left-1 top-1 z-10 hidden rounded bg-black/70 p-1 text-white/70 group-hover:block"><GripVertical className="h-3 w-3"/></div><BlockPreview block={b}/></div>)}</div></div></main>
+ <aside className="border-t border-white/10 bg-[#0b0e12] p-4 lg:border-l lg:border-t-0"><Inspector block={selected} update={update}/><div className="mt-5 border-t border-white/10 pt-4"><p className="section-label">Export & Copy</p><button onClick={copyDesign} className="mt-3 flex w-full items-center gap-3 rounded-xl bg-[#d7b878] px-4 py-3 text-left text-xs font-semibold text-black"><Copy className="h-4 w-4"/>Copy design for Outlook</button><button onClick={exportHtml} className="mt-2 flex w-full items-center gap-3 rounded-xl border border-white/10 px-4 py-3 text-left text-xs text-white/70"><Code2 className="h-4 w-4"/>Export Outlook-safe HTML</button><button onClick={()=>setMode("code")} className="mt-2 flex w-full items-center gap-3 rounded-xl border border-white/10 px-4 py-3 text-left text-xs text-white/70"><Code2 className="h-4 w-4"/>View generated code</button>{notice&&<p className="mt-3 text-center text-[10px] text-[#d7b878]">{notice}</p>}</div></aside>
+ </div>{mode==="preview"&&<PreviewOverlay blocks={blocks} palette={palette} device={device} close={()=>setMode("editor")}/>} {mode==="code"&&<CodeOverlay html={html} close={()=>setMode("editor")}/>}</div></PageShell>
 }
 
-function createBlock(type: BlockType): EmailBlock {
-  const id = `${type}-${Date.now()}`;
-  if (type === "hero") return { id, type, eyebrow: "YOUR BRAND / NEWSLETTER", heading: "Your newsletter headline goes here.", body: "Introduce this edition with a short, confident message.", buttonText: "Read more", buttonUrl: "#", align: "left" };
-  if (type === "text") return { id, type, heading: "A new section", body: "Add your newsletter story, product update, announcement or editorial note here.", align: "left" };
-  if (type === "image") return { id, type, imageUrl: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80", heading: "Featured story", body: "Add a caption or supporting copy.", align: "left" };
-  if (type === "button") return { id, type, buttonText: "Call to action", buttonUrl: "#", align: "center" };
-  if (type === "columns") return { id, type, heading: "Two ideas. One newsletter.", body: "Use columns for products, links or short editorial cards.", align: "left" };
-  if (type === "quote") return { id, type, quote: "Add a memorable quote or customer statement here.", author: "AUTHOR / BRAND", align: "center" };
-  return { id, type };
-}
-
-function EmailTemplateBuilderPage() {
-  const [blocks, setBlocks] = useState<EmailBlock[]>(starterBlocks);
-  const [selectedId, setSelectedId] = useState(starterBlocks[0]?.id ?? "");
-  const [palette, setPalette] = useState<Palette>(palettes[0]);
-  const [subject, setSubject] = useState("STEELX — Field Notes / September");
-  const [sender, setSender] = useState("STEELX Studio <studio@steelxdecor.com>");
-  const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
-  const [mode, setMode] = useState<"editor" | "preview" | "code">("editor");
-  const [history, setHistory] = useState<EmailBlock[][]>([]);
-  const [future, setFuture] = useState<EmailBlock[][]>([]);
-  const [notice, setNotice] = useState("");
-
-  const selected = blocks.find((block) => block.id === selectedId) ?? null;
-  const html = useMemo(() => buildEmailHtml(blocks, palette, subject), [blocks, palette, subject]);
-
-  function commit(next: EmailBlock[]) {
-    setHistory((items) => [...items.slice(-19), blocks]);
-    setFuture([]);
-    setBlocks(next);
-  }
-
-  function updateSelected(patch: Partial<EmailBlock>) {
-    if (!selected) return;
-    commit(blocks.map((block) => block.id === selected.id ? { ...block, ...patch } : block));
-  }
-
-  function addBlock(type: BlockType) {
-    const block = createBlock(type);
-    commit([...blocks, block]);
-    setSelectedId(block.id);
-  }
-
-  function removeBlock() {
-    if (!selected) return;
-    const index = blocks.findIndex((block) => block.id === selected.id);
-    const next = blocks.filter((block) => block.id !== selected.id);
-    commit(next);
-    setSelectedId(next[index - 1]?.id ?? next[0]?.id ?? "");
-  }
-
-  function moveBlock(direction: -1 | 1) {
-    if (!selected) return;
-    const index = blocks.findIndex((block) => block.id === selected.id);
-    const target = index + direction;
-    if (target < 0 || target >= blocks.length) return;
-    const next = [...blocks];
-    const item = next[index];
-    const targetItem = next[target];
-    if (!item || !targetItem) return;
-    next[index] = targetItem;
-    next[target] = item;
-    commit(next);
-  }
-
-  function duplicateBlock() {
-    if (!selected) return;
-    const copy = { ...selected, id: `${selected.type}-${Date.now()}` };
-    const index = blocks.findIndex((block) => block.id === selected.id);
-    const next = [...blocks];
-    next.splice(index + 1, 0, copy);
-    commit(next);
-    setSelectedId(copy.id);
-  }
-
-  function undo() {
-    const previous = history.at(-1);
-    if (!previous) return;
-    setFuture((items) => [...items, blocks]);
-    setHistory((items) => items.slice(0, -1));
-    setBlocks(previous);
-    setSelectedId(previous[0]?.id ?? "");
-  }
-
-  function redo() {
-    const next = future.at(-1);
-    if (!next) return;
-    setHistory((items) => [...items, blocks]);
-    setFuture((items) => items.slice(0, -1));
-    setBlocks(next);
-    setSelectedId(next[0]?.id ?? "");
-  }
-
-  async function copyHtml() {
-    await navigator.clipboard?.writeText(html);
-    setNotice("HTML copied");
-    window.setTimeout(() => setNotice(""), 1600);
-  }
-
-  function exportHtml() {
-    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = "steelx-newsletter.html";
-    anchor.click();
-    URL.revokeObjectURL(url);
-  }
-
-  return (
-    <PageShell>
-      <div className="min-h-[calc(100vh-80px)] bg-[#090909] text-[#f3f0e9]">
-        <header className="border-b border-white/10 bg-[#0d0d0d] px-4 py-4 sm:px-6 lg:px-8">
-          <div className="mx-auto flex max-w-[1800px] items-center justify-between gap-4">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-[#d7b878]"><Mail className="h-5 w-5" /></div>
-              <div className="min-w-0"><h1 className="truncate font-display text-xl">Email Template Builder</h1><p className="text-[11px] text-white/40">Build polished, responsive newsletters without touching code.</p></div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button type="button" onClick={undo} disabled={!history.length} className="icon-button"><Undo2 className="h-4 w-4" /></button>
-              <button type="button" onClick={redo} disabled={!future.length} className="icon-button"><Redo2 className="h-4 w-4" /></button>
-              <button type="button" onClick={() => setMode(mode === "preview" ? "editor" : "preview")} className="toolbar-button"><Eye className="h-4 w-4" /><span className="hidden sm:inline">Preview</span></button>
-              <button type="button" onClick={copyHtml} className="toolbar-button"><Copy className="h-4 w-4" /><span className="hidden sm:inline">Copy HTML</span></button>
-              <button type="button" onClick={exportHtml} className="gold-button"><Download className="h-4 w-4" /><span className="hidden sm:inline">Export</span></button>
-            </div>
-          </div>
-        </header>
-
-        <div className="mx-auto flex max-w-[1800px] items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-6 lg:px-8">
-          <div className="flex min-w-0 items-center gap-3"><span className="hidden text-[9px] uppercase tracking-[0.22em] text-white/35 sm:inline">Subject</span><input value={subject} onChange={(event) => setSubject(event.target.value)} className="min-w-0 bg-transparent text-sm text-white/80 outline-none" /></div>
-          <div className="flex items-center gap-2"><span className="hidden text-[10px] text-[#d7b878] sm:inline">{notice}</span><button type="button" onClick={() => setNotice("Draft ready")} className="toolbar-button"><Check className="h-4 w-4" /> Save draft</button><button type="button" className="gold-button"><Send className="h-4 w-4" /> Send test</button></div>
-        </div>
-
-        {mode === "code" ? <CodeView html={html} onClose={() => setMode("editor")} /> : mode === "preview" ? <Preview blocks={blocks} palette={palette} device={device} setDevice={setDevice} onCode={() => setMode("code")} /> : (
-          <div className="grid min-h-[calc(100vh-150px)] lg:grid-cols-[230px_minmax(0,1fr)_310px]">
-            <aside className="border-b border-white/10 bg-[#0c0c0c] lg:border-b-0 lg:border-r"><div className="p-4 sm:p-5"><p className="section-label">Content blocks</p><div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-1">{(Object.keys(blockMeta) as BlockType[]).map((type) => { const Icon = blockMeta[type].icon; return <button key={type} type="button" onClick={() => addBlock(type)} className="block-picker"><Icon className="h-4 w-4 text-[#d7b878]" /><span>{blockMeta[type].label}</span><Plus className="ml-auto h-3.5 w-3.5 text-white/25" /></button>; })}</div><div className="my-6 h-px bg-white/10" /><p className="section-label">Design</p><div className="mt-3 space-y-2">{palettes.map((item) => <button key={item.name} type="button" onClick={() => setPalette(item)} className={cn("flex w-full items-center gap-3 rounded-xl border p-2.5 text-left", palette.name === item.name ? "border-[#d7b878]/50 bg-white/[0.05]" : "border-white/10")}><span className="h-7 w-7 rounded-lg border border-white/10" style={{ background: `linear-gradient(135deg, ${item.background} 50%, ${item.accent} 50%)` }} /><span className="text-xs text-white/70">{item.name}</span></button>)}</div><div className="mt-6 rounded-xl border border-[#d7b878]/15 bg-[#d7b878]/[0.04] p-3.5"><div className="flex items-center gap-2 text-[#d7b878]"><Sparkles className="h-3.5 w-3.5" /><span className="text-[10px] uppercase tracking-[0.18em]">Pro tip</span></div><p className="mt-2 text-[11px] leading-relaxed text-white/40">Keep one primary CTA per newsletter. Short sections perform better on mobile.</p></div></div></aside>
-
-            <main className="min-w-0 bg-[#151515] p-4 sm:p-6 lg:p-8"><div className="mx-auto max-w-[920px]"><div className="mb-5 flex items-center justify-between"><div><p className="section-label">Canvas</p><p className="mt-1 text-[11px] text-white/35">Click a block to edit it.</p></div><div className="flex rounded-lg border border-white/10 bg-[#0d0d0d] p-1"><button type="button" onClick={() => setDevice("desktop")} className={cn("rounded-md p-1.5", device === "desktop" ? "bg-white/10 text-white" : "text-white/30")}><Monitor className="h-3.5 w-3.5" /></button><button type="button" onClick={() => setDevice("mobile")} className={cn("rounded-md p-1.5", device === "mobile" ? "bg-white/10 text-white" : "text-white/30")}><Smartphone className="h-3.5 w-3.5" /></button></div></div><div className={cn("mx-auto overflow-hidden rounded-xl bg-white shadow-2xl", device === "mobile" ? "max-w-[390px]" : "max-w-[680px]")}><div className="border-b border-[#ddd] bg-[#f7f7f7] px-4 py-2.5 text-[9px] text-[#888]">TO: subscribers · FROM: {sender}</div>{blocks.map((block, index) => <EditableBlock key={block.id} block={block} selected={block.id === selectedId} onSelect={() => setSelectedId(block.id)} palette={palette} onMove={moveBlock} onDuplicate={duplicateBlock} onRemove={removeBlock} first={index === 0} last={index === blocks.length - 1} />)}{blocks.length === 0 ? <button type="button" onClick={() => addBlock("hero")} className="flex min-h-[340px] w-full items-center justify-center gap-3 text-[#777]"><Plus className="h-8 w-8" />Add your first block</button> : null}<div className="border-t border-[#ddd] bg-[#f4f4f4] px-8 py-7 text-center text-[#999]"><p className="text-[9px] uppercase tracking-[0.2em]">STEELX STUDIO</p><p className="mt-2 text-[10px]">You are receiving this because you subscribed to our newsletter.</p><p className="mt-3 text-[9px] underline">Unsubscribe · Preferences</p></div></div></div></main>
-
-            <aside className="border-t border-white/10 bg-[#0c0c0c] lg:border-l lg:border-t-0"><div className="sticky top-0 max-h-[calc(100vh-150px)] overflow-y-auto p-4 sm:p-5"><p className="section-label">Inspector</p>{selected ? <Inspector block={selected} update={updateSelected} /> : <p className="mt-6 text-sm text-white/30">Select a block to edit it.</p>}</div></aside>
-          </div>
-        )}
-      </div>
-    </PageShell>
-  );
-}
-
-function EditableBlock({ block, selected, onSelect, palette, onMove, onDuplicate, onRemove, first, last }: { block: EmailBlock; selected: boolean; onSelect: () => void; palette: Palette; onMove: (direction: -1 | 1) => void; onDuplicate: () => void; onRemove: () => void; first: boolean; last: boolean }) {
-  return <div onClick={onSelect} className={cn("group relative cursor-pointer", selected ? "ring-2 ring-inset ring-[#c9a96b]" : "hover:ring-1 hover:ring-inset hover:ring-[#c9a96b]/50")}>{selected ? <div className="absolute right-2 top-2 z-10 flex gap-1 rounded-lg bg-[#171717] p-1" onClick={(event) => event.stopPropagation()}><button type="button" disabled={first} onClick={() => onMove(-1)} className="mini-action"><ArrowUp className="h-3 w-3" /></button><button type="button" disabled={last} onClick={() => onMove(1)} className="mini-action"><ArrowDown className="h-3 w-3" /></button><button type="button" onClick={onDuplicate} className="mini-action"><Copy className="h-3 w-3" /></button><button type="button" onClick={onRemove} className="mini-action"><Trash2 className="h-3 w-3" /></button></div> : null}<RenderedBlock block={block} palette={palette} /></div>;
-}
-
-function RenderedBlock({ block, palette }: { block: EmailBlock; palette: Palette }) {
-  const align = block.align ?? "left";
-  if (block.type === "divider") return <div className="px-10 py-7"><div className="h-px w-full bg-black/10" /></div>;
-  if (block.type === "columns") return <div className="grid grid-cols-2 gap-4 px-8 py-9" style={{ color: palette.text }}><div className="rounded-lg border border-black/10 p-5"><div className="mb-4 h-20 rounded-md bg-black/10" /><p className="text-xs font-bold">Column one</p><p className="mt-2 text-[10px] opacity-60">Short supporting copy.</p></div><div className="rounded-lg border border-black/10 p-5"><div className="mb-4 h-20 rounded-md bg-black/10" /><p className="text-xs font-bold">Column two</p><p className="mt-2 text-[10px] opacity-60">Another short story.</p></div></div>;
-  if (block.type === "hero") return <div className="px-8 py-12 sm:px-10" style={{ background: palette.background, color: palette.text, textAlign: align }}><p className="text-[8px] font-bold tracking-[0.3em]" style={{ color: palette.accent }}>{block.eyebrow}</p><h2 className="mt-5 font-serif text-3xl font-semibold leading-[1.05] sm:text-4xl">{block.heading}</h2><p className="mt-5 text-sm leading-relaxed opacity-60">{block.body}</p>{block.buttonText ? <div className="mt-7"><span className="inline-flex rounded-sm px-5 py-3 text-[9px] font-bold uppercase tracking-[0.16em]" style={{ background: palette.accent, color: "#111" }}>{block.buttonText}</span></div> : null}</div>;
-  if (block.type === "text") return <div className="px-8 py-9 sm:px-10" style={{ color: palette.text, textAlign: align }}><h3 className="font-serif text-2xl font-semibold">{block.heading}</h3><p className="mt-4 text-sm leading-7 opacity-65">{block.body}</p></div>;
-  if (block.type === "image") return <div style={{ color: palette.text, textAlign: align }}><img src={block.imageUrl} alt="Newsletter feature" className="block aspect-[16/9] w-full object-cover" /><div className="px-8 py-5"><h3 className="font-serif text-xl font-semibold">{block.heading}</h3><p className="mt-2 text-xs opacity-55">{block.body}</p></div></div>;
-  if (block.type === "quote") return <div className="px-8 py-12" style={{ background: palette.background, color: palette.text, textAlign: align }}><Quote className="mx-auto h-5 w-5" style={{ color: palette.accent }} /><p className="mt-4 font-serif text-2xl italic">“{block.quote}”</p><p className="mt-5 text-[8px] font-bold uppercase tracking-[0.25em] opacity-50">{block.author}</p></div>;
-  return <div className="flex justify-center px-8 py-9" style={{ textAlign: align }}><span className="rounded-sm px-6 py-3 text-[9px] font-bold uppercase tracking-[0.16em]" style={{ background: palette.accent, color: "#111" }}>{block.buttonText}</span></div>;
-}
-
-function Inspector({ block, update }: { block: EmailBlock; update: (patch: Partial<EmailBlock>) => void }) {
-  return <div className="mt-4 space-y-4">{block.type === "hero" ? <><Field label="Eyebrow" value={block.eyebrow} onChange={(value) => update({ eyebrow: value })} /><Field label="Headline" value={block.heading} onChange={(value) => update({ heading: value })} area /><Field label="Body" value={block.body} onChange={(value) => update({ body: value })} area /><Field label="Button" value={block.buttonText} onChange={(value) => update({ buttonText: value })} /><Field label="URL" value={block.buttonUrl} onChange={(value) => update({ buttonUrl: value })} /></> : null}{block.type === "text" ? <><Field label="Heading" value={block.heading} onChange={(value) => update({ heading: value })} /><Field label="Copy" value={block.body} onChange={(value) => update({ body: value })} area /></> : null}{block.type === "image" ? <><Field label="Image URL" value={block.imageUrl} onChange={(value) => update({ imageUrl: value })} /><Field label="Heading" value={block.heading} onChange={(value) => update({ heading: value })} /><Field label="Caption" value={block.body} onChange={(value) => update({ body: value })} /></> : null}{block.type === "button" ? <><Field label="Button label" value={block.buttonText} onChange={(value) => update({ buttonText: value })} /><Field label="Destination URL" value={block.buttonUrl} onChange={(value) => update({ buttonUrl: value })} /></> : null}{block.type === "quote" ? <><Field label="Quote" value={block.quote} onChange={(value) => update({ quote: value })} area /><Field label="Attribution" value={block.author} onChange={(value) => update({ author: value })} /></> : null}{block.type === "columns" ? <Field label="Section heading" value={block.heading} onChange={(value) => update({ heading: value })} /> : null}</div>;
-}
-
-function Field({ label, value, onChange, area = false }: { label: string; value?: string; onChange: (value: string) => void; area?: boolean }) {
-  return <label className="block"><span className="field-label">{label}</span>{area ? <textarea rows={4} value={value ?? ""} onChange={(event) => onChange(event.target.value)} className="field resize-none" /> : <input value={value ?? ""} onChange={(event) => onChange(event.target.value)} className="field" />}</label>;
-}
-
-function Preview({ blocks, palette, device, setDevice, onCode }: { blocks: EmailBlock[]; palette: Palette; device: "desktop" | "mobile"; setDevice: (value: "desktop" | "mobile") => void; onCode: () => void }) {
-  return <div className="min-h-[calc(100vh-150px)] bg-[#151515] p-4 sm:p-8"><div className="mx-auto max-w-[1000px]"><div className="mb-5 flex items-center justify-between"><div><p className="section-label">Live preview</p><p className="mt-1 text-[11px] text-white/35">What subscribers will see.</p></div><div className="flex gap-2"><button type="button" onClick={() => setDevice(device === "desktop" ? "mobile" : "desktop")} className="toolbar-button">{device === "desktop" ? <Monitor className="h-4 w-4" /> : <Smartphone className="h-4 w-4" />} Device</button><button type="button" onClick={onCode} className="toolbar-button"><Code2 className="h-4 w-4" /> HTML</button></div></div><div className={cn("mx-auto overflow-hidden rounded-xl bg-white shadow-2xl", device === "mobile" ? "max-w-[390px]" : "max-w-[680px]")}>{blocks.map((block) => <RenderedBlock key={block.id} block={block} palette={palette} />)}</div></div></div>;
-}
-
-function CodeView({ html, onClose }: { html: string; onClose: () => void }) {
-  return <div className="min-h-[calc(100vh-150px)] bg-[#111] p-4 sm:p-8"><div className="mx-auto max-w-[1100px]"><div className="mb-4 flex items-center justify-between"><div><p className="section-label">Export HTML</p><p className="mt-1 text-[11px] text-white/35">Ready to paste into your email platform.</p></div><button type="button" onClick={onClose} className="toolbar-button">Close</button></div><pre className="overflow-auto rounded-xl border border-white/10 bg-[#080808] p-5 text-xs leading-relaxed text-white/65">{html}</pre></div></div>;
-}
-
-function buildEmailHtml(blocks: EmailBlock[], palette: Palette, subject: string) {
-  const body = blocks.map((block) => {
-    const align = block.align ?? "left";
-    const button = block.buttonText ? `<a href="${escapeHtml(block.buttonUrl || "#")}" style="display:inline-block;background:${palette.accent};color:#111;text-decoration:none;padding:13px 22px;font:700 11px Arial,sans-serif;letter-spacing:1.5px;text-transform:uppercase;">${escapeHtml(block.buttonText)}</a>` : "";
-    if (block.type === "divider") return `<tr><td style="padding:28px 40px;"><div style="height:1px;background:${palette.text}22;"></div></td></tr>`;
-    if (block.type === "hero") return `<tr><td style="background:${palette.background};color:${palette.text};padding:48px 40px;text-align:${align};"><div style="font:700 9px Arial,sans-serif;letter-spacing:3px;color:${palette.accent};">${escapeHtml(block.eyebrow || "")}</div><h1 style="font:600 42px Georgia,serif;line-height:1.05;margin:20px 0 0;">${escapeHtml(block.heading || "")}</h1><p style="font:14px Arial,sans-serif;line-height:1.7;opacity:.65;">${escapeHtml(block.body || "")}</p><div style="margin-top:26px;">${button}</div></td></tr>`;
-    if (block.type === "text") return `<tr><td style="padding:36px 40px;color:${palette.text};text-align:${align};"><h2 style="font:600 27px Georgia,serif;margin:0;">${escapeHtml(block.heading || "")}</h2><p style="font:14px Arial,sans-serif;line-height:1.8;opacity:.65;margin:16px 0 0;">${escapeHtml(block.body || "")}</p></td></tr>`;
-    if (block.type === "image") return `<tr><td style="color:${palette.text};text-align:${align};"><img src="${escapeHtml(block.imageUrl || "")}" alt="" width="680" style="display:block;width:100%;height:auto;"><div style="padding:20px 40px;"><h2 style="font:600 23px Georgia,serif;margin:0;">${escapeHtml(block.heading || "")}</h2><p style="font:12px Arial,sans-serif;opacity:.55;margin:8px 0 0;">${escapeHtml(block.body || "")}</p></div></td></tr>`;
-    if (block.type === "quote") return `<tr><td style="background:${palette.background};color:${palette.text};padding:42px;text-align:center;"><div style="font:italic 26px Georgia,serif;line-height:1.4;">“${escapeHtml(block.quote || "") }”</div><div style="font:700 9px Arial,sans-serif;letter-spacing:2px;margin-top:18px;opacity:.5;">${escapeHtml(block.author || "")}</div></td></tr>`;
-    if (block.type === "columns") return `<tr><td style="padding:32px 28px;color:${palette.text};"><table role="presentation" width="100%"><tr><td width="50%" style="padding:12px;"><div style="height:90px;background:#00000010;"></div><h3 style="font:700 13px Arial,sans-serif;">Column one</h3></td><td width="50%" style="padding:12px;"><div style="height:90px;background:#00000010;"></div><h3 style="font:700 13px Arial,sans-serif;">Column two</h3></td></tr></table></td></tr>`;
-    return `<tr><td style="padding:30px;text-align:${align};">${button}</td></tr>`;
-  }).join("");
-  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${escapeHtml(subject)}</title></head><body style="margin:0;background:#ececec;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:28px 10px;"><table role="presentation" width="680" cellpadding="0" cellspacing="0" style="max-width:680px;width:100%;background:#fff;">${body}<tr><td style="background:#f4f4f4;padding:30px;text-align:center;font:10px Arial;color:#999;">STEELX STUDIO · You are receiving this because you subscribed to our newsletter.<br><br><u>Unsubscribe</u> · <u>Preferences</u></td></tr></table></td></tr></table></body></html>`;
-}
-
-function escapeHtml(value: string) {
-  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
-}
+function BlockPreview({block:b}:{block:Block}){return <div dangerouslySetInnerHTML={{__html:blockHtml(b)}}/>}
+function Inspector({block:b,update}:{block:Block|null;update:(p:Partial<Block>)=>void}){if(!b)return <div className="py-12 text-center text-xs text-white/30">Select a section to edit</div>;return <div><div className="flex items-center justify-between"><div><p className="section-label">Text</p><p className="mt-1 text-xs text-white/40">{meta[b.type].label} settings</p></div><span className="rounded bg-white/5 px-2 py-1 text-[9px] text-white/30">{b.type}</span></div><label className="mt-5 block text-[10px] text-white/40">Title / text</label><textarea value={b.title||b.text||""} onChange={e=>b.title!==undefined?update({title:e.target.value}):update({text:e.target.value})} className="mt-2 h-24 w-full resize-none rounded-xl border border-white/10 bg-white/[.03] p-3 text-xs outline-none focus:border-[#d7b878]/50"/><div className="mt-4 grid grid-cols-2 gap-2"><label className="text-[10px] text-white/40">Font family<select value={b.font||"Arial"} onChange={e=>update({font:e.target.value})} className="mt-1 w-full rounded-lg border border-white/10 bg-[#12151a] p-2 text-xs"><option>Arial</option><option>Helvetica</option><option>Georgia</option><option>Verdana</option><option>Trebuchet MS</option><option>Times New Roman</option></select></label><label className="text-[10px] text-white/40">Font size<input type="number" value={b.size||16} onChange={e=>update({size:Number(e.target.value)})} className="mt-1 w-full rounded-lg border border-white/10 bg-[#12151a] p-2 text-xs"/></label></div><div className="mt-4"><span className="text-[10px] text-white/40">Alignment</span><div className="mt-1 grid grid-cols-3 gap-1 rounded-lg border border-white/10 p-1"><button onClick={()=>update({align:"left"})} className={cn("p-2",b.align==="left"&&"bg-white/10")}><AlignLeft className="mx-auto h-4 w-4"/></button><button onClick={()=>update({align:"center"})} className={cn("p-2",b.align==="center"&&"bg-white/10")}><AlignCenter className="mx-auto h-4 w-4"/></button><button onClick={()=>update({align:"right"})} className={cn("p-2",b.align==="right"&&"bg-white/10")}><AlignRight className="mx-auto h-4 w-4"/></button></div></div><div className="mt-4 grid grid-cols-2 gap-2"><label className="text-[10px] text-white/40">Text color<input type="color" value={b.color||"#202020"} onChange={e=>update({color:e.target.value})} className="mt-1 h-9 w-full rounded-lg bg-transparent"/></label><label className="text-[10px] text-white/40">Background<input type="color" value={b.bg||"#ffffff"} onChange={e=>update({bg:e.target.value})} className="mt-1 h-9 w-full rounded-lg bg-transparent"/></label></div><div className="mt-4 grid grid-cols-2 gap-2"><label className="text-[10px] text-white/40">Padding<input type="number" value={b.padding??28} onChange={e=>update({padding:Number(e.target.value)})} className="mt-1 w-full rounded-lg border border-white/10 bg-[#12151a] p-2 text-xs"/></label><label className="text-[10px] text-white/40">Radius<input type="number" value={b.radius??0} onChange={e=>update({radius:Number(e.target.value)})} className="mt-1 w-full rounded-lg border border-white/10 bg-[#12151a] p-2 text-xs"/></label></div>{["image","url","label"].map(k=><label key={k} className="mt-4 block text-[10px] capitalize text-white/40">{k}<input value={(b as any)[k]||""} onChange={e=>update({[k]:e.target.value})} className="mt-1 w-full rounded-lg border border-white/10 bg-[#12151a] p-2 text-xs"/></label>)}</div>}
+function PreviewOverlay({blocks,palette,device,close}:{blocks:Block[];palette:Palette;device:"desktop"|"mobile";close:()=>void}){return <div className="fixed inset-0 z-[80] overflow-auto bg-black/80 p-6 backdrop-blur"><div className="mx-auto max-w-[900px]"><button onClick={close} className="mb-4 rounded-full bg-white/10 p-2"><X className="h-5 w-5"/></button><div className={cn("mx-auto overflow-hidden rounded-xl bg-white",device==="mobile"?"max-w-[390px]":"max-w-[680px]")}><div dangerouslySetInnerHTML={{__html:blocks.map(blockHtml).join("")}}/></div></div></div>}
+function CodeOverlay({html,close}:{html:string;close:()=>void}){return <div className="fixed inset-0 z-[80] bg-[#050505]/95 p-6"><div className="mx-auto max-w-6xl"><div className="mb-3 flex justify-between"><span className="text-sm">Generated Outlook-safe HTML</span><button onClick={close}><X/></button></div><pre className="max-h-[85vh] overflow-auto rounded-xl bg-black p-5 text-xs leading-relaxed text-white/70">{html}</pre></div></div>}
