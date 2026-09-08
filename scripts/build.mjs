@@ -27,6 +27,12 @@ await rm(hiddenSource, { recursive: true, force: true });
 await cp(karateSource, hiddenSource, { recursive: true });
 await rm(karateSource, { recursive: true, force: true });
 
+// Force TanStack Router to regenerate the file-based route tree so newly
+// added routes are included in the production build instead of relying on a
+// stale committed routeTree.gen.ts.
+const routeTree = resolve(root, "src", "routeTree.gen.ts");
+await rm(routeTree, { force: true });
+
 try {
   execFileSync(vite, ["build", ...process.argv.slice(2)], { stdio: "inherit" });
 } finally {
