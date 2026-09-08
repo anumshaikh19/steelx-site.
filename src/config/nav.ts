@@ -20,10 +20,10 @@ export const secondaryItems = [
   { label: "People", href: "/people" },
   { label: "Exhibitions", href: "/exhibitions" },
   { label: "Careers", href: "/careers" },
+  { label: "Email Builder", href: "/email-template-builder" },
 ] as const;
 
 export type NavItem = (typeof navItems)[number];
-
 
 /** Product / material pages surfaced alongside the main navigation. */
 export const materialItems = [
