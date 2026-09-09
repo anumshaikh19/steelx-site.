@@ -158,3 +158,11 @@
   .field::placeholder { color:rgb(255 255 255 / .22); }
   .field:focus { border-color:rgb(215 184 120 / .5); box-shadow:0 0 0 3px rgb(215 184 120 / .06); }
 }
+
+/* Imported PNG/JPG/WebP designs must never be cropped to the canvas preview height. */
+img[src^="blob:"] {
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain !important;
+}
