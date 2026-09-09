@@ -16,8 +16,20 @@ import { Reviews } from "@/components/site/Reviews";
 import { Trainers } from "@/components/site/Trainers";
 import { Location } from "@/components/site/Location";
 import { FinalCta } from "@/components/site/FinalCta";
+import { ReferencePage } from "@/components/site/ReferencePage";
+
+function ReferenceRoute() {
+  const parts = window.location.pathname.replace(/^\/karate\/?/, "").split("/").filter(Boolean);
+  if (parts.length >= 2 && ["kihon", "kata", "kumite"].includes(parts[0])) {
+    return <ReferencePage kind={parts[0]} slug={parts[1]} />;
+  }
+  return null;
+}
 
 export function App() {
+  const reference = typeof window !== "undefined" ? ReferenceRoute() : null;
+  if (reference) return reference;
+
   return (
     <>
       <Cursor />
