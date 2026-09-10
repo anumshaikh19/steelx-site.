@@ -18,6 +18,7 @@ import { Location } from "@/components/site/Location";
 import { FinalCta } from "@/components/site/FinalCta";
 import { KihonSection } from "@/components/site/KihonSection";
 import { ReferencePage } from "@/components/site/ReferencePage";
+import { TachiPage } from "@/components/site/TachiPage";
 
 const slugify = (value: string) => decodeURIComponent(value).replace(/\.html$/i, "").replace(/^Kihon\s+0\d+\s*-\s*/i, "").replace(/^Kata\s+\d+\s*-\s*/i, "").replace(/^Kumite\s+0\d+\s*-\s*/i, "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
@@ -52,6 +53,7 @@ export function App() {
     return () => { window.removeEventListener("popstate", onPop); document.removeEventListener("click", onClick); };
   }, []);
 
+  if (pathname === "/karate/kihon/tachi" || pathname === "/karate/kihon/tachi/") return <TachiPage />;
   if (reference) return <ReferencePage kind={reference.kind} slug={reference.slug} />;
 
   return (
