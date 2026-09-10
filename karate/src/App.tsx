@@ -7,7 +7,6 @@ import { DojoStatement } from "@/components/site/DojoStatement";
 import { Arts } from "@/components/site/Arts";
 import { OneStrike } from "@/components/site/OneStrike";
 import { Calisthenics } from "@/components/site/Calisthenics";
-import { KarateLibrary } from "@/components/site/KarateLibrary";
 import { Belts } from "@/components/site/Belts";
 import { Philosophy } from "@/components/site/Philosophy";
 import { Timings } from "@/components/site/Timings";
@@ -59,7 +58,7 @@ export function App() {
       <Cursor /><div aria-hidden className="grain-overlay" /><Nav />
       <main>
         <h1 className="sr-only">Dhanurveda — Martial Arts &amp; Calisthenics academy in Nagpada, Mumbai</h1>
-        <Hero /><TitleTransition /><DojoStatement /><Arts /><OneStrike /><Calisthenics /><KarateLibrary /><Belts /><Philosophy /><Timings /><Gallery /><Reviews /><FirstClass /><Trainers /><Location /><FinalCta />
+        <Hero /><TitleTransition /><DojoStatement /><Arts /><OneStrike /><Calisthenics /><Belts /><Philosophy /><Timings /><Gallery /><Reviews /><FirstClass /><Trainers /><Location /><FinalCta />
       </main>
     </>
   );
