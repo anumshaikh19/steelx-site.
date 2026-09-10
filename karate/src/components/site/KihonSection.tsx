@@ -64,18 +64,15 @@ const intro = `Kihon means "basics," or "fundamentals." It is the term used to d
 function FamilyColumn({ family }: { family: Family }) {
   return (
     <div id={`kihon-${family.id}`} className="min-w-0">
-      <a href={`#kihon-${family.id}`} className="inline-block text-[1.02rem] font-normal uppercase text-[#9b3d18] underline decoration-[#9b3d18] underline-offset-2">
+      <a href={family.id === "tachi" ? "/karate/kihon/tachi" : `#kihon-${family.id}`} className="group inline-flex items-center gap-2 text-[1.02rem] font-normal uppercase text-[#9b3d18] underline decoration-[#9b3d18] underline-offset-2">
         {family.label}
+        {family.id === "tachi" && <span aria-hidden className="text-[0.8rem] no-underline transition-transform group-hover:translate-x-1">↗</span>}
       </a>
       <div className="mb-4 text-[0.68rem] uppercase leading-none text-[#111111]">({family.sub})</div>
       {family.groups.map((group) => (
         <div key={group.title} className="mb-7">
-          <h3 className="mb-1 text-[0.84rem] font-medium text-[#151515] underline decoration-[#151515] underline-offset-2">
-            {group.title}
-          </h3>
-          <ul className="space-y-0 text-[0.7rem] leading-[1.3] text-[#111111]">
-            {group.items.map((item) => <li key={item}>{item}</li>)}
-          </ul>
+          <h3 className="mb-1 text-[0.84rem] font-medium text-[#151515] underline decoration-[#151515] underline-offset-2">{group.title}</h3>
+          <ul className="space-y-0 text-[0.7rem] leading-[1.3] text-[#111111]">{group.items.map((item) => <li key={item}>{item}</li>)}</ul>
         </div>
       ))}
     </div>
@@ -87,26 +84,12 @@ export function KihonSection() {
     <section id="kihon" aria-labelledby="kihon-section-title" className="relative overflow-hidden border-y border-[#cfc6b5] bg-[#e9e2d3] px-5 py-20 text-[#111111] md:px-10 md:py-28">
       <div className="mx-auto max-w-[1180px]">
         <div className="mb-10 flex flex-col gap-5 border-b border-[#cfc6b5] pb-7 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="mb-3 text-[0.62rem] font-bold uppercase tracking-[0.3em] text-[#9b3d18]">Dhanurveda · Karate fundamentals</p>
-            <h2 id="kihon-section-title" className="font-[var(--font-display)] text-6xl font-bold uppercase leading-[0.82] tracking-[-0.03em] md:text-8xl">Kihon</h2>
-          </div>
-          <a href="/karate/kihon" className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[#111111] underline underline-offset-4 hover:text-[#9b3d18]">
-            Open full reference →
-          </a>
+          <div><p className="mb-3 text-[0.62rem] font-bold uppercase tracking-[0.3em] text-[#9b3d18]">Dhanurveda · Karate fundamentals</p><h2 id="kihon-section-title" className="font-[var(--font-display)] text-6xl font-bold uppercase leading-[0.82] tracking-[-0.03em] md:text-8xl">Kihon</h2></div>
+          <a href="/karate/kihon/tachi" className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[#111111] underline underline-offset-4 hover:text-[#9b3d18]">Explore Tachi →</a>
         </div>
-
-        <p className="mx-auto max-w-[1120px] text-justify font-serif text-[0.92rem] leading-[1.22] md:text-[1rem]">
-          {intro}
-        </p>
-
-        <div className="mt-10 grid grid-cols-1 gap-x-7 gap-y-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-x-8">
-          {families.map((family) => <FamilyColumn key={family.id} family={family} />)}
-        </div>
-
-        <p className="mt-3 border-t border-[#cfc6b5] pt-3 font-serif text-[0.7rem] leading-[1.2] md:text-[0.76rem]">
-          *In actuality, kata preceded kihon. Kihon was developed as a means to facilitate the learning of movements of the kata, especially when teaching large groups of people.
-        </p>
+        <p className="mx-auto max-w-[1120px] text-justify font-serif text-[0.92rem] leading-[1.22] md:text-[1rem]">{intro}</p>
+        <div className="mt-10 grid grid-cols-1 gap-x-7 gap-y-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-x-8">{families.map((family) => <FamilyColumn key={family.id} family={family} />)}</div>
+        <p className="mt-3 border-t border-[#cfc6b5] pt-3 font-serif text-[0.7rem] leading-[1.2] md:text-[0.76rem]">*In actuality, kata preceded kihon. Kihon was developed as a means to facilitate the learning of movements of the kata, especially when teaching large groups of people.</p>
       </div>
     </section>
   );
