@@ -24,6 +24,7 @@ import { UkePage } from "@/components/site/UkePage";
 import { TsukiPage } from "@/components/site/TsukiPage";
 import { KeriPage } from "@/components/site/KeriPage";
 import { UchiPage } from "@/components/site/UchiPage";
+import { HeianShodanPage } from "@/components/site/HeianShodanPage";
 
 const slugify = (value: string) => decodeURIComponent(value).replace(/\.html$/i, "").replace(/^Kihon\s+0\d+\s*-\s*/i, "").replace(/^Kata\s+\d+\s*-\s*/i, "").replace(/^Kumite\s+0\d+\s*-\s*/i, "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 function referenceParts(pathname: string) { const parts = pathname.replace(/^\/karate\/?/, "").split("/").filter(Boolean); return parts.length >= 2 && ["kihon", "kata", "kumite"].includes(parts[0]) ? { kind: parts[0], slug: parts[1] } : null; }
@@ -36,6 +37,7 @@ export function App() {
   if (pathname === "/karate/kihon/tsuki" || pathname === "/karate/kihon/tsuki/") return <TsukiPage />;
   if (pathname === "/karate/kihon/keri" || pathname === "/karate/kihon/keri/") return <KeriPage />;
   if (pathname === "/karate/kihon/uchi" || pathname === "/karate/kihon/uchi/") return <UchiPage />;
+  if (pathname === "/karate/kata/heian-shodan" || pathname === "/karate/kata/heian-shodan/") return <HeianShodanPage />;
   if (reference) return <ReferencePage kind={reference.kind} slug={reference.slug} />;
   return <><Cursor /><div aria-hidden className="grain-overlay" /><Nav /><main><h1 className="sr-only">Dhanurveda — Martial Arts &amp; Calisthenics academy in Nagpada, Mumbai</h1><Hero /><TitleTransition /><DojoStatement /><Arts /><KihonSection /><KataSection /><OneStrike /><Calisthenics /><Belts /><Philosophy /><Timings /><Gallery /><Reviews /><FirstClass /><Trainers /><Location /><FinalCta /></main></>;
 }
