@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/karate/kihon/tachi",
+      "destination": "/karate/index.html"
+    },
+    {
+      "source": "/karate/kihon/tachi/",
+      "destination": "/karate/index.html"
+    }
+  ]
+}
