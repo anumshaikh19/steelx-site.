@@ -7,6 +7,8 @@
     { "source": "/karate/kihon/tsuki", "destination": "/karate/index.html" },
     { "source": "/karate/kihon/tsuki/", "destination": "/karate/index.html" },
     { "source": "/karate/kihon/keri", "destination": "/karate/index.html" },
-    { "source": "/karate/kihon/keri/", "destination": "/karate/index.html" }
+    { "source": "/karate/kihon/keri/", "destination": "/karate/index.html" },
+    { "source": "/karate/kihon/uchi", "destination": "/karate/index.html" },
+    { "source": "/karate/kihon/uchi/", "destination": "/karate/index.html" }
   ]
 }
