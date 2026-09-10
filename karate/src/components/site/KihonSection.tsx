@@ -2,96 +2,20 @@ type Group = { title: string; items: string[] };
 type Family = { id: string; label: string; sub: string; groups: Group[] };
 
 const families: Family[] = [
-  {
-    id: "tachi",
-    label: "TACHI",
-    sub: "STANCES",
-    groups: [
-      { title: "Outer Tension Stances", items: ["zenkutsu-dachi", "kokutsu-dachi", "kiba-dachi", "fudo-dachi (sochin)", "shiko-dachi"] },
-      { title: "Inner Tension Stances", items: ["hangetsu-dachi", "sanchin-dachi", "nekoashi-dachi"] },
-      { title: "Natural Stances", items: ["hachiji-dachi", "uchi-hachiji-dachi", "musubi-dachi", "heisoku-dachi", "renoji-dachi", "teinoji-dachi", "heiko-dachi"] },
-      { title: "Unstable Stances", items: ["ashi-dachi", "tsuru-dachi (sagiashi)", "kosa-dachi", "hizakutsu-dachi", "hiza-dachi"] },
-    ],
-  },
-  {
-    id: "uke",
-    label: "UKE",
-    sub: "BLOCKS",
-    groups: [
-      { title: "Basic Closed-Hand Blocks", items: ["age-uke", "soto-uke", "gedan-barai", "uchi-uke"] },
-      { title: "Open-Hand Blocks", items: ["shuto-uke", "tate shuto-uke", "kake-uke", "haishu-uke", "tsukami-uke (koko-uke)"] },
-      { title: "Advanced Blocks", items: ["haiwan-uke", "nagashi-uke", "osae-uke", "sukui-uke", "maki-otoshi-uke"] },
-      { title: "Double-Hand Blocks", items: ["morote-uke", "kosa-uke (juji-uke)", "kakewake-uke", "manji-uke", "bo-uke", "awase-uke", "hasami-uke", "oshi-uke"] },
-    ],
-  },
-  {
-    id: "tsuki",
-    label: "TSUKI",
-    sub: "PUNCHES",
-    groups: [
-      { title: "Basic Punches", items: ["choku-zuki", "oi-zuki", "gyaku-zuki", "kisami-zuki"] },
-      { title: "Advanced Punches", items: ["ura-zuki", "age-zuki", "kagi-zuki", "mawashi-zuki", "tate-zuki", "uke-zuki"] },
-      { title: "Double-Hand Punches", items: ["morote-zuki", "yama-zuki", "yumi-zuki", "awase-zuki", "heiko-zuki", "hasami-zuki"] },
-      { title: "Fore-Knuckle Punches", items: ["ippon-ken", "nakadaka-ippon-ken", "hiraken"] },
-      { title: "Spear-Hand", items: ["ippon-nukite", "nihon-nukite", "tate-nukite (shihon-nukite)", "hira-nukite (hon-nukite)"] },
-    ],
-  },
-  {
-    id: "keri",
-    label: "KERI",
-    sub: "KICKS",
-    groups: [
-      { title: "Basic Kicks", items: ["mae-geri", "yoko-geri-keage", "yoko-geri-kekomi", "mawashi-geri"] },
-      { title: "Advanced Kicks", items: ["ushiro-geri", "ura-mawashi-geri", "mikazuki-geri", "tobi-geri"] },
-      { title: "Advanced Leg Attacks", items: ["fumikomi", "ashi-barai", "ashi-namigaeshi"] },
-      { title: "Non-Traditional Kicks", items: ["ushiro-ura-mawashi-geri", "ura-mikazuki-geri", "kagi-geri", "otoshi-kakato-geri", "tsumasaki-geri", "sune-geri", "kin-geri", "naname-geri"] },
-    ],
-  },
-  {
-    id: "uchi",
-    label: "UCHI",
-    sub: "STRIKES",
-    groups: [
-      { title: "Roundhouse Strikes", items: ["kentsui-uchi", "uraken-uchi", "shuto-uchi", "haito-uchi", "teisho"] },
-      { title: "Animal Strikes", items: ["keito", "seiryuto", "kakuto", "kumade", "washide"] },
-      { title: "Smashing Techniques", items: ["empi-uchi (empi-ate)", "hiza-tsuchi (hiza-ate)"] },
-    ],
-  },
+  { id: "tachi", label: "TACHI", sub: "STANCES", groups: [{ title: "Outer Tension Stances", items: ["zenkutsu-dachi", "kokutsu-dachi", "kiba-dachi", "fudo-dachi (sochin)", "shiko-dachi"] }, { title: "Inner Tension Stances", items: ["hangetsu-dachi", "sanchin-dachi", "nekoashi-dachi"] }, { title: "Natural Stances", items: ["hachiji-dachi", "uchi-hachiji-dachi", "musubi-dachi", "heisoku-dachi", "renoji-dachi", "teinoji-dachi", "heiko-dachi"] }, { title: "Unstable Stances", items: ["ashi-dachi", "tsuru-dachi (sagiashi)", "kosa-dachi", "hizakutsu-dachi", "hiza-dachi"] }] },
+  { id: "uke", label: "UKE", sub: "BLOCKS", groups: [{ title: "Basic Closed-Hand Blocks", items: ["age-uke", "soto-uke", "gedan-barai", "uchi-uke"] }, { title: "Open-Hand Blocks", items: ["shuto-uke", "tate shuto-uke", "kake-uke", "haishu-uke", "tsukami-uke (koko-uke)"] }, { title: "Advanced Blocks", items: ["haiwan-uke", "nagashi-uke", "osae-uke", "sukui-uke", "maki-otoshi-uke"] }, { title: "Double-Hand Blocks", items: ["morote-uke", "kosa-uke (juji-uke)", "kakewake-uke", "manji-uke", "bo-uke", "awase-uke", "hasami-uke", "oshi-uke"] }] },
+  { id: "tsuki", label: "TSUKI", sub: "PUNCHES", groups: [{ title: "Basic Punches", items: ["choku-zuki", "oi-zuki", "gyaku-zuki", "kisami-zuki"] }, { title: "Advanced Punches", items: ["ura-zuki", "age-zuki (tsukiage)", "kage-zuki", "mawashi-zuki", "tate-zuki", "uke-zuki"] }, { title: "Double-Hand Punches", items: ["morote-zuki", "yama-zuki", "yumi-zuki", "awase-zuki", "heiko-zuki", "hasami-zuki"] }, { title: "Fore-Knuckle Punches", items: ["ippon-ken", "nakadaka-ippon-ken", "hiraken"] }, { title: "Spear-Hand", items: ["ippon-nukite", "nihon-nukite", "tate-nukite (shihon-nukite)", "hira-nukite (shihon-nukite)"] }] },
+  { id: "keri", label: "KERI", sub: "KICKS", groups: [{ title: "Basic Kicks", items: ["mae-geri", "yoko-geri-keage", "yoko-geri-kekomi", "mawashi-geri"] }, { title: "Advanced Kicks", items: ["ushiro-geri", "ura-mawashi-geri", "mikazuki-geri", "tobi-geri"] }, { title: "Advanced Leg Attacks", items: ["fumikomi", "ashi-barai", "ashi-namigaeshi"] }, { title: "Non-Traditional Kicks", items: ["ushiro-ura-mawashi-geri", "ura-mikazuki-geri", "kagi-geri", "otoshi-kakato-geri", "tsumasaki-geri", "sune-geri", "kin-geri", "naname-geri"] }] },
+  { id: "uchi", label: "UCHI", sub: "STRIKES", groups: [{ title: "Roundhouse Strikes", items: ["kentsui-uchi", "uraken-uchi", "shuto-uchi", "haito-uchi", "teisho"] }, { title: "Animal Strikes", items: ["keito", "seiryuto", "kakuto", "kumade", "washide"] }, { title: "Smashing Techniques", items: ["empi-uchi (empi-ate)", "hiza-tsuchi (hiza-ate)"] }] },
 ];
 
 const intro = `Kihon means "basics," or "fundamentals." It is the term used to describe the practice and repetition of the basic techniques of karate. Kihon can be performed with footwork or from a stationary position. It can be performed individually or in large groups. Kihon can be considered as the alphabet of karate. By organizing various kihon techniques into sequences, kata are created*. When learning how to apply kihon techniques to another person, kumite is born. Since kihon is vital to the development of proper karate technique, Shotokan students spend a great deal of time trying to perfect it. Improve your kihon skills, and all other aspects of karate improve automatically. Kihon can be divided into 5 categories:`;
 
 function FamilyColumn({ family }: { family: Family }) {
-  const dedicated = family.id === "tachi" || family.id === "uke";
-  return (
-    <div id={`kihon-${family.id}`} className="min-w-0">
-      <a href={dedicated ? `/karate/kihon/${family.id}` : `#kihon-${family.id}`} className="group inline-flex items-center gap-2 text-[1.02rem] font-normal uppercase text-[#9b3d18] underline decoration-[#9b3d18] underline-offset-2">
-        {family.label}
-        {dedicated && <span aria-hidden className="text-[0.8rem] no-underline transition-transform group-hover:translate-x-1">↗</span>}
-      </a>
-      <div className="mb-4 text-[0.68rem] uppercase leading-none text-[#111111]">({family.sub})</div>
-      {family.groups.map((group) => (
-        <div key={group.title} className="mb-7">
-          <h3 className="mb-1 text-[0.84rem] font-medium text-[#151515] underline decoration-[#151515] underline-offset-2">{group.title}</h3>
-          <ul className="space-y-0 text-[0.7rem] leading-[1.3] text-[#111111]">{group.items.map((item) => <li key={item}>{item}</li>)}</ul>
-        </div>
-      ))}
-    </div>
-  );
+  const dedicated = ["tachi", "uke", "tsuki"].includes(family.id);
+  return <div id={`kihon-${family.id}`} className="min-w-0"><a href={dedicated ? `/karate/kihon/${family.id}` : `#kihon-${family.id}`} className="group inline-flex items-center gap-2 text-[1.02rem] font-normal uppercase text-[#9b3d18] underline decoration-[#9b3d18] underline-offset-2">{family.label}{dedicated && <span aria-hidden className="text-[0.8rem] no-underline transition-transform group-hover:translate-x-1">↗</span>}</a><div className="mb-4 text-[0.68rem] uppercase leading-none text-[#111111]">({family.sub})</div>{family.groups.map(group => <div key={group.title} className="mb-7"><h3 className="mb-1 text-[0.84rem] font-medium text-[#151515] underline decoration-[#151515] underline-offset-2">{group.title}</h3><ul className="space-y-0 text-[0.7rem] leading-[1.3] text-[#111111]">{group.items.map(item => <li key={item}>{item}</li>)}</ul></div>)}</div>;
 }
 
 export function KihonSection() {
-  return (
-    <section id="kihon" aria-labelledby="kihon-section-title" className="relative overflow-hidden border-y border-[#cfc6b5] bg-[#e9e2d3] px-5 py-20 text-[#111111] md:px-10 md:py-28">
-      <div className="mx-auto max-w-[1180px]">
-        <div className="mb-10 flex flex-col gap-5 border-b border-[#cfc6b5] pb-7 md:flex-row md:items-end md:justify-between">
-          <div><p className="mb-3 text-[0.62rem] font-bold uppercase tracking-[0.3em] text-[#9b3d18]">Dhanurveda · Karate fundamentals</p><h2 id="kihon-section-title" className="font-[var(--font-display)] text-6xl font-bold uppercase leading-[0.82] tracking-[-0.03em] md:text-8xl">Kihon</h2></div>
-          <a href="/karate/kihon/tachi" className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[#111111] underline underline-offset-4 hover:text-[#9b3d18]">Explore Tachi →</a>
-        </div>
-        <p className="mx-auto max-w-[1120px] text-justify font-serif text-[0.92rem] leading-[1.22] md:text-[1rem]">{intro}</p>
-        <div className="mt-10 grid grid-cols-1 gap-x-7 gap-y-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-x-8">{families.map((family) => <FamilyColumn key={family.id} family={family} />)}</div>
-        <p className="mt-3 border-t border-[#cfc6b5] pt-3 font-serif text-[0.7rem] leading-[1.2] md:text-[0.76rem]">*In actuality, kata preceded kihon. Kihon was developed as a means to facilitate the learning of movements of the kata, especially when teaching large groups of people.</p>
-      </div>
-    </section>
-  );
+  return <section id="kihon" aria-labelledby="kihon-section-title" className="relative overflow-hidden border-y border-[#cfc6b5] bg-[#e9e2d3] px-5 py-20 text-[#111111] md:px-10 md:py-28"><div className="mx-auto max-w-[1180px]"><div className="mb-10 flex flex-col gap-5 border-b border-[#cfc6b5] pb-7 md:flex-row md:items-end md:justify-between"><div><p className="mb-3 text-[0.62rem] font-bold uppercase tracking-[0.3em] text-[#9b3d18]">Dhanurveda · Karate fundamentals</p><h2 id="kihon-section-title" className="font-[var(--font-display)] text-6xl font-bold uppercase leading-[0.82] tracking-[-0.03em] md:text-8xl">Kihon</h2></div><a href="/karate/kihon/tachi" className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[#111111] underline underline-offset-4 hover:text-[#9b3d18]">Explore Tachi →</a></div><p className="mx-auto max-w-[1120px] text-justify font-serif text-[0.92rem] leading-[1.22] md:text-[1rem]">{intro}</p><div className="mt-10 grid grid-cols-1 gap-x-7 gap-y-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-x-8">{families.map(family => <FamilyColumn key={family.id} family={family} />)}</div><p className="mt-3 border-t border-[#cfc6b5] pt-3 font-serif text-[0.7rem] leading-[1.2] md:text-[0.76rem]">*In actuality, kata preceded kihon. Kihon was developed as a means to facilitate the learning of movements of the kata, especially when teaching large groups of people.</p></div></section>;
 }
