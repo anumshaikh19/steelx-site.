@@ -22,6 +22,7 @@ import { TachiPage } from "@/components/site/TachiPage";
 import { UkePage } from "@/components/site/UkePage";
 import { TsukiPage } from "@/components/site/TsukiPage";
 import { KeriPage } from "@/components/site/KeriPage";
+import { UchiPage } from "@/components/site/UchiPage";
 
 const slugify = (value: string) => decodeURIComponent(value).replace(/\.html$/i, "").replace(/^Kihon\s+0\d+\s*-\s*/i, "").replace(/^Kata\s+\d+\s*-\s*/i, "").replace(/^Kumite\s+0\d+\s*-\s*/i, "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
@@ -60,6 +61,7 @@ export function App() {
   if (pathname === "/karate/kihon/uke" || pathname === "/karate/kihon/uke/") return <UkePage />;
   if (pathname === "/karate/kihon/tsuki" || pathname === "/karate/kihon/tsuki/") return <TsukiPage />;
   if (pathname === "/karate/kihon/keri" || pathname === "/karate/kihon/keri/") return <KeriPage />;
+  if (pathname === "/karate/kihon/uchi" || pathname === "/karate/kihon/uchi/") return <UchiPage />;
   if (reference) return <ReferencePage kind={reference.kind} slug={reference.slug} />;
 
   return (
