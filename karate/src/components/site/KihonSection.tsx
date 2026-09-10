@@ -62,11 +62,12 @@ const families: Family[] = [
 const intro = `Kihon means "basics," or "fundamentals." It is the term used to describe the practice and repetition of the basic techniques of karate. Kihon can be performed with footwork or from a stationary position. It can be performed individually or in large groups. Kihon can be considered as the alphabet of karate. By organizing various kihon techniques into sequences, kata are created*. When learning how to apply kihon techniques to another person, kumite is born. Since kihon is vital to the development of proper karate technique, Shotokan students spend a great deal of time trying to perfect it. Improve your kihon skills, and all other aspects of karate improve automatically. Kihon can be divided into 5 categories:`;
 
 function FamilyColumn({ family }: { family: Family }) {
+  const dedicated = family.id === "tachi" || family.id === "uke";
   return (
     <div id={`kihon-${family.id}`} className="min-w-0">
-      <a href={family.id === "tachi" ? "/karate/kihon/tachi" : `#kihon-${family.id}`} className="group inline-flex items-center gap-2 text-[1.02rem] font-normal uppercase text-[#9b3d18] underline decoration-[#9b3d18] underline-offset-2">
+      <a href={dedicated ? `/karate/kihon/${family.id}` : `#kihon-${family.id}`} className="group inline-flex items-center gap-2 text-[1.02rem] font-normal uppercase text-[#9b3d18] underline decoration-[#9b3d18] underline-offset-2">
         {family.label}
-        {family.id === "tachi" && <span aria-hidden className="text-[0.8rem] no-underline transition-transform group-hover:translate-x-1">↗</span>}
+        {dedicated && <span aria-hidden className="text-[0.8rem] no-underline transition-transform group-hover:translate-x-1">↗</span>}
       </a>
       <div className="mb-4 text-[0.68rem] uppercase leading-none text-[#111111]">({family.sub})</div>
       {family.groups.map((group) => (
