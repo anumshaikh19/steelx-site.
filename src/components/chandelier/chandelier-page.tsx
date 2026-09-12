@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { ArrowDownRight, ArrowUpRight, Menu, Search, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { WebGLChandelier } from "@/components/chandelier/webgl-chandelier";
 
 const CATEGORIES = [
   ["01", "Chandeliers", "Sculptural forms for extraordinary spaces."],
@@ -46,140 +47,6 @@ function useScrollProgress(ref: RefObject<HTMLElement | null>) {
   return progress;
 }
 
-function WebGLLightField({ progress }: { progress: number }) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const gl = canvas.getContext("webgl", { antialias: true, alpha: true });
-    if (!gl) return;
-
-    const vertex = `
-      attribute vec2 aPosition;
-      attribute float aSize;
-      attribute float aPhase;
-      uniform float uTime;
-      uniform float uProgress;
-      varying float vGlow;
-      void main(){
-        float drift = sin(uTime * .16 + aPhase) * .018;
-        vec2 p = aPosition;
-        p.y += drift;
-        p.y += uProgress * .08;
-        gl_Position = vec4(p, 0.0, 1.0);
-        gl_PointSize = aSize * (1.0 + sin(uTime*.3 + aPhase)*.06);
-        vGlow = .55 + .45*sin(uTime*.4 + aPhase);
-      }
-    `;
-    const fragment = `
-      precision mediump float;
-      varying float vGlow;
-      void main(){
-        vec2 uv = gl_PointCoord - .5;
-        float d = length(uv);
-        float a = smoothstep(.5, .0, d);
-        vec3 warm = vec3(1.0, .67, .35);
-        gl_FragColor = vec4(warm, a * .48 * vGlow);
-      }
-    `;
-    const compile = (type: number, source: string) => {
-      const shader = gl.createShader(type)!;
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      return shader;
-    };
-    const program = gl.createProgram()!;
-    gl.attachShader(program, compile(gl.VERTEX_SHADER, vertex));
-    gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fragment));
-    gl.linkProgram(program);
-    gl.useProgram(program);
-
-    const count = 80;
-    const positions = new Float32Array(count * 2);
-    const sizes = new Float32Array(count);
-    const phases = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
-      const angle = (i / count) * Math.PI * 2;
-      const radius = .2 + (i % 13) * .025;
-      positions[i * 2] = Math.cos(angle * 2.3) * radius + (Math.random() - .5) * .18;
-      positions[i * 2 + 1] = Math.sin(angle) * radius * .7 + (Math.random() - .5) * .24;
-      sizes[i] = 2.5 + Math.random() * 7;
-      phases[i] = Math.random() * Math.PI * 2;
-    }
-    const makeBuffer = (data: Float32Array) => {
-      const b = gl.createBuffer()!;
-      gl.bindBuffer(gl.ARRAY_BUFFER, b);
-      gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-      return b;
-    };
-    const positionBuffer = makeBuffer(positions);
-    const sizeBuffer = makeBuffer(sizes);
-    const phaseBuffer = makeBuffer(phases);
-    const aPosition = gl.getAttribLocation(program, "aPosition");
-    const aSize = gl.getAttribLocation(program, "aSize");
-    const aPhase = gl.getAttribLocation(program, "aPhase");
-    const uTime = gl.getUniformLocation(program, "uTime");
-    const uProgress = gl.getUniformLocation(program, "uProgress");
-
-    let raf = 0;
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.7);
-      canvas.width = Math.floor(canvas.clientWidth * dpr);
-      canvas.height = Math.floor(canvas.clientHeight * dpr);
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    };
-    resize();
-    window.addEventListener("resize", resize);
-    const start = performance.now();
-    const frame = (now: number) => {
-      gl.clearColor(0.02, 0.02, 0.018, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.enable(gl.BLEND);
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-      gl.useProgram(program);
-      gl.uniform1f(uTime, (now - start) / 1000);
-      gl.uniform1f(uProgress, progress);
-      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-      gl.enableVertexAttribArray(aPosition);
-      gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
-      gl.bindBuffer(gl.ARRAY_BUFFER, sizeBuffer);
-      gl.enableVertexAttribArray(aSize);
-      gl.vertexAttribPointer(aSize, 1, gl.FLOAT, false, 0, 0);
-      gl.bindBuffer(gl.ARRAY_BUFFER, phaseBuffer);
-      gl.enableVertexAttribArray(aPhase);
-      gl.vertexAttribPointer(aPhase, 1, gl.FLOAT, false, 0, 0);
-      gl.drawArrays(gl.POINTS, 0, count);
-      raf = requestAnimationFrame(frame);
-    };
-    raf = requestAnimationFrame(frame);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
-      gl.deleteProgram(program);
-      gl.deleteBuffer(positionBuffer);
-      gl.deleteBuffer(sizeBuffer);
-      gl.deleteBuffer(phaseBuffer);
-    };
-  }, [progress]);
-  return <canvas ref={canvasRef} className="absolute inset-0 h-full w-full opacity-70" aria-hidden="true" />;
-}
-
-function Chandelier({ progress, mouse }: { progress: number; mouse: { x: number; y: number } }) {
-  const elements = [[0, 0, 0], [18, 13, 18], [-18, 13, -18], [36, 27, 36], [-36, 27, -36], [54, 40, 54], [-54, 40, -54], [0, 47, 0]];
-  return <div className="absolute left-1/2 top-[49%] h-[min(64vw,560px)] w-[min(72vw,760px)] -translate-x-1/2 -translate-y-1/2 [perspective:1100px]" style={{ transform: `translate3d(calc(-50% + ${mouse.x * 12}px), calc(-50% + ${mouse.y * 8}px), 0) rotateX(${mouse.y * -3}deg) rotateY(${mouse.x * 5}deg) scale(${1 + progress * 0.55})` }}>
-    <div className="absolute left-1/2 top-[8%] h-[84%] w-px -translate-x-1/2 bg-gradient-to-b from-[#7e6848]/0 via-[#a78655]/80 to-[#7e6848]/0" />
-    {elements.map(([x, y, z], i) => {
-      const separation = Math.max(0, (progress - .42) / .58);
-      const dx = x * (1 + separation * 3.8);
-      const dy = y + separation * (i % 2 ? 75 : -65);
-      const rotate = (i - 3.5) * separation * 9;
-      return <div key={i} className="absolute left-1/2 top-1/2 origin-top" style={{ transform: `translate3d(${dx}px, ${dy}px, ${z * separation}px) rotate(${rotate}deg) translate(-50%, -50%)` }}><div className="h-24 w-px bg-gradient-to-b from-[#a78655]/0 via-[#b99a67] to-[#a78655]/0 sm:h-32" /><div className="absolute -bottom-3 left-1/2 h-7 w-7 -translate-x-1/2 rounded-full bg-[#ffe2a8] shadow-[0_0_26px_10px_rgba(255,226,168,.22),0_0_7px_2px_rgba(255,236,196,.9)] sm:h-9 sm:w-9" /><div className="absolute -bottom-5 left-1/2 h-12 w-12 -translate-x-1/2 rounded-full bg-[#ffe2a8]/10 blur-md" /></div>;
-    })}
-    <div className="absolute left-1/2 top-[15%] h-24 w-24 -translate-x-1/2 rounded-full border border-[#a78655]/70 bg-[#201d18]/80 shadow-[0_0_70px_rgba(255,226,168,.08)]" />
-    <div className="absolute left-1/2 top-[20%] h-px w-[62%] -translate-x-1/2 bg-gradient-to-r from-transparent via-[#a78655] to-transparent" />
-  </div>;
-}
-
 function CustomCursor() {
   const [pos, setPos] = useState({ x: -100, y: -100 });
   const [active, setActive] = useState(false);
@@ -208,11 +75,9 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
 function Hero({ reduced }: { reduced: boolean }) {
   const ref = useRef<HTMLElement | null>(null);
   const progress = useScrollProgress(ref);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [ready, setReady] = useState(false);
   useEffect(() => { const t = window.setTimeout(() => setReady(true), reduced ? 0 : 900); return () => window.clearTimeout(t); }, [reduced]);
-  useEffect(() => { if (reduced) return; const move = (e: MouseEvent) => setMouse({ x: (e.clientX / window.innerWidth - .5), y: (e.clientY / window.innerHeight - .5) }); window.addEventListener("mousemove", move); return () => window.removeEventListener("mousemove", move); }, [reduced]);
-  return <section ref={ref} className="relative h-[230vh] bg-[#0B0B0A]" aria-label="Immersive lighting introduction"><div className="sticky top-0 h-screen overflow-hidden"><WebGLLightField progress={progress} /><div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 45%, rgba(255,226,168,.075), transparent 26%), radial-gradient(circle at 50% 90%, rgba(167,134,85,.08), transparent 38%)" }} /><div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0B0B0A] to-transparent" /><div className="absolute left-6 top-1/2 z-10 hidden -translate-y-1/2 text-[8px] uppercase tracking-[.35em] text-white/35 md:block [writing-mode:vertical-rl]">LIGHT ↓ EXPLORE</div><div className={`absolute left-1/2 top-[18%] z-20 -translate-x-1/2 text-center transition-opacity duration-[1800ms] ${ready ? "opacity-100" : "opacity-0"}`}><p className="text-[9px] uppercase tracking-[.42em] text-[#A78655]">A digital flagship experience</p><h1 className="mt-5 max-w-[900px] font-serif text-[clamp(2.8rem,7vw,7.5rem)] leading-[.9] text-[#F2EEE6]">Light is not placed.<br /><em className="font-normal text-[#FFE2A8]">It transforms.</em></h1></div><Chandelier progress={progress} mouse={mouse} /><div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-4 text-[8px] uppercase tracking-[.3em] text-white/40"><span className="h-10 w-px bg-gradient-to-b from-[#A78655] to-transparent" /> Explore the object</div><div className="absolute bottom-10 right-6 z-20 hidden max-w-[190px] text-right text-[10px] leading-relaxed text-white/35 md:block">Scroll forward to enter the chandelier. The object becomes the collection.</div></div></section>;
+  return <section ref={ref} className="relative h-[230vh] bg-[#0B0B0A]" aria-label="Immersive lighting introduction"><div className="sticky top-0 h-screen overflow-hidden"><div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(255,226,168,.075),transparent_26%),radial-gradient(circle_at_50%_90%,rgba(167,134,85,.08),transparent_38%)]" /><div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0B0B0A] to-transparent" /><div className="absolute inset-0 z-[1] opacity-70" style={{ background: "radial-gradient(circle at 50% 45%, rgba(255,226,168,.05), transparent 34%)" }} /><div className="absolute inset-0 z-[2] pointer-events-none"><WebGLChandelier lightsOn={true} /></div><div className={`absolute left-1/2 top-[18%] z-20 -translate-x-1/2 text-center transition-opacity duration-[1800ms] ${ready ? "opacity-100" : "opacity-0"}`}><p className="text-[9px] uppercase tracking-[.42em] text-[#A78655]">A digital flagship experience</p><h1 className="mt-5 max-w-[900px] font-serif text-[clamp(2.8rem,7vw,7.5rem)] leading-[.9] text-[#F2EEE6]">Light is not placed.<br /><em className="font-normal text-[#FFE2A8]">It transforms.</em></h1></div><div className="absolute left-6 top-1/2 z-20 hidden -translate-y-1/2 text-[8px] uppercase tracking-[.35em] text-white/35 md:block [writing-mode:vertical-rl]">LIGHT ↓ EXPLORE</div><div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-4 text-[8px] uppercase tracking-[.3em] text-white/40"><span className="h-10 w-px bg-gradient-to-b from-[#A78655] to-transparent" /> Explore the object</div><div className="absolute bottom-10 right-6 z-20 hidden max-w-[190px] text-right text-[10px] leading-relaxed text-white/35 md:block">Scroll forward to enter the chandelier. The object becomes the collection.</div><div className="absolute bottom-10 left-6 z-20 max-w-[260px] text-[9px] uppercase tracking-[.24em] text-white/35">The chandelier physically rotates with your cursor.</div></div></section>;
 }
 
 function Philosophy() { return <section id="philosophy" className="relative overflow-hidden bg-[#F2EEE6] px-6 py-32 text-[#191817] sm:px-10 lg:px-16 lg:py-48"><div className="mx-auto grid max-w-[1400px] gap-20 lg:grid-cols-[1.1fr_.9fr] lg:items-center"><div><p className="text-[9px] uppercase tracking-[.32em] text-[#A78655]">02 — Philosophy</p><h2 className="mt-8 max-w-4xl font-serif text-[clamp(3.4rem,7vw,8rem)] leading-[.86] tracking-[-.035em]">More than light.<br /><em className="font-normal">A form of space.</em></h2></div><div className="max-w-md lg:pt-32"><p className="text-lg leading-relaxed text-[#4f4a43]">Every piece is conceived to alter the atmosphere, rhythm and character of a space. Light is the material; architecture is the canvas.</p><div className="mt-14 h-px w-24 bg-[#A78655]" /></div></div><div className="pointer-events-none absolute -right-24 top-1/4 h-[500px] w-[500px] rounded-full border border-[#B8AA99]/45" /><div className="pointer-events-none absolute -right-10 top-[28%] h-[350px] w-[350px] rounded-full bg-[#D7CEC1]/55 blur-3xl" /></section>; }
