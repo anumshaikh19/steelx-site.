@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Movement = [string, string, string, string, string, string];
@@ -6,7 +7,7 @@ type Props = {
   title: string;
   number: string;
   series: string;
-  intro: React.ReactNode;
+  intro: ReactNode;
   movements: Movement[];
   previous: [string, string];
   next: [string, string];
