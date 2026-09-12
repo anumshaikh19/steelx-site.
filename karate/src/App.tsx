@@ -18,6 +18,7 @@ import { Location } from "@/components/site/Location";
 import { FinalCta } from "@/components/site/FinalCta";
 import { KihonSection } from "@/components/site/KihonSection";
 import { KataSection } from "@/components/site/KataSection";
+import { KumiteSection } from "@/components/site/KumiteSection";
 import { ReferencePage } from "@/components/site/ReferencePage";
 import { TachiPage } from "@/components/site/TachiPage";
 import { UkePage } from "@/components/site/UkePage";
@@ -55,7 +56,7 @@ import { TaikyokuNidanPage } from "@/components/site/TaikyokuNidanPage";
 import { TaikyokuSandanPage } from "@/components/site/TaikyokuSandanPage";
 import { TenNoKataPage } from "@/components/site/TenNoKataPage";
 
-const slugify = (value: string) => decodeURIComponent(value).replace(/\.html$/i, "").replace(/^Kihon\s+0\d+\s*-\s*/i, "").replace(/^Kata\s+\d+\s*-\s*/i, "").replace(/^Kumite\s+0\d+\s*-\s*/i, "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const slugify = (value: string) => decodeURIComponent(value).replace(/\.html$/i, "").replace(/^Kihon\s+0\d+\s*-\s*/i, "").replace(/^Kata\s+\d+\s*-\s*/i, "").replace(/^Kumite\s+0\d+\s*-\s*/i, "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "-");
 function referenceParts(pathname: string) { const parts = pathname.replace(/^\/karate\/?/, "").split("/").filter(Boolean); return parts.length >= 2 && ["kihon", "kata", "kumite"].includes(parts[0]) ? { kind: parts[0], slug: parts[1] } : null; }
 export function App() {
   const [pathname, setPathname] = useState(() => typeof window === "undefined" ? "/karate/" : window.location.pathname);
@@ -97,5 +98,5 @@ export function App() {
   if (pathname === "/karate/kata/taikyoku-sandan" || pathname === "/karate/kata/taikyoku-sandan/") return <TaikyokuSandanPage />;
   if (pathname === "/karate/kata/ten-no-kata" || pathname === "/karate/kata/ten-no-kata/") return <TenNoKataPage />;
   if (reference) return <ReferencePage kind={reference.kind} slug={reference.slug} />;
-  return <><Cursor /><div aria-hidden className="grain-overlay" /><Nav /><main><h1 className="sr-only">Dhanurveda — Martial Arts &amp; Calisthenics academy in Nagpada, Mumbai</h1><Hero /><TitleTransition /><DojoStatement /><Arts /><KihonSection /><KataSection /><OneStrike /><Calisthenics /><Belts /><Philosophy /><Timings /><Gallery /><Reviews /><FirstClass /><Trainers /><Location /><FinalCta /></main></>;
+  return <><Cursor /><div aria-hidden className="grain-overlay" /><Nav /><main><h1 className="sr-only">Dhanurveda — Martial Arts &amp; Calisthenics academy in Nagpada, Mumbai</h1><Hero /><TitleTransition /><DojoStatement /><Arts /><KihonSection /><KataSection /><KumiteSection /><OneStrike /><Calisthenics /><Belts /><Philosophy /><Timings /><Gallery /><Reviews /><FirstClass /><Trainers /><Location /><FinalCta /></main></>;
 }
