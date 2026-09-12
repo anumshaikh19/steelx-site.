@@ -35,8 +35,6 @@ function makeMetal(materialColor = 0x9c8060) {
 
 export function WebGLChandelier({ lightsOn }: WebGLChandelierProps) {
   const mountRef = useRef<HTMLDivElement>(null);
-  const lightsRef = useRef<THREE.PointLight[]>([]);
-  const glowRef = useRef<THREE.Sprite[]>([]);
   const targetLight = useRef(lightsOn ? 1 : 0);
 
   useEffect(() => {
@@ -93,7 +91,6 @@ export function WebGLChandelier({ lightsOn }: WebGLChandelierProps) {
     root.add(canopy);
 
     const glowTexture = createGlowTexture();
-    const bulbs: THREE.Object3D[] = [];
     const pointLights: THREE.PointLight[] = [];
     const glows: THREE.Sprite[] = [];
 
@@ -102,7 +99,6 @@ export function WebGLChandelier({ lightsOn }: WebGLChandelierProps) {
       bulb.position.set(x, y, z);
       bulb.scale.y = 1.35;
       root.add(bulb);
-      bulbs.push(bulb);
 
       const light = new THREE.PointLight(0xffd28a, 0, 2.5, 1.65);
       light.position.copy(bulb.position);
@@ -168,9 +164,6 @@ export function WebGLChandelier({ lightsOn }: WebGLChandelierProps) {
     floor.position.z = -0.2;
     scene.add(floor);
 
-    lightsRef.current = pointLights;
-    glowRef.current = glows;
-
     const pointer = new THREE.Vector2(0, 0);
     const targetRotation = new THREE.Vector2(0, 0);
     let raf = 0;
@@ -216,14 +209,14 @@ export function WebGLChandelier({ lightsOn }: WebGLChandelierProps) {
       raf = requestAnimationFrame(animate);
     };
 
-    mount.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("resize", resize);
     resize();
     animate();
 
     return () => {
       cancelAnimationFrame(raf);
-      mount.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("resize", resize);
       renderer.dispose();
       glowTexture.dispose();
@@ -235,8 +228,6 @@ export function WebGLChandelier({ lightsOn }: WebGLChandelierProps) {
         }
       });
       mount.removeChild(renderer.domElement);
-      lightsRef.current = [];
-      glowRef.current = [];
     };
   }, []);
 
