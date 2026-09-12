@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>CHANDELIER — STEELX</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; }
+      body {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: #0b0c0d;
+        color: #f3f1eb;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .wrap {
+        width: min(1200px, 100%);
+        min-height: 100vh;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255,255,255,.14);
+        padding-bottom: 18px;
+      }
+      .brand, .back {
+        color: #f3f1eb;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: .22em;
+        font-size: 11px;
+      }
+      .back { color: #c8a96b; }
+      main { padding: 12vh 0; }
+      .eyebrow {
+        margin: 0 0 22px;
+        color: #c8a96b;
+        text-transform: uppercase;
+        letter-spacing: .4em;
+        font-size: 11px;
+      }
+      h1 {
+        margin: 0;
+        max-width: 1000px;
+        font-size: clamp(4rem, 13vw, 11rem);
+        line-height: .82;
+        letter-spacing: -.06em;
+        font-weight: 600;
+      }
+      .line { color: #c8a96b; }
+      p {
+        max-width: 620px;
+        margin: 34px 0 0;
+        color: rgba(243,241,235,.62);
+        font-size: 16px;
+        line-height: 1.7;
+      }
+      footer {
+        border-top: 1px solid rgba(255,255,255,.14);
+        padding-top: 18px;
+        color: rgba(243,241,235,.42);
+        text-transform: uppercase;
+        letter-spacing: .2em;
+        font-size: 9px;
+      }
+      @media (max-width: 640px) {
+        .wrap { padding: 24px; }
+        main { padding: 8vh 0; }
+        h1 { font-size: clamp(4rem, 20vw, 7rem); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="top">
+        <a class="brand" href="/">STEELX</a>
+        <a class="back" href="/">← Home</a>
+      </div>
+      <main>
+        <p class="eyebrow">New section</p>
+        <h1>CHANDELIER<span class="line">.</span></h1>
+        <p>
+          A dedicated space for chandelier and lighting work. This section is ready for the
+          upcoming collection, projects, specifications and visual content.
+        </p>
+      </main>
+      <footer>STEELX · Architectural metal surfaces</footer>
+    </div>
+  </body>
+</html>
