@@ -11,6 +11,8 @@
     { "source": "/karate/kihon/uchi", "destination": "/karate/index.html" },
     { "source": "/karate/kihon/uchi/", "destination": "/karate/index.html" },
     { "source": "/karate/kata/:slug", "destination": "/karate/index.html" },
-    { "source": "/karate/kata/:slug/", "destination": "/karate/index.html" }
+    { "source": "/karate/kata/:slug/", "destination": "/karate/index.html" },
+    { "source": "/karate/kumite/:slug", "destination": "/karate/index.html" },
+    { "source": "/karate/kumite/:slug/", "destination": "/karate/index.html" }
   ]
 }
