@@ -1,178 +1,28 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="noindex" />
-    <title>CHANDELIER — STEELX</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
-    <style>
-      :root { color-scheme: dark; --ink:#080808; --paper:#e9e5dc; --gold:#c8a96b; --muted:rgba(233,229,220,.58); }
-      * { box-sizing:border-box; }
-      html { scroll-behavior:smooth; background:var(--ink); }
-      body { margin:0; background:var(--ink); color:var(--paper); font-family:Manrope,Arial,sans-serif; overflow-x:hidden; }
-      a { color:inherit; text-decoration:none; }
-      .cursor { position:fixed; z-index:20; width:12px; height:12px; border:1px solid rgba(255,255,255,.7); border-radius:50%; pointer-events:none; transform:translate(-50%,-50%); mix-blend-mode:difference; transition:width .25s,height .25s,background .25s; }
-      .cursor.on { width:42px; height:42px; background:rgba(255,255,255,.08); }
-      .progress { position:fixed; left:0; top:0; height:2px; width:0; background:var(--gold); z-index:30; }
-      .hero { min-height:100svh; position:relative; overflow:hidden; isolation:isolate; background:radial-gradient(circle at 50% 42%,#26231e 0,#0b0b0b 42%,#050505 100%); }
-      .hero::before { content:""; position:absolute; inset:0; z-index:-2; background:linear-gradient(90deg,rgba(0,0,0,.8),transparent 42%,rgba(0,0,0,.42)), url('https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=2400&q=88') center/cover; opacity:.28; filter:saturate(.45) contrast(1.1); }
-      .hero::after { content:""; position:absolute; inset:0; z-index:-1; background:radial-gradient(circle at 50% 45%,transparent 0,rgba(0,0,0,.22) 40%,rgba(0,0,0,.8) 100%); pointer-events:none; }
-      nav { position:absolute; top:0; left:0; right:0; z-index:5; display:flex; justify-content:space-between; align-items:center; padding:28px 4vw; border-bottom:1px solid rgba(255,255,255,.11); }
-      .brand,.navlink,.meta,.kicker { font:300 10px/1 'DM Mono',monospace; letter-spacing:.2em; text-transform:uppercase; }
-      .navlink { color:var(--muted); }
-      .hero-copy { position:absolute; left:6vw; top:22%; z-index:4; max-width:570px; }
-      .kicker { color:var(--gold); margin-bottom:28px; }
-      h1 { margin:0; font-size:clamp(5rem,14vw,13.5rem); line-height:.78; letter-spacing:-.085em; font-weight:500; }
-      h1 span { display:block; color:transparent; -webkit-text-stroke:1px rgba(233,229,220,.58); }
-      .intro { margin:42px 0 0 2px; max-width:430px; color:var(--muted); font-size:14px; line-height:1.8; }
-      .hero-note { position:absolute; right:4vw; bottom:32px; z-index:4; display:flex; gap:22px; align-items:center; color:var(--muted); }
-      .hero-note::before { content:""; width:54px; height:1px; background:rgba(255,255,255,.35); }
-      #scene { position:absolute; inset:0; width:100%; height:100%; z-index:2; display:block; }
-      .section { position:relative; padding:15vw 7vw; background:#0a0a09; }
-      .section-head { display:grid; grid-template-columns:1fr 2fr; gap:8vw; align-items:end; margin-bottom:8vw; }
-      .section h2 { margin:0; font-size:clamp(3rem,7vw,8rem); line-height:.86; letter-spacing:-.07em; font-weight:400; }
-      .section-copy { max-width:520px; color:var(--muted); font-size:15px; line-height:1.9; }
-      .photo-grid { display:grid; grid-template-columns:1.35fr .8fr; gap:2vw; align-items:end; }
-      .photo { position:relative; overflow:hidden; background:#151515; }
-      .photo img { width:100%; height:100%; object-fit:cover; display:block; filter:saturate(.72) contrast(1.08); transition:transform 1.2s cubic-bezier(.2,.7,.2,1),filter 1.2s; }
-      .photo:hover img { transform:scale(1.035); filter:saturate(.95) contrast(1.08); }
-      .photo.large { height:min(72vw,760px); }
-      .photo.small { height:min(48vw,520px); margin-bottom:7vw; }
-      .caption { position:absolute; left:18px; bottom:18px; right:18px; display:flex; justify-content:space-between; font:300 9px/1.3 'DM Mono',monospace; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.78); text-shadow:0 1px 12px #000; }
-      .manifesto { min-height:90vh; display:flex; align-items:center; padding:10vw 7vw; background:linear-gradient(135deg,#10100f,#070707); }
-      .manifesto-inner { width:100%; display:grid; grid-template-columns:1fr 1fr; gap:10vw; align-items:center; }
-      .manifesto h3 { margin:0; font-size:clamp(3.5rem,8vw,9rem); line-height:.84; letter-spacing:-.08em; font-weight:400; }
-      .manifesto h3 em { color:var(--gold); font-style:normal; }
-      .specs { border-top:1px solid rgba(255,255,255,.14); }
-      .spec { display:flex; justify-content:space-between; gap:30px; padding:20px 0; border-bottom:1px solid rgba(255,255,255,.14); font-size:12px; }
-      .spec span:last-child { color:var(--muted); text-align:right; }
-      footer { padding:32px 4vw; display:flex; justify-content:space-between; color:rgba(255,255,255,.35); font:300 9px/1 'DM Mono',monospace; letter-spacing:.16em; text-transform:uppercase; border-top:1px solid rgba(255,255,255,.1); }
-      @media (max-width:800px) { .hero-copy { left:7vw; top:20%; } .hero-copy h1 { font-size:clamp(4.6rem,20vw,8rem); } .section-head,.photo-grid,.manifesto-inner { grid-template-columns:1fr; } .photo.large { height:105vw; } .photo.small { height:85vw; margin:0; } .manifesto { min-height:auto; padding:25vw 7vw; } .cursor { display:none; } }
-      @media (prefers-reduced-motion:reduce) { html{scroll-behavior:auto} .photo img{transition:none} }
-    </style>
-  </head>
-  <body>
-    <div class="progress" id="progress"></div>
-    <div class="cursor" id="cursor"></div>
-    <section class="hero" id="top">
-      <nav><a class="brand" href="/">STEELX</a><a class="navlink" href="#collection">The collection ↓</a></nav>
-      <canvas id="scene" aria-label="Interactive 3D chandelier"></canvas>
-      <div class="hero-copy">
-        <div class="kicker">Lighting / 001 — The suspended object</div>
-        <h1>LIGHT<br><span>TAKES</span><br>FORM.</h1>
-        <p class="intro">A sculptural chandelier conceived as architecture in the air. Move your cursor across the piece — the structure turns, the light breathes, and every reflection shifts with you.</p>
-      </div>
-      <div class="hero-note meta">Drag / Move / Discover</div>
-    </section>
-
-    <section class="section" id="collection">
-      <div class="section-head">
-        <h2>Objects<br>of light.</h2>
-        <p class="section-copy">SteelX treats lighting as a spatial material rather than a fixture. Precision metalwork, hand-finished surfaces and engineered illumination become one continuous architectural gesture.</p>
-      </div>
-      <div class="photo-grid">
-        <figure class="photo large"><img loading="lazy" src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=88" alt="Luxury architectural interior with sculptural lighting"><figcaption class="caption"><span>Residence / Mumbai</span><span>01</span></figcaption></figure>
-        <figure class="photo small"><img loading="lazy" src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=88" alt="Premium interior with statement lighting"><figcaption class="caption"><span>Atmosphere / Detail</span><span>02</span></figcaption></figure>
-      </div>
-    </section>
-
-    <section class="manifesto">
-      <div class="manifesto-inner">
-        <h3>Not a lamp.<br>A <em>presence.</em></h3>
-        <div class="specs">
-          <div class="spec"><span>Material</span><span>Brushed / polished metal</span></div>
-          <div class="spec"><span>Illumination</span><span>Warm architectural LED</span></div>
-          <div class="spec"><span>Fabrication</span><span>Made to measure</span></div>
-          <div class="spec"><span>Experience</span><span>Designed for the room</span></div>
-        </div>
-      </div>
-    </section>
-
-    <footer><span>STEELX — Architectural metal surfaces</span><a href="#top">Back to top ↑</a></footer>
-
-    <script type="module">
-      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
-
-      const canvas = document.querySelector('#scene');
-      const scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2(0x080808, 0.035);
-      const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, .1, 100);
-      camera.position.set(0, .4, 7.8);
-      const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-      renderer.setPixelRatio(Math.min(devicePixelRatio, 1.8));
-      renderer.setSize(innerWidth, innerHeight);
-      renderer.outputColorSpace = THREE.SRGBColorSpace;
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.35;
-
-      const chandelier = new THREE.Group();
-      chandelier.position.set(1.0, -.05, 0);
-      scene.add(chandelier);
-
-      const brass = new THREE.MeshStandardMaterial({color:0xb08a4b, metalness:.92, roughness:.2});
-      const darkMetal = new THREE.MeshStandardMaterial({color:0x1a1814, metalness:.88, roughness:.25});
-      const crystal = new THREE.MeshPhysicalMaterial({color:0xf7f0dc, transmission:.72, thickness:.35, roughness:.08, metalness:.02, transparent:true, opacity:.94, ior:1.45});
-      const glow = new THREE.MeshBasicMaterial({color:0xffd890});
-
-      const stem = new THREE.Mesh(new THREE.CylinderGeometry(.055,.055,2.2,20), brass); stem.position.y=1.5; chandelier.add(stem);
-      const canopy = new THREE.Mesh(new THREE.CylinderGeometry(.45,.28,.16,48), darkMetal); canopy.position.y=2.62; chandelier.add(canopy);
-      const crown = new THREE.Mesh(new THREE.TorusGeometry(.82,.07,12,64), brass); crown.rotation.x=Math.PI/2; crown.position.y=.75; chandelier.add(crown);
-      const ring2 = new THREE.Mesh(new THREE.TorusGeometry(.54,.045,10,48), brass); ring2.rotation.x=Math.PI/2; ring2.position.y=.22; chandelier.add(ring2);
-
-      const count=18;
-      for(let i=0;i<count;i++){
-        const a=i/count*Math.PI*2;
-        const arm=new THREE.Group();
-        arm.rotation.y=a;
-        const rod=new THREE.Mesh(new THREE.CylinderGeometry(.022,.022,1.5,10), brass);
-        rod.position.set(.72,.55,0); rod.rotation.z=-.42; arm.add(rod);
-        const shade=new THREE.Mesh(new THREE.CylinderGeometry(.16,.23,.22,20), darkMetal);
-        shade.position.set(1.32,.16,0); arm.add(shade);
-        const bulb=new THREE.Mesh(new THREE.SphereGeometry(.105,18,12), glow);
-        bulb.position.set(1.32,.01,0); arm.add(bulb);
-        const crystalDrop=new THREE.Mesh(new THREE.OctahedronGeometry(.15,1), crystal);
-        crystalDrop.position.set(1.0,-.2,0); crystalDrop.scale.y=1.8; arm.add(crystalDrop);
-        chandelier.add(arm);
-      }
-      const inner = new THREE.Mesh(new THREE.TorusGeometry(.3,.035,10,48), brass); inner.rotation.x=Math.PI/2; inner.position.y=-.05; chandelier.add(inner);
-
-      const ambient = new THREE.HemisphereLight(0xfff1d6,0x111111,.72); scene.add(ambient);
-      const key = new THREE.PointLight(0xffc878,28,9,2); key.position.set(1,1.5,2); scene.add(key);
-      const fill = new THREE.PointLight(0x8fa8c8,8,8,2); fill.position.set(-3,1,-2); scene.add(fill);
-      const rim = new THREE.SpotLight(0xffe6bd,20,14,Math.PI/5,.7,1.5); rim.position.set(2,5,3); rim.target=chandelier; scene.add(rim);
-
-      const dustGeo=new THREE.BufferGeometry();
-      const dust=new Float32Array(900*3);
-      for(let i=0;i<dust.length;i+=3){dust[i]=(Math.random()-.5)*12; dust[i+1]=(Math.random()-.5)*8; dust[i+2]=(Math.random()-.5)*8;}
-      dustGeo.setAttribute('position',new THREE.BufferAttribute(dust,3));
-      const dustMat=new THREE.PointsMaterial({color:0x8e7958,size:.012,transparent:true,opacity:.35});
-      scene.add(new THREE.Points(dustGeo,dustMat));
-
-      const pointer={x:0,y:0};
-      addEventListener('pointermove',e=>{pointer.x=(e.clientX/innerWidth-.5)*2; pointer.y=(e.clientY/innerHeight-.5)*2;});
-      addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
-      const clock=new THREE.Clock();
-      function animate(){
-        const t=clock.getElapsedTime();
-        chandelier.rotation.y += ((pointer.x*.42 + t*.10)-chandelier.rotation.y)*.035;
-        chandelier.rotation.x += ((-pointer.y*.12)-chandelier.rotation.x)*.035;
-        chandelier.position.y = -.05 + Math.sin(t*.65)*.025;
-        key.intensity = 25 + Math.sin(t*1.7)*3 + pointer.y*-3;
-        camera.position.x += (pointer.x*.28-camera.position.x)*.018;
-        camera.position.y += ((.4-pointer.y*.18)-camera.position.y)*.018;
-        camera.lookAt(.35,.7,0);
-        renderer.render(scene,camera);
-        requestAnimationFrame(animate);
-      }
-      animate();
-
-      const cursor=document.querySelector('#cursor');
-      addEventListener('pointermove',e=>{cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px';});
-      document.querySelectorAll('a,.photo').forEach(el=>{el.addEventListener('mouseenter',()=>cursor.classList.add('on'));el.addEventListener('mouseleave',()=>cursor.classList.remove('on'));});
-      addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-innerHeight;document.querySelector('#progress').style.width=(scrollY/Math.max(h,1)*100)+'%';});
-    </script>
-  </body>
-</html>
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>STEELX — Chandelier / 01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Manrope:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#090909;--warm:#e8e1d5;--dim:#8d8982;--line:rgba(232,225,213,.14);--accent:#b89a63}*{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--warm);font-family:Manrope,Arial,sans-serif;overflow-x:hidden}a{color:inherit;text-decoration:none}.mono{font:300 9px/1.4 'DM Mono',monospace;letter-spacing:.18em;text-transform:uppercase}.grain{position:fixed;inset:-50%;z-index:50;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");transform:rotate(7deg)}
+.cursor{position:fixed;left:0;top:0;width:10px;height:10px;border:1px solid #fff;border-radius:50%;z-index:100;pointer-events:none;mix-blend-mode:difference;transition:.25s}.cursor.big{width:54px;height:54px;background:#fff}.bar{position:fixed;top:0;left:0;width:0;height:2px;background:var(--accent);z-index:90}
+.hero{height:100svh;min-height:720px;position:relative;overflow:hidden;background:#111}.hero-photo{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.35) 45%,rgba(0,0,0,.48)),url('https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=2600&q=92') center/cover;transform:scale(1.04);filter:saturate(.72) contrast(1.08)}.hero-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#090909 0,transparent 24%,transparent 75%,rgba(0,0,0,.45))}.nav{position:absolute;z-index:10;top:0;left:0;right:0;padding:30px 4vw;display:flex;justify-content:space-between;border-bottom:1px solid var(--line)}.nav a{opacity:.8}.hero-content{position:absolute;z-index:5;left:7vw;bottom:11vh;max-width:900px}.eyebrow{color:var(--accent);margin-bottom:28px}.hero h1{font-size:clamp(5rem,13vw,13rem);font-weight:400;line-height:.78;letter-spacing:-.085em;margin:0}.hero h1 em{font-family:'Playfair Display',serif;font-weight:400}.hero-sub{max-width:470px;color:rgba(232,225,213,.67);font-size:14px;line-height:1.8;margin:38px 0 0 5px}.scroll{position:absolute;right:4vw;bottom:35px;display:flex;gap:18px;align-items:center;color:var(--dim)}.scroll i{display:block;width:70px;height:1px;background:var(--line)}
+.statement{padding:16vw 7vw 12vw;display:grid;grid-template-columns:1fr 1.6fr;gap:10vw;border-bottom:1px solid var(--line)}.statement h2{font-size:clamp(3rem,6vw,7rem);line-height:.86;letter-spacing:-.07em;font-weight:400;margin:0}.statement h2 span{font-family:'Playfair Display',serif;font-style:italic}.statement p{max-width:620px;color:var(--dim);font-size:17px;line-height:2;margin:0;padding-top:12px}.statement .mono{color:var(--accent);margin-bottom:35px}
+.gallery{padding:12vw 4vw}.gallery-top{display:flex;justify-content:space-between;align-items:end;padding:0 3vw 5vw}.gallery-top h3{font-size:clamp(2.5rem,5vw,5.5rem);line-height:.9;letter-spacing:-.07em;font-weight:400;margin:0}.gallery-top p{max-width:310px;color:var(--dim);line-height:1.7;font-size:13px}.feature{position:relative;height:min(70vw,900px);overflow:hidden}.feature img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.4s cubic-bezier(.2,.7,.2,1);filter:saturate(.75)}.feature:hover img{transform:scale(1.035);filter:saturate(.95)}.feature .label{position:absolute;bottom:28px;left:28px;right:28px;display:flex;justify-content:space-between;text-shadow:0 2px 15px #000}.split{display:grid;grid-template-columns:.72fr 1.28fr;gap:2vw;margin-top:2vw;align-items:end}.shot{height:min(53vw,680px);position:relative;overflow:hidden}.shot.tall{height:min(62vw,800px)}.shot img{width:100%;height:100%;object-fit:cover;filter:saturate(.7);transition:transform 1.2s}.shot:hover img{transform:scale(1.04)}
+.dark-section{padding:16vw 7vw;background:#0d0d0c}.process{display:grid;grid-template-columns:1fr 1fr;gap:12vw;align-items:start}.process-title{font-size:clamp(3.5rem,7vw,8rem);line-height:.83;letter-spacing:-.08em;margin:0;font-weight:400}.process-title i{font-family:'Playfair Display',serif}.process-copy{color:var(--dim);line-height:1.9;font-size:14px;max-width:480px}.steps{margin-top:7vw;border-top:1px solid var(--line)}.step{display:grid;grid-template-columns:80px 1fr 1fr;padding:25px 0;border-bottom:1px solid var(--line);gap:30px}.step strong{font-size:14px;font-weight:400}.step p{margin:0;color:var(--dim);font-size:12px;line-height:1.7}.number{color:var(--accent)}
+.immersive{height:90vh;min-height:620px;position:relative;overflow:hidden}.immersive img{width:100%;height:100%;object-fit:cover;filter:brightness(.48) saturate(.65)}.immersive-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7vw}.immersive h4{font-size:clamp(4rem,10vw,11rem);line-height:.78;letter-spacing:-.08em;font-weight:400;margin:0}.immersive h4 em{font-family:'Playfair Display',serif}.immersive p{max-width:440px;color:rgba(255,255,255,.62);font-size:13px;line-height:1.8;margin:35px 0}.cta{display:inline-flex;align-items:center;gap:18px;border:1px solid rgba(255,255,255,.28);padding:16px 22px;font:300 9px 'DM Mono',monospace;letter-spacing:.18em;text-transform:uppercase;transition:.3s}.cta:hover{background:#fff;color:#090909}
+footer{padding:32px 4vw;display:flex;justify-content:space-between;border-top:1px solid var(--line);color:#625f5a}@media(max-width:800px){.cursor{display:none}.hero{min-height:700px}.hero-content{left:7vw;bottom:10vh}.statement,.process{grid-template-columns:1fr;gap:50px}.statement p{font-size:15px}.split{grid-template-columns:1fr}.shot,.shot.tall{height:105vw}.feature{height:120vw}.step{grid-template-columns:45px 1fr}.step p{grid-column:2}.gallery-top{display:block}.gallery-top p{margin-top:25px}.immersive{height:75vh;min-height:520px}}
+</style></head>
+<body>
+<div class="bar" id="bar"></div><div class="cursor" id="cursor"></div><div class="grain"></div>
+<header class="hero" id="home"><div class="hero-photo"></div><nav class="nav"><a class="mono" href="/">STEELX</a><a class="mono" href="#collection">Chandelier / 01</a><a class="mono" href="#contact">Enquire ↗</a></nav><div class="hero-content"><div class="mono eyebrow">Architectural lighting / Mumbai</div><h1>LIGHT<br>AS <em>SCULPTURE.</em></h1><p class="hero-sub">A chandelier is no longer a fixture. It is the atmosphere, the focal point, and the quiet architecture above the room.</p></div><div class="scroll mono"><i></i>Scroll to explore</div></header>
+<section class="statement"><div><div class="mono">01 — Philosophy</div><h2>Made to be<br><span>remembered.</span></h2></div><p>SteelX creates architectural metalwork and statement lighting for spaces that demand more than decoration. Every curve, reflection and shadow is considered as part of the room — not placed on top of it.</p></section>
+<section class="gallery" id="collection"><div class="gallery-top"><h3>The room<br>changes <em>with light.</em></h3><p>Real spaces. Real materials. A visual study of how a sculptural light source transforms architecture.</p></div><figure class="feature"><img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=2400&q=92" alt="Luxury interior with statement chandelier"><figcaption class="label mono"><span>Residence / 01</span><span>Steel × Glass</span></figcaption></figure><div class="split"><figure class="shot"><img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=90" alt="Premium contemporary interior"><figcaption class="label mono">Atmosphere / 02</figcaption></figure><figure class="shot tall"><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=2000&q=90" alt="High-end architectural living space"><figcaption class="label mono">Architecture / 03</figcaption></figure></div></section>
+<section class="dark-section"><div class="process"><div><div class="mono eyebrow">02 — The making</div><h3 class="process-title">Precision<br>with a <i>human</i><br>finish.</h3></div><p class="process-copy">From proportion to surface, the chandelier is developed around the architecture it inhabits. Metal is formed, finished and assembled with the restraint of furniture-making and the precision of engineering.</p></div><div class="steps"><div class="step"><span class="mono number">01</span><strong>Define the space</strong><p>Scale, ceiling height, sightlines and the natural rhythm of the room establish the starting point.</p></div><div class="step"><span class="mono number">02</span><strong>Shape the object</strong><p>Profiles, arms and illumination are developed as one continuous composition.</p></div><div class="step"><span class="mono number">03</span><strong>Finish the surface</strong><p>Hand-finished metal and controlled illumination create depth that changes throughout the day.</p></div><div class="step"><span class="mono number">04</span><strong>Install as architecture</strong><p>The final piece is calibrated to the room so it feels designed with the space, never simply installed in it.</p></div></div></section>
+<section class="immersive"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2400&q=92" alt="Luxury architectural interior at dusk"><div class="immersive-content"><div class="mono eyebrow">03 — The experience</div><h4>Own the<br><em>moment.</em></h4><p>Tell us about your space. We will develop a statement lighting piece around it.</p><a class="cta" id="contact" href="mailto:hello@steelx.in">Start a conversation ↗</a></div></section>
+<footer><span class="mono">STEELX / Architectural metal & lighting</span><a class="mono" href="#home">Back to top ↑</a></footer>
+<script>
+const cursor=document.getElementById('cursor');let mx=innerWidth/2,my=innerHeight/2,cx=mx,cy=my;addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY});function loop(){cx+=(mx-cx)*.14;cy+=(my-cy)*.14;cursor.style.transform=`translate(${cx-5}px,${cy-5}px)`;requestAnimationFrame(loop)}loop();document.querySelectorAll('a,.feature,.shot').forEach(x=>{x.onmouseenter=()=>cursor.classList.add('big');x.onmouseleave=()=>cursor.classList.remove('big')});addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-innerHeight;document.getElementById('bar').style.width=(scrollY/Math.max(h,1)*100)+'%'});
+</script></body></html>
