@@ -1,289 +1,407 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Lightbulb, Menu, MousePointer2, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
-import { PageShell, Section } from "@/components/page-shell";
-import { FeatureProjectCard, ProjectGridCard } from "@/components/project-grid-card";
-import { Reveal, SectionHeading } from "@/components/reveal";
-import { ClipReveal, Counter, HorizontalRail, Magnetic, Marquee, Parallax, StickyStory } from "@/components/motion";
-import { finishes } from "@/data/finishes";
-import { journalPosts, formatDate } from "@/data/journal";
-import { projects } from "@/data/projects";
+import { PageShell } from "@/components/page-shell";
+import { Magnetic } from "@/components/motion";
 
-import metalHero from "@/assets/metal-hero.jpg";
-import pvdChamber from "@/assets/pvd-chamber.jpg";
-import polishing from "@/assets/polishing.jpg";
-import sheetPrep from "@/assets/sheet-prep.jpg";
-import inspection from "@/assets/inspection.jpg";
-import installation from "@/assets/installation.jpg";
-import lobby from "@/assets/install-lobby.jpg";
-import meshHero from "@/assets/mesh-hero.jpg";
-import rawSteel from "@/assets/raw-steel.jpg";
-
-const title = "STEELX — PVD Coated Stainless Steel & Architectural Metal Surfaces";
-const description =
-  "STEELX designs, coats and installs PVD stainless steel surfaces, decorative mesh and architectural metal for hospitality, retail, facades and luxury interiors worldwide.";
+const HERO_IMAGE =
+  "https://images.unsplash.com/photo-1782834294783-dff56aa2a540?auto=format&fit=crop&fm=jpg&q=88&w=2400";
+const DETAIL_IMAGE =
+  "https://images.unsplash.com/photo-1779055660990-53475b256aac?auto=format&fit=crop&fm=jpg&q=88&w=2200";
+const SECONDARY_IMAGE =
+  "https://images.unsplash.com/photo-1779055660990-53475b256aac?auto=format&fit=crop&fm=jpg&q=82&w=1600";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { title: "STEELX — Light Changes the Space" },
+      {
+        name: "description",
+        content:
+          "A cinematic digital flagship for architectural lighting, sculptural chandeliers and bespoke illumination.",
+      },
+      { property: "og:title", content: "STEELX — Light Changes the Space" },
+      {
+        property: "og:description",
+        content: "Architectural lighting as atmosphere, material and space.",
+      },
     ],
   }),
   component: HomePage,
 });
 
-const stats = [
-  { value: 15, suffix: "+", label: "Years" },
-  { value: 480, suffix: "+", label: "Projects delivered" },
-  { value: 11, suffix: "", label: "Markets" },
-  { value: 9, suffix: "+", label: "PVD colours" },
-];
+function CinematicCursor({ lightsOn }: { lightsOn: boolean }) {
+  const dot = useRef<HTMLDivElement>(null);
+  const ring = useRef<HTMLDivElement>(null);
+  const raf = useRef<number | null>(null);
+  const pointer = useRef({ x: -200, y: -200 });
+  const ringPosition = useRef({ x: -200, y: -200 });
 
-const capabilities = [
-  { t: "PVD coating", d: "Colour bonded in vacuum — champagne, gold, rose, bronze, black, gunmetal.", img: pvdChamber },
-  { t: "Architectural surfaces", d: "Facade panels, wall cladding, ceilings and column casings.", img: metalHero },
-  { t: "Decorative mesh", d: "Woven stainless screens for partitions, ceilings and facades.", img: meshHero },
-  { t: "Custom fabrication", d: "Joinery metal, reception desks, sculptural forms, bespoke assemblies.", img: polishing },
-  { t: "Installation", d: "Our own crews, sequenced crating, film off after the last wet trade.", img: installation },
-];
+  useEffect(() => {
+    const move = (event: PointerEvent) => {
+      pointer.current = { x: event.clientX, y: event.clientY };
+      if (dot.current) {
+        dot.current.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
+      }
+    };
 
-const story = [
-  { id: "raw", index: "01", title: "Raw steel", text: "Mill sheet in 304 or 316, checked for flatness and surface before anything else happens.", image: rawSteel, alt: "Raw stainless steel" },
-  { id: "prep", index: "02", title: "Preparation", text: "Hairline, vibration, bead-blast or mirror — the texture that decides the final result.", image: sheetPrep, alt: "Sheet preparation" },
-  { id: "pvd", index: "03", title: "PVD", text: "Vaporised metal condenses onto the panel in vacuum, bonded atomically, measured in microns.", image: pvdChamber, alt: "PVD chamber" },
-  { id: "qa", index: "04", title: "Inspection", text: "Colour, thickness and adhesion checked against one signed control sample.", image: inspection, alt: "Inspection" },
-  { id: "install", index: "05", title: "Installation", text: "Crated in sequence and fitted by our own teams, anywhere we ship.", image: lobby, alt: "Installed surface" },
+    const frame = () => {
+      ringPosition.current.x += (pointer.current.x - ringPosition.current.x) * 0.12;
+      ringPosition.current.y += (pointer.current.y - ringPosition.current.y) * 0.12;
+      if (ring.current) {
+        ring.current.style.transform = `translate3d(${ringPosition.current.x}px, ${ringPosition.current.y}px, 0)`;
+      }
+      raf.current = requestAnimationFrame(frame);
+    };
+
+    window.addEventListener("pointermove", move, { passive: true });
+    raf.current = requestAnimationFrame(frame);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      if (raf.current) cancelAnimationFrame(raf.current);
+    };
+  }, []);
+
+  return (
+    <>
+      <div
+        ref={ring}
+        aria-hidden="true"
+        className="pointer-events-none fixed left-0 top-0 z-[90] hidden h-14 w-14 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/35 mix-blend-difference transition-[width,height,border-color] duration-300 lg:block"
+      >
+        <span className="absolute inset-2 rounded-full border border-white/10" />
+      </div>
+      <div
+        ref={dot}
+        aria-hidden="true"
+        className="pointer-events-none fixed left-0 top-0 z-[91] hidden h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFE2A8] shadow-[0_0_18px_8px_rgba(255,226,168,.35)] lg:block"
+      />
+      <div
+        className={`pointer-events-none fixed inset-0 z-[80] hidden lg:block ${lightsOn ? "opacity-100" : "opacity-0"} transition-opacity duration-700`}
+        style={{
+          background:
+            "radial-gradient(280px 280px at var(--mx,50%) var(--my,50%), rgba(255,226,168,.075), transparent 70%)",
+        }}
+        aria-hidden="true"
+      />
+    </>
+  );
+}
+
+function LightField({ lightsOn }: { lightsOn: boolean }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    let frame = 0;
+    let raf = 0;
+    const dots = Array.from({ length: 55 }, (_, index) => ({
+      x: (index * 73) % 1000,
+      y: (index * 131) % 700,
+      r: 0.5 + ((index * 17) % 10) / 10,
+      speed: 0.08 + ((index * 7) % 10) / 100,
+      phase: index * 0.7,
+    }));
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+      canvas.width = Math.floor(canvas.clientWidth * dpr);
+      canvas.height = Math.floor(canvas.clientHeight * dpr);
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const draw = () => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      context.clearRect(0, 0, width, height);
+      const opacity = lightsOn ? 0.72 : 0.18;
+      dots.forEach((dot) => {
+        const x = (dot.x + frame * dot.speed) % width;
+        const y = (dot.y + Math.sin(frame * 0.003 + dot.phase) * 16) % height;
+        const pulse = 0.4 + Math.sin(frame * 0.01 + dot.phase) * 0.3;
+        context.beginPath();
+        context.fillStyle = `rgba(255,226,168,${Math.max(0.04, opacity * pulse)})`;
+        context.arc(x, y, dot.r, 0, Math.PI * 2);
+        context.fill();
+      });
+      frame += 1;
+      raf = requestAnimationFrame(draw);
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+    raf = requestAnimationFrame(draw);
+    return () => {
+      window.removeEventListener("resize", resize);
+      cancelAnimationFrame(raf);
+    };
+  }, [lightsOn]);
+
+  return <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full opacity-70" aria-hidden="true" />;
+}
+
+function LightToggle({ lightsOn, onToggle }: { lightsOn: boolean; onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-pressed={lightsOn}
+      className="group inline-flex items-center gap-3 border border-white/20 bg-black/20 px-4 py-2.5 text-[0.58rem] uppercase tracking-[0.24em] text-white/75 backdrop-blur-md transition-all hover:border-[#FFE2A8]/60 hover:text-white"
+    >
+      <span className={`relative h-2.5 w-2.5 rounded-full border ${lightsOn ? "border-[#FFE2A8] bg-[#FFE2A8] shadow-[0_0_16px_6px_rgba(255,226,168,.55)]" : "border-white/50"}`} />
+      {lightsOn ? "Lights on" : "Lights off"}
+      <Lightbulb className="h-3.5 w-3.5 transition-transform duration-500 group-hover:rotate-12" />
+    </button>
+  );
+}
+
+function Hero({ lightsOn, onToggle }: { lightsOn: boolean; onToggle: () => void }) {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    const image = imageRef.current;
+    if (!hero || !image) return;
+
+    const onMove = (event: PointerEvent) => {
+      const rect = hero.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      image.style.transform = `perspective(1400px) rotateX(${y * -2.2}deg) rotateY(${x * 3.2}deg) scale(1.045) translate3d(${x * 12}px, ${y * 10}px, 0)`;
+      hero.style.setProperty("--mx", `${(x + 0.5) * 100}%`);
+      hero.style.setProperty("--my", `${(y + 0.5) * 100}%`);
+    };
+    const onLeave = () => {
+      image.style.transform = "perspective(1400px) rotateX(0deg) rotateY(0deg) scale(1.03)";
+    };
+
+    hero.addEventListener("pointermove", onMove);
+    hero.addEventListener("pointerleave", onLeave);
+    return () => {
+      hero.removeEventListener("pointermove", onMove);
+      hero.removeEventListener("pointerleave", onLeave);
+    };
+  }, []);
+
+  return (
+    <section ref={heroRef} className="relative min-h-[100svh] overflow-hidden bg-[#0B0B0A] [--mx:50%] [--my:50%]">
+      <div
+        ref={imageRef}
+        className={`absolute -inset-6 bg-cover bg-center transition-[filter,transform] duration-700 ease-out ${lightsOn ? "brightness-100 saturate-[.9]" : "brightness-[.24] saturate-[.55]"}`}
+        style={{ backgroundImage: `url(${HERO_IMAGE})` }}
+      />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,transparent_10%,rgba(7,7,6,.18)_48%,rgba(7,7,6,.88)_100%)]" />
+      <div className={`absolute inset-0 transition-opacity duration-1000 ${lightsOn ? "opacity-100" : "opacity-0"}`} style={{ background: "radial-gradient(520px 420px at 52% 42%, rgba(255,226,168,.26), transparent 70%)" }} />
+      <LightField lightsOn={lightsOn} />
+
+      <div className="relative z-10 flex min-h-[100svh] flex-col justify-end px-5 pb-8 pt-28 sm:px-8 lg:px-12 lg:pb-12">
+        <div className="flex items-center justify-between gap-4">
+          <div className="max-w-xl">
+            <p className="text-[0.6rem] uppercase tracking-[0.38em] text-[#FFE2A8]">Architectural lighting</p>
+            <h1 className="mt-6 max-w-3xl font-display text-[3.5rem] leading-[.84] text-white sm:text-7xl lg:text-[8.6rem]">
+              LIGHT
+              <span className="block text-white/80">CHANGES</span>
+              <span className="block italic text-[#FFE2A8]">THE SPACE.</span>
+            </h1>
+            <p className="mt-8 max-w-md text-sm leading-relaxed text-white/65 sm:text-base">
+              Sculptural chandeliers and architectural light designed to change the atmosphere, rhythm and character of a room.
+            </p>
+          </div>
+
+          <div className="hidden items-end gap-3 lg:flex">
+            <LightToggle lightsOn={lightsOn} onToggle={onToggle} />
+            <div className="flex h-12 w-12 items-center justify-center border border-white/15 bg-black/20 text-white/60 backdrop-blur-md">
+              <MousePointer2 className="h-4 w-4" />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-12 flex items-end justify-between border-t border-white/15 pt-5">
+          <div className="flex items-center gap-3 text-[0.58rem] uppercase tracking-[0.25em] text-white/50">
+            <span className="h-px w-8 bg-[#FFE2A8]" />
+            Move your cursor through the light
+          </div>
+          <Link to="/chandelier/" className="hidden items-center gap-2 text-[0.62rem] uppercase tracking-[0.24em] text-white/80 transition-colors hover:text-[#FFE2A8] sm:flex">
+            Enter the collection <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const categories = [
+  ["01", "Chandeliers"],
+  ["02", "Pendants"],
+  ["03", "Table lights"],
+  ["04", "Floor lights"],
+  ["05", "Wall lights"],
+  ["06", "Ceiling lights"],
+  ["07", "Outdoor"],
+  ["08", "Bespoke"],
 ];
 
 function HomePage() {
-  const feature = projects[0]!;
-  const selected = projects.slice(1, 4);
-  const secondFeature = projects[4];
-  const more = projects.slice(5, 8);
-  const posts = journalPosts.slice(0, 3);
+  const [lightsOn, setLightsOn] = useState(true);
 
   return (
     <PageShell overlayHeader>
-      {/* Cinematic hero */}
-      <section className="relative flex min-h-[100svh] items-end overflow-hidden">
-        <img
-          src={metalHero}
-          alt="Champagne PVD coated stainless steel surface under raking light"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/40" />
-        <div className="pointer-events-none absolute inset-0 tech-grid opacity-30" aria-hidden="true" />
-        <div className="relative mx-auto w-full max-w-[1600px] px-4 pb-14 sm:px-8 lg:px-10 lg:pb-20">
-          <Reveal variant="text" as="p" className="text-[0.62rem] uppercase tracking-[0.42em] text-champagne">
-            Stainless steel · PVD · Architectural surfaces
-          </Reveal>
-          <Reveal variant="up" delay={80}>
-            <h1 className="mt-8 max-w-5xl font-display text-[3rem] leading-[0.88] text-foreground sm:text-8xl lg:text-[9.5rem]">
-              SURFACES
-              <span className="block text-steel-gradient">ENGINEERED</span>
-              TO LAST.
-            </h1>
-          </Reveal>
-          <div className="mt-12 grid gap-8 border-t border-border pt-8 lg:grid-cols-[1fr_auto] lg:items-end">
-            <Reveal variant="up" delay={160}>
-              <p className="max-w-2xl text-base leading-relaxed text-muted-foreground lg:text-lg">
-                We take stainless steel from mill sheet to installed architectural surface — cut,
-                formed, finished, PVD coated and fitted by one team, for hospitality, retail,
-                facades and luxury interiors across eleven markets.
-              </p>
-            </Reveal>
-            <Reveal variant="up" delay={220}>
-              <Magnetic>
-                <Link
-                  to="/projects"
-                  data-cursor="Explore →"
-                  className="inline-flex items-center gap-2 bg-champagne-gradient px-8 py-4 text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-metal-black"
-                >
-                  Explore projects <ArrowUpRight className="h-4 w-4" />
-                </Link>
-              </Magnetic>
-            </Reveal>
+      <CinematicCursor lightsOn={lightsOn} />
+      <Hero lightsOn={lightsOn} onToggle={() => setLightsOn((value) => !value)} />
+
+      <section className="relative overflow-hidden bg-[#F2EEE6] px-5 py-20 text-[#191817] sm:px-8 lg:px-12 lg:py-28">
+        <div className="grid gap-14 lg:grid-cols-[.7fr_1.3fr] lg:items-end">
+          <div>
+            <p className="text-[0.58rem] uppercase tracking-[0.3em] text-black/45">Our philosophy</p>
+            <h2 className="mt-6 max-w-xl font-display text-4xl leading-[.95] sm:text-6xl">MORE THAN LIGHT. A FORM OF SPACE.</h2>
+            <p className="mt-7 max-w-md text-sm leading-relaxed text-black/60">Every piece is conceived as an architectural gesture — a controlled meeting of material, shadow and warm illumination.</p>
+          </div>
+          <div className="relative min-h-[42vw] overflow-hidden bg-[#D7CEC1] lg:min-h-[30vw]">
+            <img src={DETAIL_IMAGE} alt="Luxury chandelier detail" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1600ms] hover:scale-105" loading="lazy" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#191817]/30 via-transparent to-[#FFE2A8]/10" />
+            <span className="absolute bottom-5 left-5 text-[0.58rem] uppercase tracking-[0.26em] text-white/80">Material · Light · Space</span>
           </div>
         </div>
       </section>
 
-      <Marquee items={["PVD COATED STAINLESS", "DECORATIVE MESH", "FACADE SYSTEMS", "HOSPITALITY METAL", "RETAIL FABRICATION", "INTERNATIONAL DELIVERY"]} />
-
-      {/* Stats */}
-      <Section className="lg:py-20">
-        <div className="grid gap-px border-t border-border sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((s, i) => (
-            <Reveal key={s.label} variant="row" delay={i * 90} className="border-b border-border py-8 pr-6">
-              <p className="font-display text-5xl text-champagne lg:text-7xl">
-                <Counter to={s.value} suffix={s.suffix} />
-              </p>
-              <p className="mt-3 text-[0.6rem] uppercase tracking-[0.28em] text-muted-foreground">{s.label}</p>
-            </Reveal>
-          ))}
+      <section className="bg-[#0B0B0A] px-5 py-20 text-white sm:px-8 lg:px-12 lg:py-28">
+        <div className="flex items-end justify-between gap-6">
+          <div>
+            <p className="text-[0.58rem] uppercase tracking-[0.3em] text-[#FFE2A8]">The collection</p>
+            <h2 className="mt-5 font-display text-4xl sm:text-6xl">Timeless forms.<br />Infinite possibilities.</h2>
+          </div>
+          <Link to="/chandelier/" className="hidden items-center gap-2 text-[0.6rem] uppercase tracking-[0.25em] text-white/65 hover:text-[#FFE2A8] sm:flex">Explore all <ArrowUpRight className="h-4 w-4" /></Link>
         </div>
-      </Section>
-
-      {/* Capabilities rail */}
-      <Section className="border-t border-border">
-        <SectionHeading eyebrow="Capabilities" title="What we make" />
-        <HorizontalRail className="mt-12" itemClassName="w-[74vw] sm:w-[42vw] lg:w-[27vw]">
-          {capabilities.map((c) => (
-            <article key={c.t} className="group" data-cursor="Explore">
-              <div className="aspect-[4/5] overflow-hidden border border-border metal-sheen">
-                <img
-                  src={c.img}
-                  alt={c.t}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
-                />
-              </div>
-              <h3 className="mt-4 font-display text-2xl text-foreground">{c.t}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{c.d}</p>
-            </article>
-          ))}
-        </HorizontalRail>
-      </Section>
-
-      {/* Feature project */}
-      <Section className="border-t border-border">
-        <SectionHeading eyebrow="Selected work" title="Recent projects" />
-        <Reveal variant="scale" className="mt-12">
-          <FeatureProjectCard project={feature} />
-        </Reveal>
-        <div className="mt-20 grid gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
-          {selected.map((p, i) => (
-            <Reveal key={p.slug} variant="up" delay={(i % 3) * 110}>
-              <ProjectGridCard project={p} index={i} />
-            </Reveal>
-          ))}
-        </div>
-        {secondFeature ? (
-          <Reveal variant="scale" className="mt-20">
-            <FeatureProjectCard project={secondFeature} />
-          </Reveal>
-        ) : null}
-        <div className="mt-20 grid gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
-          {more.map((p, i) => (
-            <Reveal key={p.slug} variant="up" delay={(i % 3) * 110}>
-              <ProjectGridCard project={p} index={i + 4} />
-            </Reveal>
-          ))}
-        </div>
-        <Reveal variant="up" className="mt-16">
-          <Link
-            to="/projects"
-            data-cursor="View all →"
-            className="inline-flex items-center gap-2 border border-border px-8 py-4 text-[0.72rem] uppercase tracking-[0.2em] text-foreground transition-colors hover:border-champagne hover:text-champagne"
-          >
-            All projects <ArrowUpRight className="h-4 w-4" />
-          </Link>
-        </Reveal>
-      </Section>
-
-      {/* Sticky material story */}
-      <Section className="border-t border-border">
-        <SectionHeading eyebrow="From sheet to surface" title="How a panel is made" />
-        <div className="mt-12">
-          <StickyStory steps={story} />
-        </div>
-      </Section>
-
-      {/* Finishes */}
-      <Section className="border-t border-border">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <SectionHeading eyebrow="Finishes" title="Nine tones, one control sample" />
-          <Link
-            to="/ss-decorative-mesh-pvd"
-            data-cursor="Explore →"
-            className="text-[0.66rem] uppercase tracking-[0.22em] text-champagne"
-          >
-            See decorative mesh →
-          </Link>
-        </div>
-        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {finishes.map((f, i) => (
-            <Reveal key={f.id} variant="up" delay={(i % 5) * 80}>
-              <div
-                className="aspect-square border border-border metal-grain transition-transform duration-700 hover:scale-[1.03]"
-                style={{ backgroundImage: f.swatch }}
-                role="img"
-                aria-label={`${f.name} finish`}
-              />
-              <p className="mt-3 text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">{f.name}</p>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
-      {/* Full-bleed */}
-      <ClipReveal>
-        <Parallax className="aspect-[21/9] w-full border-y border-border" amount={80}>
-          <img src={lobby} alt="Coated stainless surfaces in a completed hospitality lobby" loading="lazy" className="h-full w-full object-cover" />
-        </Parallax>
-      </ClipReveal>
-
-      {/* Journal */}
-      <Section>
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <SectionHeading eyebrow="Journal" title="Notes on metal" />
-          <Link to="/journal" className="text-[0.66rem] uppercase tracking-[0.22em] text-champagne">
-            All articles →
-          </Link>
-        </div>
-        <div className="mt-12 grid gap-x-10 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((p, i) => (
-            <Reveal key={p.slug} variant="up" delay={(i % 3) * 100}>
-              <Link to="/journal/$slug" params={{ slug: p.slug }} data-cursor="Read →" className="group block">
-                <div className="aspect-[4/3] overflow-hidden border border-border metal-sheen">
-                  <img
-                    src={p.hero}
-                    alt={p.heroAlt}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-[1300ms] group-hover:scale-105"
-                  />
+        <div className="mt-12 grid grid-cols-2 border-l border-white/10 md:grid-cols-4 lg:grid-cols-8">
+          {categories.map(([number, name], index) => (
+            <Link key={name} to="/chandelier/" className="group relative border-b border-r border-t border-white/10 p-5 transition-colors hover:bg-white/[.035] lg:min-h-64">
+              <span className="text-[0.55rem] tracking-[0.22em] text-white/35">{number}</span>
+              <div className="absolute inset-x-5 bottom-5">
+                <div className={`mb-5 aspect-[3/4] overflow-hidden bg-[#191817] ${index % 2 ? "rotate-1" : "-rotate-1"}`}>
+                  <img src={index % 2 ? DETAIL_IMAGE : HERO_IMAGE} alt={name} loading="lazy" className="h-full w-full object-cover opacity-75 transition duration-700 group-hover:scale-110 group-hover:opacity-100" />
                 </div>
-                <p className="mt-4 text-[0.58rem] uppercase tracking-[0.26em] text-champagne">
-                  {p.category} · {formatDate(p.date)}
-                </p>
-                <h3 className="mt-3 font-display text-xl leading-snug text-foreground transition-colors group-hover:text-champagne">
-                  {p.title}
-                </h3>
-              </Link>
-            </Reveal>
+                <span className="block text-[0.55rem] uppercase tracking-[0.18em] text-white/75">{name}</span>
+              </div>
+            </Link>
           ))}
         </div>
-      </Section>
+      </section>
 
-      {/* CTA */}
-      <Section className="border-t border-border text-center">
-        <Reveal variant="up">
-          <h2 className="font-display text-4xl leading-tight text-foreground sm:text-7xl">
-            Let's build a surface.
-          </h2>
-        </Reveal>
-        <Reveal variant="up" delay={100}>
-          <p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-muted-foreground">
-            Send drawings, a finish reference, or a photograph of a surface you like. We reply with
-            samples and a specification.
-          </p>
-        </Reveal>
-        <Reveal variant="up" delay={180}>
-          <Magnetic className="mt-10">
-            <Link
-              to="/contact"
-              data-cursor="Start →"
-              className="inline-flex items-center gap-2 bg-champagne-gradient px-9 py-4 text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-metal-black"
-            >
-              Start a project <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </Magnetic>
-        </Reveal>
-      </Section>
+      <section className="relative overflow-hidden bg-[#191817] px-5 py-0 text-white sm:px-8 lg:px-12">
+        <div className="grid min-h-[75svh] lg:grid-cols-[1.15fr_.85fr]">
+          <div className="relative min-h-[55svh] overflow-hidden">
+            <img src={DETAIL_IMAGE} alt="Sculptural chandelier close-up" className={`absolute inset-0 h-full w-full object-cover transition-all duration-1000 ${lightsOn ? "brightness-100" : "brightness-[.25]"}`} />
+            <div className={`absolute inset-0 transition-opacity duration-1000 ${lightsOn ? "opacity-100" : "opacity-0"}`} style={{ background: "radial-gradient(circle at 45% 48%, rgba(255,226,168,.3), transparent 38%)" }} />
+            <div className="absolute left-5 top-5 flex items-center gap-2 text-[0.55rem] uppercase tracking-[0.24em] text-white/60">
+              <Sparkles className="h-3.5 w-3.5 text-[#FFE2A8]" /> The object
+            </div>
+          </div>
+          <div className="flex flex-col justify-center px-0 py-16 lg:px-16 lg:py-24">
+            <p className="text-[0.58rem] uppercase tracking-[0.3em] text-[#FFE2A8]">Featured object</p>
+            <h2 className="mt-5 max-w-lg font-display text-5xl leading-[.9] sm:text-7xl">The Celeste Chandelier</h2>
+            <p className="mt-7 max-w-md text-sm leading-relaxed text-white/55">A sculptural interplay of hand-finished metal and luminous glass, designed to float between architecture and atmosphere.</p>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <LightToggle lightsOn={lightsOn} onToggle={() => setLightsOn((value) => !value)} />
+              <Magnetic>
+                <Link to="/chandelier/" className="inline-flex items-center gap-2 border border-white/15 px-5 py-3 text-[0.58rem] uppercase tracking-[0.2em] text-white/70 hover:border-[#FFE2A8]/50 hover:text-white">View object <ArrowUpRight className="h-4 w-4" /></Link>
+              </Magnetic>
+            </div>
+            <div className="mt-16 grid grid-cols-3 border-t border-white/10 pt-5 text-[0.55rem] uppercase tracking-[0.18em] text-white/40">
+              <span>Hand-finished brass</span><span>Warm 2700K</span><span>Custom scale</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#F2EEE6] px-5 py-20 text-[#191817] sm:px-8 lg:px-12 lg:py-28">
+        <div className="grid gap-12 lg:grid-cols-[.65fr_1.35fr]">
+          <div>
+            <p className="text-[0.58rem] uppercase tracking-[0.3em] text-black/45">Light in space</p>
+            <h2 className="mt-5 font-display text-4xl leading-[.95] sm:text-6xl">Four environments.<br />Endless atmospheres.</h2>
+            <p className="mt-7 max-w-sm text-sm leading-relaxed text-black/55">Residential, hospitality, retail and architectural spaces — each composed around the way light is felt, not simply measured.</p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {["Residential", "Hospitality", "Retail", "Architectural"].map((label, index) => (
+              <article key={label} className="group relative aspect-[4/3] overflow-hidden bg-[#D7CEC1]">
+                <img src={index % 2 ? SECONDARY_IMAGE : HERO_IMAGE} alt={`${label} lighting interior`} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1300ms] group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
+                <div className="absolute inset-x-5 bottom-5 flex items-end justify-between text-white">
+                  <div>
+                    <p className="text-[0.52rem] uppercase tracking-[0.24em] text-white/55">0{index + 1}</p>
+                    <h3 className="mt-2 font-display text-2xl">{label}</h3>
+                  </div>
+                  <ArrowUpRight className="h-5 w-5 opacity-60 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden bg-[#0B0B0A] px-5 py-24 text-white sm:px-8 lg:px-12 lg:py-36">
+        <div className="absolute inset-0 opacity-30" style={{ background: "radial-gradient(circle at 70% 50%, rgba(255,226,168,.18), transparent 35%)" }} />
+        <div className="relative z-10 mx-auto max-w-6xl text-center">
+          <p className="text-[0.58rem] uppercase tracking-[0.35em] text-[#FFE2A8]">The lighting transformation</p>
+          <h2 className="mx-auto mt-6 max-w-4xl font-display text-5xl leading-[.9] sm:text-7xl lg:text-8xl">SAME SPACE.<br /><span className="italic text-white/55">DIFFERENT FEEL.</span></h2>
+          <div className="mx-auto mt-14 max-w-3xl overflow-hidden border border-white/10">
+            <div className="relative aspect-[16/7]">
+              <img src={SECONDARY_IMAGE} alt="Warmly illuminated luxury interior" className={`absolute inset-0 h-full w-full object-cover transition-all duration-1000 ${lightsOn ? "brightness-100" : "brightness-[.18] grayscale-[.35]"}`} />
+              <div className={`absolute inset-0 transition-opacity duration-1000 ${lightsOn ? "opacity-100" : "opacity-0"}`} style={{ background: "linear-gradient(90deg, transparent, rgba(255,226,168,.24), transparent)" }} />
+              <button type="button" onClick={() => setLightsOn((value) => !value)} className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-3 border border-white/20 bg-black/45 px-5 py-3 text-[0.58rem] uppercase tracking-[0.24em] backdrop-blur-md hover:border-[#FFE2A8]/60">
+                <span>{lightsOn ? "Atmosphere" : "Dark"}</span>
+                <span className="h-px w-10 bg-white/30" />
+                <span>{lightsOn ? "Light" : "Switch on"}</span>
+              </button>
+            </div>
+          </div>
+          <p className="mx-auto mt-8 max-w-lg text-sm leading-relaxed text-white/45">Turn the light off. Turn it back on. The room stays the same. The experience doesn't.</p>
+        </div>
+      </section>
+
+      <section className="bg-[#F2EEE6] px-5 py-24 text-[#191817] sm:px-8 lg:px-12 lg:py-32">
+        <div className="flex flex-col items-start justify-between gap-10 border-b border-black/15 pb-12 md:flex-row md:items-end">
+          <div>
+            <p className="text-[0.58rem] uppercase tracking-[0.3em] text-black/45">Bespoke</p>
+            <h2 className="mt-5 max-w-3xl font-display text-5xl leading-[.9] sm:text-7xl">Some spaces require something extraordinary.</h2>
+          </div>
+          <Link to="/contact" className="inline-flex items-center gap-2 border border-black/20 px-6 py-3 text-[0.6rem] uppercase tracking-[0.22em] hover:border-black/60">Work with our design team <ArrowUpRight className="h-4 w-4" /></Link>
+        </div>
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {[
+            ["01", "Concept", "Scale, rhythm and light mapped to the architecture."],
+            ["02", "Craft", "Materials, glass, brass and finishes refined by hand."],
+            ["03", "Installation", "A complete lighting object delivered and commissioned."],
+          ].map(([number, title, text]) => (
+            <div key={number} className="border-t border-black/15 pt-5">
+              <span className="text-[0.55rem] tracking-[0.2em] text-black/40">{number}</span>
+              <h3 className="mt-10 font-display text-3xl">{title}</h3>
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-black/55">{text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="relative min-h-[70svh] overflow-hidden bg-[#0B0B0A] px-5 py-24 text-white sm:px-8 lg:px-12 lg:py-32">
+        <img src={HERO_IMAGE} alt="Chandelier glowing in a dark architectural interior" className="absolute inset-0 h-full w-full object-cover opacity-35" loading="lazy" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0A] via-[#0B0B0A]/35 to-[#0B0B0A]/60" />
+        <div className="relative z-10 flex min-h-[45svh] flex-col justify-end">
+          <p className="text-[0.58rem] uppercase tracking-[0.35em] text-[#FFE2A8]">The next room</p>
+          <h2 className="mt-5 max-w-5xl font-display text-6xl leading-[.82] sm:text-8xl lg:text-[9rem]">LET THERE<br /><span className="italic text-[#FFE2A8]">BE ATMOSPHERE.</span></h2>
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <Magnetic>
+              <Link to="/chandelier/" className="inline-flex items-center gap-2 bg-[#FFE2A8] px-7 py-4 text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-[#191817]">Explore lighting <ArrowUpRight className="h-4 w-4" /></Link>
+            </Magnetic>
+            <Link to="/contact" className="inline-flex items-center gap-2 border border-white/20 px-7 py-4 text-[0.62rem] uppercase tracking-[0.2em] text-white/75 hover:border-[#FFE2A8]/60 hover:text-white">Start a bespoke project <ArrowUpRight className="h-4 w-4" /></Link>
+          </div>
+          <div className="mt-16 flex items-center gap-3 text-[0.55rem] uppercase tracking-[0.22em] text-white/35"><ArrowDownRight className="h-4 w-4 text-[#FFE2A8]" /> Scroll to enter the world of light</div>
+        </div>
+      </section>
     </PageShell>
   );
 }
