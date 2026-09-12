@@ -1,0 +1,45 @@
+import { KataEditorialPage } from "./KataEditorialPage";
+
+const movements = [
+["1","gedan-barai","down block","ashi-orishiki (hiza-dachi)","gedan",""],
+["2","ryoken-koshi-kamae","both fists hip posture","hachiji-dachi","--",""],
+["3","gedan-barai","down block","ashi-zenkutsu","gedan",""],
+["4","mizu-nagare-no-kamae","water flowing posture","kiba-dachi","chudan",""],
+["5","gedan-barai","down block","zenkutsu-dachi","gedan",""],
+["6","age-zuki","rising punch","zenkutsu-dachi","jodan",""],
+["7","ken-kata-ue / gedan-zuki","fist above shoulder / downward punch","kosa-dachi","-- / gedan",""],
+["8","gedan-barai","down block","hizakutsu (gyaku-zenkutsu)","gedan",""],
+["9","gedan-barai","down block","zenkutsu-dachi","gedan",""],
+["10","age-zuki","rising punch","zenkutsu-dachi","jodan",""],
+["11","ken-kata-ue / gedan-zuki","fist above shoulder / downward punch","kosa-dachi","-- / gedan",""],
+["12","gedan-barai","down block","hizakutsu (gyaku-zenkutsu)","gedan",""],
+["13","gedan-barai","down block","zenkutsu-dachi","gedan",""],
+["14","sho-naname-mae-ue","palm diagonally in front and above","kiba-dachi","jodan","slow speed"],
+["15*","tekubi-uchi","wrist strike","ashi-dachi (tsuru-dachi)","jodan",""],
+["16","tate-shuto-uke","vertical knife-hand block","kiba-dachi","chudan","slow speed"],
+["17","tsuki (choku-zuki)","punch (straight punch)","kiba-dachi","chudan",""],
+["18","tsuki (choku-zuki)","punch (straight punch)","kiba-dachi","chudan",""],
+["19","gedan-barai","down block","zenkutsu-dachi","gedan",""],
+["20","age-zuki","rising punch","zenkutsu-dachi","jodan",""],
+["21","shuto-uke","knife-hand block","kokutsu-dachi","chudan",""],
+["22","shuto-uke","knife-hand block","kokutsu-dachi","chudan","kirikae-ashi"],
+["23","gyaku-zuki","reverse punch","kokutsu-dachi","chudan",""],
+["24","shuto-uke","knife-hand block","kokutsu-dachi","chudan",""],
+["25","gedan-barai","down block","zenkutsu-dachi","gedan",""],
+["26","age-zuki","rising punch","zenkutsu-dachi","jodan",""],
+["27","ken-kata-ue / gedan-zuki","fist above shoulder / downward punch","kosa-dachi","-- / gedan",""],
+["28","gedan-barai","down block","hizakutsu (gyaku-zenkutsu)","gedan",""],
+["29","gedan-barai","down block","zenkutsu-dachi","gedan",""],
+["30","teisho-oshiage-uke","palm-heel pushing-rising block","zenkutsu-dachi","chudan","slow speed"],
+["31","teisho-oshiage-uke / teisho-osae-uke","palm-heel pushing-rising / palm-heel pressing block","zenkutsu-dachi","chudan / chudan","slow speed"],
+["32","teisho-oshiage-uke / teisho-osae-uke","palm-heel pushing-rising / palm-heel pressing block","zenkutsu-dachi","chudan / chudan","slow speed"],
+["33","teisho-oshiage-uke / teisho-osae-uke","palm-heel pushing-rising / palm-heel pressing block","zenkutsu-dachi","chudan / chudan","slow speed"],
+["34","gedan-kamae","downward posture","kokutsu-dachi","gedan","yori-ashi"],
+["35","ryosho-tsukami-uke (koko-uke)","both palms grasping block (tiger-mouth block)","fudo-dachi","jodan / gedan","yori-ashi"],
+["36*","shuto-uke","knife-hand block","kokutsu-dachi","chudan","kaiten-tobi"],
+["37","shuto-uke","knife-hand block","kokutsu-dachi","chudan",""],
+] as [string,string,string,string,string,string][];
+
+export function EmpiPage() {
+  return <KataEditorialPage title="Empi" number="12" series="Sentei Series" previous={["Jion","jion"]} next={["Jitte","jitte"]} intro={<><p><em>Empi</em> (formerly known as <em>Wanshu</em>, named after a Chinese diplomat) has 37 counts, making it the shortest of the <em>Sentei</em> kata. <em>Empi</em> translates as "Flying Swallow" or "Flight of the Swallow." It is a very dynamic kata, requiring speed and agility. It gets its name from the diving patterns of the swallow, a small bird known for its excellent swiftness and maneuverability. Hence, the kata is characterized by quick changes in direction, as well as many sinking and rising motions that mimic the swallow's flight. Just as the swallow catches flying insects in mid-flight, the <em>bunkai</em> of <em>Empi</em> focus on catching the opponent in mid-attack, unbalancing him and making him unable to make further attacks.</p><p className="mt-5"><em>Empi</em> offers several new variations on previously learned techniques, usually by changing their angle. These techniques include <em>gedan-zuki</em>, <em>age-zuki</em>, <em>tekubi-uchi</em> (similar to <em>soto-uke</em>), <em>teisho oshiage-uke</em> and <em>teisho-osae-uke</em>. <em>Empi</em> also allows for the practice of certain rare techniques that, although not unique, are not found in many other kata. These movements include dropping to one knee (<em>orishiki</em>), the reverse lean (in <em>hizakutsu</em>), and <em>kirikae-ashi</em>, an advanced form of footwork whereby the karateka switches the feet to counterattack. <em>Empi</em> is probably most noted for the spinning jump (<em>kaiten-tobi</em>) occurring at the end of the kata, making it attractive to younger karateka.</p></>} movements={movements} />;
+}
