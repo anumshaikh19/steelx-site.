@@ -120,6 +120,13 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           >
             KARATE <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
+          <a
+            href="/chandelier/"
+            aria-label="Open CHANDELIER section"
+            className="hidden items-center gap-2 rounded-full border border-border px-4 py-2.5 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:border-champagne hover:text-champagne xl:inline-flex"
+          >
+            CHANDELIER <ArrowUpRight className="h-3.5 w-3.5" />
+          </a>
           <button
             type="button"
             onClick={() => setOpen(true)}
@@ -204,6 +211,14 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
             className="mt-8 flex w-full items-center justify-between border border-border px-6 py-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground hover:border-champagne hover:text-champagne"
           >
             KARATE
+            <ArrowUpRight className="h-4 w-4" />
+          </a>
+          <a
+            href="/chandelier/"
+            onClick={() => setOpen(false)}
+            className="mt-3 flex w-full items-center justify-between border border-border px-6 py-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground hover:border-champagne hover:text-champagne"
+          >
+            CHANDELIER
             <ArrowUpRight className="h-4 w-4" />
           </a>
           <Link
