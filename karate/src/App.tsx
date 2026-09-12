@@ -42,6 +42,9 @@ import { HangetsuPage } from "@/components/site/HangetsuPage";
 import { KankuShoPage } from "@/components/site/KankuShoPage";
 import { BassaiShoPage } from "@/components/site/BassaiShoPage";
 import { ChintePage } from "@/components/site/ChintePage";
+import { NijushihoPage } from "@/components/site/NijushihoPage";
+import { SochinPage } from "@/components/site/SochinPage";
+import { UnsuPage } from "@/components/site/UnsuPage";
 
 const slugify = (value: string) => decodeURIComponent(value).replace(/\.html$/i, "").replace(/^Kihon\s+0\d+\s*-\s*/i, "").replace(/^Kata\s+\d+\s*-\s*/i, "").replace(/^Kumite\s+0\d+\s*-\s*/i, "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 function referenceParts(pathname: string) { const parts = pathname.replace(/^\/karate\/?/, "").split("/").filter(Boolean); return parts.length >= 2 && ["kihon", "kata", "kumite"].includes(parts[0]) ? { kind: parts[0], slug: parts[1] } : null; }
@@ -72,6 +75,9 @@ export function App() {
   if (pathname === "/karate/kata/kanku-sho" || pathname === "/karate/kata/kanku-sho/") return <KankuShoPage />;
   if (pathname === "/karate/kata/bassai-sho" || pathname === "/karate/kata/bassai-sho/") return <BassaiShoPage />;
   if (pathname === "/karate/kata/chinte" || pathname === "/karate/kata/chinte/") return <ChintePage />;
+  if (pathname === "/karate/kata/nijushiho" || pathname === "/karate/kata/nijushiho/") return <NijushihoPage />;
+  if (pathname === "/karate/kata/sochin" || pathname === "/karate/kata/sochin/") return <SochinPage />;
+  if (pathname === "/karate/kata/unsu" || pathname === "/karate/kata/unsu/") return <UnsuPage />;
   if (reference) return <ReferencePage kind={reference.kind} slug={reference.slug} />;
   return <><Cursor /><div aria-hidden className="grain-overlay" /><Nav /><main><h1 className="sr-only">Dhanurveda — Martial Arts &amp; Calisthenics academy in Nagpada, Mumbai</h1><Hero /><TitleTransition /><DojoStatement /><Arts /><KihonSection /><KataSection /><OneStrike /><Calisthenics /><Belts /><Philosophy /><Timings /><Gallery /><Reviews /><FirstClass /><Trainers /><Location /><FinalCta /></main></>;
 }
