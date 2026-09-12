@@ -1,18 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ChandelierPage } from "@/components/chandelier/chandelier-page";
+import { LuxuryHome } from "@/components/chandelier/luxury-home";
 
 export const Route = createFileRoute("/chandelier/")({
   head: () => ({
     meta: [
-      { title: "Chandelier — The World of Light | SteelX" },
-      {
-        name: "description",
-        content:
-          "An immersive digital showroom for sculptural architectural lighting — chandeliers, pendants, bespoke objects and light in space.",
-      },
-      { property: "og:title", content: "The World of Light — SteelX" },
-      { property: "og:description", content: "Light is not placed. It transforms." },
+      { title: "SteelX — Contemporary Lighting Design House" },
+      { name: "description", content: "A photographic editorial world of architectural, decorative and bespoke lighting." },
+      { property: "og:title", content: "SteelX — Light, Sculpted." },
+      { property: "og:description", content: "Lighting designed to transform space." },
     ],
   }),
-  component: ChandelierPage,
+  component: LuxuryHome,
 });
