@@ -7,7 +7,6 @@ export function SteelXShowroomRuntime() {
     const root = document.documentElement;
     const page = document.querySelector(".sx-page");
     if (!page) return;
-
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const finePointer = window.matchMedia("(pointer: fine)");
     let raf = 0;
@@ -20,23 +19,27 @@ export function SteelXShowroomRuntime() {
     window.addEventListener("scroll", updateProgress, { passive: true });
     window.addEventListener("resize", updateProgress, { passive: true });
 
-    const images = page.querySelectorAll<HTMLImageElement>("img");
-    images.forEach((img, index) => {
+    page.querySelectorAll<HTMLImageElement>("img").forEach((img, index) => {
       img.decoding = "async";
       if (index > 0) img.loading = "lazy";
     });
 
-    // Keep product navigation explicit without changing the shared legacy header.
-    const navLinks = page.querySelector(".sx-nav-links");
-    if (navLinks && !navLinks.querySelector('[data-sx-profile-link]')) {
+    const addProfileLink = (nav: Element) => {
+      if (nav.querySelector('[data-sx-profile-link]')) return;
       const link = document.createElement("a");
       link.href = "/stainless-steel-decorative-profiles";
       link.textContent = "Profiles";
       link.dataset.sxProfileLink = "true";
-      navLinks.insertBefore(link, navLinks.children[1] ?? null);
-    }
+      nav.insertBefore(link, nav.children[1] ?? null);
+    };
+    const desktopNav = page.querySelector(".sx-nav-links");
+    if (desktopNav) addProfileLink(desktopNav);
+    const observer = new MutationObserver(() => {
+      const mobileNav = page.querySelector(".sx-mobile-menu");
+      if (mobileNav) addProfileLink(mobileNav);
+    });
+    observer.observe(page, { childList: true, subtree: true });
 
-    // Avoid presenting unverified grades, formats or fabrication claims as fixed specifications.
     page.querySelectorAll(".sx-tech-row").forEach((row) => row.remove());
     const technicalCopy = page.querySelector(".sx-technical> .sx-container>div:first-child>p");
     if (technicalCopy) technicalCopy.textContent = "Technical information is confirmed against the project brief, selected finish and fabrication requirement. Request the current material data for your specification.";
@@ -53,7 +56,10 @@ export function SteelXShowroomRuntime() {
     page.querySelectorAll(".sx-profile-caption span:nth-child(2)").forEach((el) => {
       el.textContent = "Project dependent";
     });
-    page.querySelectorAll(".sx-spec-line:first-of-type").forEach((row) => row.remove());
+    page.querySelectorAll(".sx-spec-line").forEach((row) => {
+      const label = row.querySelector("span")?.textContent?.trim().toUpperCase();
+      if (label === "GRADE") row.remove();
+    });
     page.querySelectorAll(".sx-selector-caption span:nth-child(2)").forEach((el) => {
       el.textContent = "Project specification";
     });
@@ -74,7 +80,6 @@ export function SteelXShowroomRuntime() {
       const target = event.target as HTMLElement | null;
       cursor.classList.toggle("is-link", !!target?.closest("a,button"));
     };
-
     if (canUseCursor) {
       window.addEventListener("pointermove", moveCursor, { passive: true });
       document.addEventListener("pointerover", setCursorState, { passive: true });
@@ -82,6 +87,7 @@ export function SteelXShowroomRuntime() {
     }
 
     return () => {
+      observer.disconnect();
       window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("resize", updateProgress);
       window.removeEventListener("pointermove", moveCursor);
