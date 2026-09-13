@@ -1,64 +1,56 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/marble")({ component: MarblePage });
 
-const projects = [
-  { name: "Noir Residence", type: "Private residence", detail: "Calacatta + Nero Marquina" },
-  { name: "The Monolith", type: "Hospitality", detail: "Bookmatched stone walls" },
-  { name: "Linea Gallery", type: "Retail interior", detail: "Veined marble + brushed metal" },
-];
+const stones = [
+  ["Calacatta Oro", "Italy", "Marble", "Polished", "₹1,850 / sq.ft", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85"],
+  ["Invisible Grey", "Italy", "Marble", "Honed", "₹1,420 / sq.ft", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85"],
+  ["Nero Marquina", "Spain", "Marble", "Polished", "₹980 / sq.ft", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85"],
+  ["Arabescato", "Italy", "Marble", "Leather", "₹1,690 / sq.ft", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85"],
+  ["Black Cosmic", "Brazil", "Granite", "Polished", "₹1,150 / sq.ft", "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=85"],
+  ["Patagonia", "Brazil", "Granite", "Polished", "₹1,780 / sq.ft", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85"],
+  ["Forest Green", "India", "Granite", "Leather", "₹720 / sq.ft", "https://images.unsplash.com/photo-1615874694520-474822394e73?auto=format&fit=crop&w=1200&q=85"],
+  ["Taj Mahal", "Brazil", "Quartzite", "Honed", "₹1,960 / sq.ft", "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1200&q=85"],
+] as const;
+
+const filters = ["All Stone", "Marble", "Granite", "Quartzite"];
 
 function MarblePage() {
-  return (
-    <main className="min-h-screen bg-[#f4f1eb] text-[#151515] selection:bg-[#151515] selection:text-white">
-      <section className="relative min-h-[88vh] overflow-hidden bg-[#181716] text-[#f4f1eb]">
-        <div className="absolute inset-0 opacity-70 [background:radial-gradient(circle_at_75%_35%,rgba(255,255,255,.18),transparent_25%),linear-gradient(120deg,#111_0%,#292723_48%,#111_100%)]" />
-        <div className="absolute -right-32 top-[-10%] h-[120%] w-[55%] rotate-[18deg] bg-white/5 blur-3xl" />
-        <div className="relative mx-auto flex min-h-[88vh] max-w-7xl flex-col justify-between px-6 py-8 md:px-10 lg:px-14">
-          <div className="flex items-center justify-between text-xs uppercase tracking-[0.28em] text-white/60">
-            <span>STEELX / MARBLE</span><span>Architecture · Interiors · Stone</span>
-          </div>
-          <div className="max-w-6xl pb-12">
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-7 text-xs uppercase tracking-[0.35em] text-white/55">Natural stone, engineered as a statement</motion.p>
-            <motion.h1 initial={{ opacity: 0, y: 35 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1 }} className="max-w-5xl font-serif text-[clamp(4rem,11vw,10rem)] leading-[.82] tracking-[-.065em]">
-              MARBLE<br /><span className="text-white/35">WITHOUT</span><br />LIMITS.
-            </motion.h1>
-            <div className="mt-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-              <p className="max-w-md text-sm leading-7 text-white/60">Rare stone, precise fabrication and obsessive installation for spaces that need to feel permanent.</p>
-              <a href="/contact" className="inline-flex w-fit border border-white/30 px-7 py-4 text-xs uppercase tracking-[.22em] transition hover:bg-white hover:text-black">Start a project ↗</a>
-            </div>
-          </div>
-        </div>
-      </section>
+  const [filter, setFilter] = useState("All Stone");
+  const [selected, setSelected] = useState<string[]>([]);
+  const [menu, setMenu] = useState(false);
+  const products = useMemo(() => filter === "All Stone" ? stones : stones.filter((s) => s[2] === filter), [filter]);
 
-      <section className="mx-auto max-w-7xl px-6 py-24 md:px-10 lg:px-14">
-        <div className="grid gap-12 md:grid-cols-[1.1fr_.9fr] md:items-end">
-          <h2 className="font-serif text-5xl leading-none tracking-[-.045em] md:text-7xl">Stone is not a finish.<br /><i>It is architecture.</i></h2>
-          <p className="max-w-lg text-sm leading-7 text-black/55">We source, cut, bookmatch, edge, finish and install premium marble and natural stone for residential, hospitality and commercial interiors.</p>
-        </div>
-        <div className="mt-20 grid grid-cols-2 gap-px bg-black/10 md:grid-cols-4">
-          {[['25+','stone families'],['100%','custom fabrication'],['360°','project handling'],['01','design language']].map(([n,l]) => <div key={l} className="bg-[#f4f1eb] p-7 md:p-10"><div className="font-serif text-4xl">{n}</div><div className="mt-2 text-[10px] uppercase tracking-[.22em] text-black/45">{l}</div></div>)}
-        </div>
-      </section>
+  return <main className="min-h-screen overflow-x-hidden bg-[#f1eee7] text-[#171715]">
+    <header className="fixed top-0 z-40 w-full border-b border-white/10 bg-[#0c0c0b]/75 text-white backdrop-blur-xl">
+      <div className="mx-auto flex h-20 max-w-[1500px] items-center justify-between px-5 md:px-10">
+        <a href="/marble" className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full border border-white/30 font-serif">S</span><span className="text-[11px] uppercase tracking-[.3em]">Stone Atelier</span></a>
+        <nav className="hidden gap-9 text-[10px] uppercase tracking-[.24em] text-white/60 lg:flex"><a href="#collections">Collections</a><a href="#atelier">Atelier</a><a href="#bespoke">Bespoke</a><a href="#journal">Journal</a></nav>
+        <div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-full border border-white/20 text-xs">◇{selected.length ? ` ${selected.length}` : ""}</span><button onClick={() => setMenu(!menu)} className="grid h-10 w-10 place-items-center rounded-full border border-white/20 lg:hidden">☰</button><a href="#collections" className="hidden rounded-full bg-white px-5 py-3 text-[10px] uppercase tracking-[.2em] text-black lg:block">Explore stone</a></div>
+      </div>
+      {menu && <div className="border-t border-white/10 p-6 lg:hidden"><div className="grid gap-4 text-xs uppercase tracking-[.2em]"><a href="#collections">Collections</a><a href="#atelier">Atelier</a><a href="#bespoke">Bespoke</a></div></div>}
+    </header>
 
-      <section className="bg-[#171615] px-6 py-24 text-[#f4f1eb] md:px-10 lg:px-14">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex items-end justify-between gap-6"><div><p className="text-xs uppercase tracking-[.3em] text-white/40">Capabilities</p><h2 className="mt-4 font-serif text-5xl md:text-7xl">From quarry<br /><i>to quiet luxury.</i></h2></div></div>
-          <div className="mt-16 grid gap-px bg-white/10 md:grid-cols-3">
-            {[['01','Sourcing','Curated marble, quartzite and natural stone selected for tone, movement and scale.'],['02','Fabrication','CNC precision, bookmatching, mitred edges, custom profiles and controlled finishing.'],['03','Installation','Site coordination and meticulous installation where every vein has a place.']].map(([n,t,d]) => <div key={n} className="min-h-72 bg-[#171615] p-8 transition hover:bg-[#242220]"><span className="text-xs text-white/35">{n}</span><h3 className="mt-20 font-serif text-3xl">{t}</h3><p className="mt-4 max-w-xs text-sm leading-6 text-white/45">{d}</p></div>)}
-          </div>
-        </div>
-      </section>
+    <section className="relative min-h-[100svh] overflow-hidden bg-[#0d0d0c] text-white">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_42%,rgba(255,255,255,.16),transparent_27%),radial-gradient(circle_at_20%_75%,rgba(170,145,105,.13),transparent_28%)]" />
+      <motion.div animate={{ rotate: [0, 4, 0], y: [0, -18, 0] }} transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }} className="absolute right-[-7%] top-[14%] h-[65vw] max-h-[700px] w-[52vw] rounded-[48%] border border-white/10 bg-[linear-gradient(120deg,rgba(255,255,255,.22),rgba(255,255,255,.02)_30%,#171715_70%,rgba(255,255,255,.12))] shadow-[inset_-50px_-50px_120px_rgba(0,0,0,.6),inset_30px_30px_80px_rgba(255,255,255,.08),0_60px_120px_rgba(0,0,0,.6)] [transform:perspective(1200px)_rotateY(-28deg)_rotateX(14deg)_rotateZ(-8deg)]" />
+      <div className="relative mx-auto flex min-h-[100svh] max-w-[1500px] flex-col justify-end px-6 pb-14 pt-32 md:px-12 md:pb-20 lg:px-20"><div className="max-w-3xl"><p className="mb-7 text-[10px] uppercase tracking-[.42em] text-white/45">Natural stone · Curated globally · Delivered beautifully</p><h1 className="font-serif text-[clamp(4.8rem,10vw,10rem)] leading-[.78] tracking-[-.065em]">The earth's<br/><i className="text-white/40">most beautiful</i><br/>surfaces.</h1><p className="mt-10 max-w-md text-sm leading-7 text-white/55">A private collection of marble, granite and quartzite for architecture that deserves more than ordinary.</p><div className="mt-9 flex flex-wrap gap-3"><a href="#collections" className="rounded-full bg-white px-7 py-4 text-[10px] uppercase tracking-[.22em] text-black transition hover:scale-105">Discover collection</a><a href="#bespoke" className="rounded-full border border-white/20 px-7 py-4 text-[10px] uppercase tracking-[.22em] hover:bg-white/10">Request a slab</a></div></div><div className="mt-16 flex justify-between border-t border-white/10 pt-5 text-[9px] uppercase tracking-[.25em] text-white/35"><span>01 — The collection</span><span>Scroll to explore ↓</span><span className="hidden md:block">India · Italy · Brazil · Spain</span></div></div>
+    </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-24 md:px-10 lg:px-14">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end"><div><p className="text-xs uppercase tracking-[.3em] text-black/40">Selected work</p><h2 className="mt-4 font-serif text-5xl md:text-7xl">Material,<br /><i>made monumental.</i></h2></div><a href="/projects" className="text-xs uppercase tracking-[.2em] underline underline-offset-8">View projects ↗</a></div>
-        <div className="mt-16 grid gap-5 md:grid-cols-3">{projects.map((p, i) => <article key={p.name} className="group min-h-[430px] overflow-hidden bg-[#d9d3ca] p-7 flex flex-col justify-end relative"><div className={`absolute inset-0 opacity-70 ${i===0?'[background:linear-gradient(135deg,#eee8df,#9d948a_48%,#e8e1d8)]':i===1?'[background:linear-gradient(125deg,#252525,#777_40%,#151515)]':'[background:linear-gradient(145deg,#d5cec3,#eee9e1_50%,#8d857c)]'}`} /><div className="absolute inset-0 opacity-20 [background:repeating-linear-gradient(125deg,transparent_0,transparent_12px,rgba(255,255,255,.5)_13px,transparent_14px)]" /><div className="relative"><p className="text-[10px] uppercase tracking-[.25em] text-black/50">{p.type}</p><h3 className="mt-2 font-serif text-4xl">{p.name}</h3><p className="mt-2 text-xs text-black/55">{p.detail}</p></div></article>)}</div>
-      </section>
+    <section id="collections" className="mx-auto max-w-[1500px] px-6 py-28 md:px-12 lg:px-20"><div className="flex flex-col justify-between gap-8 md:flex-row md:items-end"><div><p className="text-[10px] uppercase tracking-[.35em] text-black/40">01 / Curated collection</p><h2 className="mt-5 font-serif text-6xl leading-[.85] tracking-[-.055em] md:text-8xl">Stone with<br/><i>character.</i></h2></div><p className="max-w-sm text-sm leading-7 text-black/50">Every slab is selected for movement, depth, provenance and the ability to transform a room.</p></div><div className="mt-14 flex gap-2 overflow-x-auto pb-3">{filters.map((item) => <button key={item} onClick={() => setFilter(item)} className={`shrink-0 rounded-full border px-5 py-3 text-[10px] uppercase tracking-[.2em] ${filter === item ? "border-black bg-black text-white" : "border-black/15"}`}>{item}</button>)}</div><div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{products.map((stone, i) => <motion.article key={stone[0]} layout initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * .04 }} className="group overflow-hidden bg-[#dedad2]"><div className="relative aspect-[.78] overflow-hidden"><img src={stone[5]} alt={stone[0]} loading="lazy" className="h-full w-full object-cover transition duration-1000 group-hover:scale-110"/><div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent"/><span className="absolute left-4 top-4 rounded-full border border-white/25 bg-black/20 px-3 py-1.5 text-[8px] uppercase tracking-[.2em] text-white">{stone[2]}</span><button onClick={() => setSelected((x) => [...x, stone[0]])} className="absolute bottom-4 right-4 grid h-11 w-11 translate-y-3 place-items-center rounded-full bg-white text-black opacity-0 transition group-hover:translate-y-0 group-hover:opacity-100">+</button><div className="absolute bottom-5 left-5 text-white"><p className="text-[9px] uppercase tracking-[.2em] text-white/55">{stone[1]} · {stone[3]}</p><h3 className="mt-1 font-serif text-3xl">{stone[0]}</h3></div></div><div className="flex justify-between bg-white/60 px-5 py-4 text-[10px] uppercase tracking-[.15em]"><span className="text-black/45">Starting from</span><span>{stone[4]}</span></div></motion.article>)}</div></section>
 
-      <section className="border-t border-black/10 px-6 py-24 md:px-10 lg:px-14"><div className="mx-auto max-w-7xl"><p className="text-xs uppercase tracking-[.3em] text-black/40">The approach</p><div className="mt-8 grid gap-10 md:grid-cols-2"><h2 className="font-serif text-5xl leading-[.95] md:text-7xl">Less decoration.<br /><i>More presence.</i></h2><div className="space-y-7 text-sm leading-7 text-black/55"><p>We treat every slab as a composition. Vein direction, junctions, edge details and reflected light are resolved before fabrication begins.</p><p>The result is not simply a stone surface. It is a continuous architectural gesture—quiet from a distance, extraordinary up close.</p><a href="/contact" className="inline-block border-b border-black pb-2 text-xs uppercase tracking-[.22em] text-black">Discuss your space ↗</a></div></div></div></section>
+    <section id="atelier" className="bg-[#10100f] px-6 py-32 text-white md:px-12 lg:px-20"><div className="mx-auto grid max-w-[1500px] gap-16 lg:grid-cols-[.8fr_1.2fr] lg:items-center"><div><p className="text-[10px] uppercase tracking-[.35em] text-white/35">02 / The atelier</p><h2 className="mt-5 font-serif text-6xl leading-[.85] md:text-8xl">Not a<br/><i className="text-white/35">showroom.</i><br/>A curation.</h2><p className="mt-9 max-w-md text-sm leading-7 text-white/45">We work with architects, designers and private clients to source exceptional slabs, engineer every detail and deliver a finish that feels inevitable.</p></div><div className="relative h-[560px] overflow-hidden"><div className="absolute inset-0 bg-[radial-gradient(ellipse_at_40%_30%,rgba(255,255,255,.18),transparent_20%),linear-gradient(120deg,#201f1d,#77736b_35%,#252422_58%,#0d0d0c)]"/><motion.div animate={{ x: [-20, 30, -20], rotate: [0, 2, 0] }} transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }} className="absolute left-[15%] top-[8%] h-[85%] w-[70%] border border-white/10 bg-[repeating-linear-gradient(118deg,transparent_0,transparent_28px,rgba(255,255,255,.08)_30px,transparent_33px)] shadow-2xl [transform:perspective(1200px)_rotateY(-15deg)_rotateX(8deg)]"/></div></div></section>
 
-      <section className="bg-[#ded8cf] px-6 py-28 md:px-10 lg:px-14"><div className="mx-auto max-w-7xl text-center"><p className="text-xs uppercase tracking-[.3em] text-black/40">Build something lasting</p><h2 className="mx-auto mt-7 max-w-4xl font-serif text-6xl leading-[.9] tracking-[-.05em] md:text-8xl">Your space.<br /><i>Your stone.</i></h2><a href="/contact" className="mt-10 inline-flex bg-black px-8 py-4 text-xs uppercase tracking-[.22em] text-white transition hover:translate-y-[-2px]">Start a conversation ↗</a></div></section>
-    </main>
-  );
+    <section id="bespoke" className="bg-[#d8d1c6] px-6 py-28 md:px-12 lg:px-20"><div className="mx-auto max-w-[1500px]"><p className="text-[10px] uppercase tracking-[.35em] text-black/40">03 / Bespoke service</p><div className="mt-7 grid gap-12 lg:grid-cols-[1fr_.7fr]"><h2 className="font-serif text-6xl leading-[.85] md:text-8xl">Your vision,<br/><i>carved in stone.</i></h2><div className="space-y-8 text-sm leading-7 text-black/55"><p>Tell us the space, mood and material you are searching for. We curate slabs, arrange samples, coordinate fabrication and help specify the right finish.</p><div className="grid grid-cols-2 gap-px bg-black/10">{[["01","Consult"],["02","Curate"],["03","Fabricate"],["04","Install"]].map(([n,t]) => <div key={n} className="bg-[#d8d1c6] p-5"><span className="text-[9px] text-black/35">{n}</span><p className="mt-8 font-serif text-2xl text-black">{t}</p></div>)}</div><a href="/contact" className="inline-flex rounded-full bg-black px-7 py-4 text-[10px] uppercase tracking-[.22em] text-white">Book a private consultation</a></div></div></div></section>
+
+    <section id="journal" className="mx-auto max-w-[1500px] px-6 py-28 md:px-12 lg:px-20"><p className="text-[10px] uppercase tracking-[.35em] text-black/40">04 / Field notes</p><h2 className="mt-5 font-serif text-6xl tracking-[-.05em] md:text-8xl">The stone<br/><i>journal.</i></h2><div className="mt-16 grid gap-px bg-black/10 md:grid-cols-3">{[["01","The art of bookmatching","Why continuity turns a slab into an architectural gesture."],["02","Polished vs honed","How finish changes light, tactility and character."],["03","Inside the quarry","Following a block from extraction to installation."]].map(([n,t,d]) => <article key={n} className="bg-[#f1eee7] p-8 transition hover:bg-white md:p-10"><span className="text-[9px] text-black/35">{n}</span><div className="mt-28"><h3 className="font-serif text-4xl leading-none">{t}</h3><p className="mt-4 max-w-xs text-sm leading-6 text-black/45">{d}</p><span className="mt-8 inline-block text-[9px] uppercase tracking-[.22em] underline underline-offset-8">Read story ↗</span></div></article>)}</div></section>
+
+    <section className="relative overflow-hidden bg-[#0e0e0d] px-6 py-32 text-center text-white"><div className="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/5 blur-3xl"/><div className="relative mx-auto max-w-4xl"><p className="text-[10px] uppercase tracking-[.35em] text-white/35">The final piece</p><h2 className="mt-7 font-serif text-6xl leading-[.85] md:text-9xl">Make the<br/><i className="text-white/35">surface</i><br/>matter.</h2><p className="mx-auto mt-9 max-w-md text-sm leading-7 text-white/45">Exceptional stone is not something you simply buy. It is something you select, experience and make part of the architecture.</p><a href="/contact" className="mt-9 inline-flex rounded-full bg-white px-8 py-4 text-[10px] uppercase tracking-[.22em] text-black transition hover:scale-105">Speak with a stone specialist</a></div></section>
+
+    <footer className="bg-[#0e0e0d] px-6 pb-8 text-white md:px-12 lg:px-20"><div className="mx-auto max-w-[1500px] border-t border-white/10 pt-10"><div className="grid gap-12 md:grid-cols-4"><div className="md:col-span-2"><div className="font-serif text-3xl">Stone Atelier</div><p className="mt-5 max-w-sm text-xs leading-6 text-white/35">A premium stone house for architects, designers and private clients seeking extraordinary marble, granite and quartzite.</p></div><div><p className="text-[9px] uppercase tracking-[.25em] text-white/30">Explore</p><div className="mt-5 grid gap-3 text-xs text-white/55"><a href="#collections">Collections</a><a href="#atelier">Atelier</a><a href="#bespoke">Bespoke</a></div></div><div><p className="text-[9px] uppercase tracking-[.25em] text-white/30">Contact</p><div className="mt-5 grid gap-3 text-xs text-white/55"><a href="mailto:hello@stoneatelier.in">hello@stoneatelier.in</a><a href="/contact">Private consultation</a><span>Mumbai · India</span></div></div></div><div className="mt-16 border-t border-white/10 pt-6 text-[9px] uppercase tracking-[.2em] text-white/25">© 2026 Stone Atelier · Natural stone, precisely considered</div></div></footer>
+
+    {selected.length > 0 && <aside className="fixed bottom-5 right-5 z-50 w-[min(380px,calc(100vw-40px))] rounded-2xl border border-black/10 bg-white/95 p-5 shadow-2xl backdrop-blur-xl"><div className="flex justify-between"><div><p className="text-[9px] uppercase tracking-[.25em] text-black/40">Your selection</p><h3 className="mt-1 font-serif text-2xl">{selected.length} slab{selected.length > 1 ? "s" : ""}</h3></div><button onClick={() => setSelected([])} className="text-xs text-black/40">Clear</button></div><div className="mt-4 max-h-36 overflow-auto">{selected.map((s, i) => <div key={`${s}-${i}`} className="border-t border-black/10 py-3 text-xs">{s}</div>)}</div><a href="/contact" className="mt-3 block rounded-full bg-black px-5 py-3 text-center text-[9px] uppercase tracking-[.2em] text-white">Request quotation</a></aside>}
+  </main>;
 }
