@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
 
 const slides = [
   {
@@ -7,28 +7,24 @@ const slides = [
     eyebrow: "Featured Collection",
     description: "A masterpiece of nature, where golden veins meet timeless elegance.",
     image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=92",
-    accent: "#d9b45b",
   },
   {
     name: "Nero Marquina",
     eyebrow: "Featured Collection",
     description: "Deep black stone traced with luminous white movement and quiet drama.",
     image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=92",
-    accent: "#d7b768",
   },
   {
     name: "Verde Alpi Marble",
     eyebrow: "Featured Collection",
     description: "A rare green expression, layered with mineral depth and natural character.",
     image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=92",
-    accent: "#bda55d",
   },
   {
     name: "Taj Mahal Quartzite",
     eyebrow: "Featured Collection",
     description: "Warm ivory quartzite with subtle movement, designed for enduring spaces.",
     image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1800&q=92",
-    accent: "#d4b26b",
   },
 ];
 
@@ -65,14 +61,14 @@ export function MarbleHomeSlider() {
     restart();
   };
 
-  const onPointerDown = (event: React.PointerEvent<HTMLElement>) => {
+  const onPointerDown = (event: PointerEvent<HTMLElement>) => {
     startX.current = event.clientX;
     dragDelta.current = 0;
     setDragging(true);
     event.currentTarget.setPointerCapture(event.pointerId);
   };
 
-  const onPointerMove = (event: React.PointerEvent<HTMLElement>) => {
+  const onPointerMove = (event: PointerEvent<HTMLElement>) => {
     if (!dragging) return;
     dragDelta.current = event.clientX - startX.current;
   };
@@ -87,7 +83,7 @@ export function MarbleHomeSlider() {
     }
   };
 
-  const onMouseMove = (event: React.MouseEvent<HTMLElement>) => {
+  const onMouseMove = (event: MouseEvent<HTMLElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
     setCursor({
       x: ((event.clientX - rect.left) / rect.width) * 100,
@@ -106,7 +102,7 @@ export function MarbleHomeSlider() {
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
       onMouseMove={onMouseMove}
-      style={{ "--mx": `${cursor.x}%`, "--my": `${cursor.y}%` } as React.CSSProperties}
+      style={{ "--mx": `${cursor.x}%`, "--my": `${cursor.y}%` } as CSSProperties}
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_var(--mx)_var(--my),rgba(232,194,111,.14),transparent_25%),linear-gradient(110deg,#02070a_0%,#0a1115_42%,#3b3125_100%)]" />
       <div className="absolute inset-0 opacity-70" style={{ backgroundImage: `url(${current.image})`, backgroundSize: "cover", backgroundPosition: "center", filter: "blur(18px) saturate(.8)", transform: "scale(1.08)" }} />
@@ -162,10 +158,8 @@ export function MarbleHomeSlider() {
               <span className="h-px w-12 bg-[#d8b466]" />
               {current.eyebrow}
             </div>
-            <h1 className="font-serif text-[58px] font-normal leading-[.94] tracking-[-.045em] text-white sm:text-[72px] lg:text-[78px]">
-              {current.name.replace(" Marble", "")}
-              {current.name.includes(" Marble") && <><br /><span className="text-white">Marble</span></>}
-              {current.name.includes("Quartzite") && <><br /><span className="text-white">Quartzite</span></>}
+            <h1 className="max-w-[580px] font-serif text-[58px] font-normal leading-[.94] tracking-[-.045em] text-white sm:text-[72px] lg:text-[78px]">
+              {current.name}
             </h1>
             <p className="mt-7 max-w-[400px] text-[15px] leading-7 text-white/70">{current.description}</p>
             <a href="#collections" className="group mt-8 inline-flex items-center gap-8 bg-[#b98b42] px-6 py-4 text-[12px] font-medium text-white shadow-[0_12px_45px_rgba(0,0,0,.22)] transition hover:bg-[#d2a85d]">
