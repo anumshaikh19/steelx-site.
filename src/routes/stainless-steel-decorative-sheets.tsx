@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SteelXShowroomPage } from "@/components/steelx-showroom-pages";
+import { SteelXShowroomRuntime } from "@/components/steelx-showroom-runtime";
 import "@/styles/steelx-motion.css";
+import "@/styles/steelx-final-polish.css";
 
 export const Route = createFileRoute("/stainless-steel-decorative-sheets")({
   head: () => ({
@@ -19,5 +21,10 @@ export const Route = createFileRoute("/stainless-steel-decorative-sheets")({
       { property: "og:type", content: "website" },
     ],
   }),
-  component: () => <SteelXShowroomPage kind="sheets" />,
+  component: () => (
+    <>
+      <SteelXShowroomPage kind="sheets" />
+      <SteelXShowroomRuntime />
+    </>
+  ),
 });
