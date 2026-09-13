@@ -26,13 +26,45 @@ export function SteelXShowroomRuntime() {
       if (index > 0) img.loading = "lazy";
     });
 
+    // Keep product navigation explicit without changing the shared legacy header.
+    const navLinks = page.querySelector(".sx-nav-links");
+    if (navLinks && !navLinks.querySelector('[data-sx-profile-link]')) {
+      const link = document.createElement("a");
+      link.href = "/stainless-steel-decorative-profiles";
+      link.textContent = "Profiles";
+      link.dataset.sxProfileLink = "true";
+      navLinks.insertBefore(link, navLinks.children[1] ?? null);
+    }
+
+    // Avoid presenting unverified grades, formats or fabrication claims as fixed specifications.
+    page.querySelectorAll(".sx-tech-row").forEach((row) => row.remove());
+    const technicalCopy = page.querySelector(".sx-technical> .sx-container>div:first-child>p");
+    if (technicalCopy) technicalCopy.textContent = "Technical information is confirmed against the project brief, selected finish and fabrication requirement. Request the current material data for your specification.";
+    const techList = page.querySelector(".sx-tech-list");
+    if (techList && !techList.querySelector(".sx-production-note")) {
+      const note = document.createElement("div");
+      note.className = "sx-production-note sx-tech-row";
+      note.innerHTML = '<span>DATA</span><strong>Current technical information available on request</strong>';
+      techList.insertBefore(note, techList.firstChild);
+    }
+    page.querySelectorAll(".sx-profile-item small").forEach((el) => {
+      el.textContent = "Section and dimensions confirmed per project";
+    });
+    page.querySelectorAll(".sx-profile-caption span:nth-child(2)").forEach((el) => {
+      el.textContent = "Project dependent";
+    });
+    page.querySelectorAll(".sx-spec-line:first-of-type").forEach((row) => row.remove());
+    page.querySelectorAll(".sx-selector-caption span:nth-child(2)").forEach((el) => {
+      el.textContent = "Project specification";
+    });
+
     const cursor = cursorRef.current;
-    const canUseCursor = cursor && finePointer.matches && !reduced.matches;
+    const canUseCursor = !!cursor && finePointer.matches && !reduced.matches;
     const moveCursor = (event: PointerEvent) => {
       if (!cursor || !canUseCursor) return;
+      cancelAnimationFrame(raf);
       const x = event.clientX;
       const y = event.clientY;
-      cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       });
