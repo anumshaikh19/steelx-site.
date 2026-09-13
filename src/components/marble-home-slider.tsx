@@ -1,249 +1,111 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 
 const slides = [
-  {
-    name: "Calacatta Gold Marble",
-    eyebrow: "Featured Collection",
-    description: "A masterpiece of nature, where golden veins meet timeless elegance.",
-    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=92",
-  },
-  {
-    name: "Nero Marquina",
-    eyebrow: "Featured Collection",
-    description: "Deep black stone traced with luminous white movement and quiet drama.",
-    image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=92",
-  },
-  {
-    name: "Verde Alpi Marble",
-    eyebrow: "Featured Collection",
-    description: "A rare green expression, layered with mineral depth and natural character.",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=92",
-  },
-  {
-    name: "Taj Mahal Quartzite",
-    eyebrow: "Featured Collection",
-    description: "Warm ivory quartzite with subtle movement, designed for enduring spaces.",
-    image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1800&q=92",
-  },
+  { title: "Calacatta Gold Marble", copy: "A masterpiece of nature, where golden veins meet timeless elegance.", image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2200&q=92", alt: "Luxury interior featuring warm white marble with golden veining" },
+  { title: "Nero Marquina", copy: "Deep black stone traced with luminous white movement and quiet drama.", image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=2200&q=92", alt: "Dark luxury interior with dramatic black stone surfaces" },
+  { title: "Verde Alpi Marble", copy: "A rare green expression layered with mineral depth and natural character.", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2200&q=92", alt: "Green natural stone interior with rich mineral veining" },
+  { title: "Taj Mahal Quartzite", copy: "Warm ivory quartzite with subtle movement, designed for enduring spaces.", image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=2200&q=92", alt: "Bright contemporary interior with ivory stone surfaces" },
 ];
 
 const collections = [
   ["White Marbles", "Pure elegance", slides[0].image],
   ["Black Marbles", "Bold sophistication", slides[1].image],
   ["Colored Marbles", "Vibrant expression", slides[2].image],
-  ["Granites", "Enduring strength", "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1000&q=90"],
+  ["Granites", "Enduring strength", "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=90"],
 ];
 
+const css = String.raw`
+@property --marble-glow { syntax:'<number>'; inherits:false; initial-value:.35; }
+@property --vein-position { syntax:'<percentage>'; inherits:false; initial-value:0%; }
+.marble-slider{--bg:#080a0b;--panel:rgba(14,15,15,.9);--text:#f5f5f2;--muted:rgba(245,245,242,.68);--line:rgba(255,255,255,.18);--gold:#d4af37;--gold-soft:#e7c978;color-scheme:dark;background:var(--bg);--marble-glow:.35}
+.marble-slider[data-theme='light']{--bg:#f5f5f0;--panel:rgba(248,247,242,.92);--text:#202020;--muted:rgba(32,32,32,.68);--line:rgba(32,32,32,.18);color-scheme:light}
+@media(prefers-color-scheme:light){.marble-slider:not([data-theme='dark']){--bg:#f5f5f0;--panel:rgba(248,247,242,.92);--text:#202020;--muted:rgba(32,32,32,.68);--line:rgba(32,32,32,.18);color-scheme:light}}
+.marble-slider *{box-sizing:border-box}.marble-slider button,.marble-slider a{-webkit-tap-highlight-color:transparent}.marble-slider :is(button,a):focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+.marble-slider:has(.marble-control:hover){--marble-glow:.62}.marble-slider:has(.marble-control:focus-visible){--marble-glow:.72}
+.marble-slider .marble-control,.marble-slider .marble-theme,.marble-slider .marble-card{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='11' fill='%23111111' fill-opacity='.9' stroke='%23d4af37' stroke-width='1.5'/%3E%3Cpath d='M9 19c5-8 9-8 14-4M10 23c4-3 7-4 12-3' fill='none' stroke='%23e7c978' stroke-width='1'/%3E%3C/svg%3E") 16 16,pointer}
+.marble-slider .marble-viewport{scrollbar-width:none;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-behavior:smooth}.marble-slider .marble-viewport::-webkit-scrollbar,.marble-slider .marble-collections::-webkit-scrollbar{display:none}.marble-slider .marble-slide{scroll-snap-align:start;scroll-snap-stop:always;contain:layout paint;isolation:isolate}
+.marble-slider .marble-collections{scrollbar-width:none;scroll-snap-type:x mandatory;overscroll-behavior-x:contain}.marble-slider .marble-card{scroll-snap-align:center;scroll-snap-stop:always}
+.marble-slider .marble-image{will-change:transform,opacity;transform:translateZ(0) scale(1.035);transition:transform 1.1s cubic-bezier(.22,1,.36,1),filter 1.1s ease}.marble-slider .marble-slide:hover .marble-image{transform:translateZ(0) scale(1.07);filter:saturate(1.08) contrast(1.03)}
+.marble-slider .marble-vein{background:linear-gradient(112deg,transparent 0%,rgba(212,175,55,0) 36%,rgba(255,246,216,.42) 48%,rgba(212,175,55,0) 59%,transparent 72%);background-size:190% 100%;animation:marble-polish 9s ease-in-out infinite;mix-blend-mode:screen}.marble-slider .marble-grain{background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");opacity:.16;mix-blend-mode:soft-light}
+.marble-slider .marble-autoplay{animation:marble-progress 7s linear forwards;transform-origin:left center}.marble-slider:hover .marble-autoplay{animation-play-state:paused}.marble-slider .marble-control{min-width:44px;min-height:44px}.marble-slider .marble-ripple{position:relative;overflow:hidden}.marble-slider .marble-ripple::after{content:'';position:absolute;left:50%;top:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.22);transform:translate(-50%,-50%);transition:width .45s ease,height .45s ease}.marble-slider .marble-ripple:active::after{width:150px;height:150px}
+.marble-slider .marble-dot{width:6px;transition:width .35s ease,background-color .35s ease,opacity .35s ease}.marble-slider .marble-dot[data-active='true']{width:30px;background:var(--gold);opacity:1}.marble-slider .marble-theme-icon{transition:transform .5s ease}.marble-slider .marble-theme:hover .marble-theme-icon{transform:rotate(35deg) scale(1.08)}
+.marble-slider .marble-card::before{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,transparent 28%,rgba(0,0,0,.78));pointer-events:none}.marble-slider .marble-card img{transition:transform .8s cubic-bezier(.22,1,.36,1);will-change:transform}.marble-slider .marble-card:hover img{transform:scale(1.07)}
+.marble-slider .marble-hero-content{background:linear-gradient(135deg,rgba(12,13,13,.72),rgba(12,13,13,.18));backdrop-filter:blur(7px)}.marble-slider[data-theme='light'] .marble-hero-content{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(255,255,255,.3))}.marble-slider .marble-viewport:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+@keyframes marble-polish{0%,100%{background-position:190% 0;opacity:.15}45%{background-position:50% 0;opacity:.5}70%{background-position:-10% 0;opacity:.2}}@keyframes marble-progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media(prefers-reduced-motion:reduce){.marble-slider *,.marble-slider *::before,.marble-slider *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}.marble-slider .marble-image{transform:none}}
+@supports not(selector(:has(*))){.marble-slider .marble-control:hover{cursor:pointer}}
+@media(min-width:768px){.marble-slider .marble-card{flex-basis:calc((100% - 24px)/2)}}@media(min-width:1100px){.marble-slider .marble-card{flex-basis:calc((100% - 48px)/3)}}
+`;
+
 export function MarbleHomeSlider() {
+  const viewportRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  const [dragging, setDragging] = useState(false);
-  const [cursor, setCursor] = useState({ x: 50, y: 50 });
-  const startX = useRef(0);
-  const dragDelta = useRef(0);
-  const timer = useRef<number | undefined>(undefined);
-
-  const next = () => setActive((value) => (value + 1) % slides.length);
-  const prev = () => setActive((value) => (value - 1 + slides.length) % slides.length);
-
-  useEffect(() => {
-    timer.current = window.setInterval(next, 6200);
-    return () => window.clearInterval(timer.current);
-  }, []);
-
-  const restart = () => {
-    window.clearInterval(timer.current);
-    timer.current = window.setInterval(next, 6200);
-  };
-
-  const goTo = (index: number) => {
-    setActive(index);
-    restart();
-  };
-
-  const onPointerDown = (event: PointerEvent<HTMLElement>) => {
-    startX.current = event.clientX;
-    dragDelta.current = 0;
-    setDragging(true);
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-
-  const onPointerMove = (event: PointerEvent<HTMLElement>) => {
-    if (!dragging) return;
-    dragDelta.current = event.clientX - startX.current;
-  };
-
-  const onPointerUp = () => {
-    if (!dragging) return;
-    setDragging(false);
-    if (Math.abs(dragDelta.current) > 55) {
-      if (dragDelta.current < 0) next();
-      else prev();
-      restart();
-    }
-  };
-
-  const onMouseMove = (event: MouseEvent<HTMLElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    setCursor({
-      x: ((event.clientX - rect.left) / rect.width) * 100,
-      y: ((event.clientY - rect.top) / rect.height) * 100,
-    });
-  };
-
+  const [theme, setTheme] = useState<"light" | "dark" | undefined>(undefined);
   const current = slides[active];
 
+  const scrollToSlide = (index: number) => {
+    const viewport = viewportRef.current;
+    const slide = viewport?.querySelector<HTMLElement>(`[data-slide-index='${index}']`);
+    slide?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+    setActive(index);
+  };
+  const next = () => scrollToSlide((active + 1) % slides.length);
+  const prev = () => scrollToSlide((active - 1 + slides.length) % slides.length);
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    let frame = 0;
+    const update = () => { setActive(Math.min(Math.max(Math.round(viewport.scrollLeft / Math.max(viewport.clientWidth, 1)), 0), slides.length - 1)); frame = 0; };
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
+    viewport.addEventListener("scroll", onScroll, { passive: true });
+    return () => { viewport.removeEventListener("scroll", onScroll); if (frame) cancelAnimationFrame(frame); };
+  }, []);
+
+  useEffect(() => {
+    const onKey = (event: globalThis.KeyboardEvent) => { if (event.key === "ArrowRight") next(); if (event.key === "ArrowLeft") prev(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
+  const onHeroKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key === "ArrowRight") { event.preventDefault(); next(); }
+    if (event.key === "ArrowLeft") { event.preventDefault(); prev(); }
+  };
+
   return (
-    <section
-      id="top"
-      className="marble-slider relative isolate min-h-[760px] overflow-hidden bg-[#05090b] text-white md:min-h-[850px] lg:h-[min(100vh,1024px)] lg:min-h-[820px]"
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerUp}
-      onMouseMove={onMouseMove}
-      style={{ "--mx": `${cursor.x}%`, "--my": `${cursor.y}%` } as CSSProperties}
-    >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_var(--mx)_var(--my),rgba(232,194,111,.14),transparent_25%),linear-gradient(110deg,#02070a_0%,#0a1115_42%,#3b3125_100%)]" />
-      <div className="absolute inset-0 opacity-70" style={{ backgroundImage: `url(${current.image})`, backgroundSize: "cover", backgroundPosition: "center", filter: "blur(18px) saturate(.8)", transform: "scale(1.08)" }} />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(1,5,7,.96)_0%,rgba(1,6,8,.78)_29%,rgba(1,6,8,.22)_59%,rgba(3,5,5,.16)_100%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(1,5,7,.98)_0%,transparent_28%,rgba(1,5,7,.3)_100%)]" />
+    <section id="top" className="marble-slider relative isolate overflow-hidden text-[var(--text)]" data-theme={theme} style={{ "--hero-image": `url(${current.image})` } as CSSProperties} onKeyDown={onHeroKeyDown}>
+      <style>{css}</style>
+      <div className="absolute inset-0 z-0 bg-[var(--bg)]" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-45 blur-2xl transition-all duration-1000" style={{ backgroundImage: "var(--hero-image)", backgroundSize: "cover", backgroundPosition: "center", transform: "scale(1.08)" }} aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(3,6,7,.92)_0%,rgba(3,6,7,.68)_34%,rgba(3,6,7,.2)_68%,rgba(3,6,7,.42)_100%)]" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(0deg,rgba(3,6,7,.98)_0%,transparent_35%,rgba(3,6,7,.35)_100%)]" aria-hidden="true" />
+      <div className="marble-grain pointer-events-none absolute inset-0 z-30" aria-hidden="true" />
 
-      <header className="absolute left-0 right-0 top-0 z-40 border-b border-white/[.08] bg-black/10 backdrop-blur-[2px]">
-        <div className="mx-auto flex h-[90px] max-w-[1500px] items-center justify-between px-6 md:px-10 lg:px-12">
-          <a href="#top" className="group min-w-[190px]">
-            <div className="font-serif text-[24px] font-light tracking-[.42em] text-white">MARBLES</div>
-            <div className="mt-1 text-[8px] uppercase tracking-[.28em] text-white/55">Natural stone. Timeless beauty.</div>
-          </a>
-
-          <nav className="hidden items-center gap-9 lg:flex">
-            {["Home", "Collections", "Spaces", "Process", "Journal", "About"].map((item, index) => (
-              <a
-                key={item}
-                href={index === 0 ? "#top" : `#${["", "collections", "spaces", "craft", "journal", "consult"][index]}`}
-                className={`relative py-8 text-[13px] font-light tracking-wide transition ${index === 0 ? "text-white" : "text-white/65 hover:text-white"}`}
-              >
-                {item}
-                {index === 0 && <span className="absolute bottom-[-1px] left-0 right-0 h-px bg-[#d8b466]" />}
-              </a>
-            ))}
+      <header className="absolute inset-x-0 top-0 z-50 border-b border-white/10 bg-black/15 backdrop-blur-md">
+        <div className="mx-auto flex h-[86px] max-w-[1540px] items-center justify-between px-5 sm:px-8 lg:px-12">
+          <a href="#top" className="shrink-0" aria-label="Marbles home"><div className="font-serif text-[23px] font-light tracking-[.42em]">MARBLES</div><div className="mt-1 text-[8px] uppercase tracking-[.25em] opacity-60">Natural stone. Timeless beauty.</div></a>
+          <nav className="hidden items-center gap-8 xl:flex" aria-label="Primary navigation">
+            {[["Home", "top"], ["Collections", "collections"], ["Spaces", "spaces"], ["Process", "craft"], ["Journal", "journal"], ["About", "consult"]].map(([label, href], index) => <a key={label} href={`#${href}`} className={`relative py-7 text-[13px] tracking-wide transition hover:text-[var(--gold-soft)] ${index === 0 ? "text-white" : "text-white/70"}`}>{label}{index === 0 && <span className="absolute bottom-0 left-0 right-0 h-px bg-[var(--gold)]" />}</a>)}
           </nav>
-
-          <div className="flex items-center gap-4">
-            <button aria-label="Search" className="hidden h-10 w-10 place-items-center rounded-full border border-white/10 md:grid">
-              <span className="h-4 w-4 rounded-full border border-white/75 after:absolute after:ml-[11px] after:mt-[11px] after:h-2 after:w-px after:rotate-[-42deg] after:bg-white/75" />
-            </button>
-            <button aria-label="Light mode" className="hidden h-10 w-10 place-items-center rounded-full md:grid">
-              <span className="text-lg text-white/80">☼</span>
-            </button>
-            <a href="#consult" className="rounded-full border border-[#d7b36d]/70 px-6 py-3 text-[12px] tracking-wide text-white transition hover:bg-[#d7b36d] hover:text-[#111]">Get Quote</a>
-          </div>
+          <div className="flex items-center gap-2 sm:gap-3"><button className="marble-theme marble-control grid h-11 w-11 place-items-center rounded-full border border-white/15 text-white/80" type="button" onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label="Toggle light and dark mode"><span className="marble-theme-icon text-xl">☼</span></button><a href="#consult" className="marble-control rounded-full border border-[#d4af37]/70 px-5 py-3 text-[12px] tracking-wide text-white transition hover:bg-[#d4af37] hover:text-[#111] sm:px-6">Get Quote</a></div>
         </div>
       </header>
 
-      <div className="absolute right-[8%] top-[18%] h-32 w-32 rounded-full bg-[#f2c873]/20 blur-3xl" />
-      <div className="absolute left-[37%] top-[46%] h-3 w-3 rounded-full bg-[#f5cf7d] shadow-[0_0_35px_12px_rgba(242,190,92,.45)]" />
-
-      <div className="relative z-20 mx-auto flex h-full min-h-[760px] max-w-[1500px] items-center px-6 pb-44 pt-40 md:px-12 lg:min-h-0 lg:px-16 lg:pb-40 lg:pt-36">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.65, ease: "easeOut" }}
-            className="relative z-30 max-w-[570px]"
-          >
-            <div className="mb-7 flex items-center gap-3 text-[10px] uppercase tracking-[.27em] text-white/70">
-              <span className="h-px w-12 bg-[#d8b466]" />
-              {current.eyebrow}
-            </div>
-            <h1 className="max-w-[580px] font-serif text-[58px] font-normal leading-[.94] tracking-[-.045em] text-white sm:text-[72px] lg:text-[78px]">
-              {current.name}
-            </h1>
-            <p className="mt-7 max-w-[400px] text-[15px] leading-7 text-white/70">{current.description}</p>
-            <a href="#collections" className="group mt-8 inline-flex items-center gap-8 bg-[#b98b42] px-6 py-4 text-[12px] font-medium text-white shadow-[0_12px_45px_rgba(0,0,0,.22)] transition hover:bg-[#d2a85d]">
-              Explore Collection
-              <span className="text-xl transition-transform group-hover:translate-x-1">→</span>
-            </a>
-          </motion.div>
-        </AnimatePresence>
-
-        <div className="pointer-events-none absolute inset-y-0 right-[-3%] left-[36%] hidden md:block">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              initial={{ opacity: 0, scale: .93, x: 45, rotate: 3 }}
-              animate={{ opacity: 1, scale: 1, x: 0, rotate: 0 }}
-              exit={{ opacity: 0, scale: 1.02, x: -25 }}
-              transition={{ duration: .9, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute inset-0"
-            >
-              <div className="absolute left-[31%] top-[33%] h-[43%] w-[29%] overflow-hidden shadow-[25px_35px_70px_rgba(0,0,0,.55)] [clip-path:polygon(10%_0,94%_6%,100%_94%,4%_100%,0_12%)]" style={{ backgroundImage: `url(${slides[(active + 1) % 4].image})`, backgroundSize: "cover", backgroundPosition: "center" }} />
-              <div className="absolute left-[49%] top-[19%] h-[63%] w-[36%] overflow-hidden shadow-[30px_45px_100px_rgba(0,0,0,.55)] [clip-path:polygon(8%_0,100%_8%,92%_94%,0_100%,0_13%)]" style={{ backgroundImage: `url(${current.image})`, backgroundSize: "cover", backgroundPosition: "center" }}>
-                <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,.28),transparent_28%,transparent_65%,rgba(0,0,0,.24))]" />
-              </div>
-              <div className="absolute left-[80%] top-[37%] h-[39%] w-[13%] overflow-hidden shadow-[15px_30px_60px_rgba(0,0,0,.6)] [clip-path:polygon(12%_0,100%_6%,86%_100%,0_90%,4%_20%)]" style={{ backgroundImage: `url(${slides[(active + 2) % 4].image})`, backgroundSize: "cover", backgroundPosition: "center" }} />
-
-              <div className="absolute left-[43%] top-[35%] h-[35%] w-[52%] rounded-[50%] border border-[#d9ae59]/75 [transform:rotate(-10deg)] shadow-[0_0_30px_rgba(219,176,88,.2)]" />
-              <div className="absolute left-[43%] top-[58%] h-[18%] w-[52%] rounded-[50%] border border-[#f2c36e]/55 [transform:rotate(-7deg)]" />
-              <div className="absolute left-[78%] top-[56%] h-5 w-5 rounded-full bg-[#f2cb7b] shadow-[0_0_24px_9px_rgba(242,203,123,.45)]" />
-
-              {[0, 1, 2, 3, 4].map((n) => (
-                <div key={n} className="absolute h-10 w-7 overflow-hidden rounded-[35%] opacity-70 shadow-lg" style={{ left: `${[9, 25, 67, 76, 19][n]}%`, top: `${[27, 63, 25, 12, 78][n]}%`, transform: `rotate(${[-22, 16, 22, -34, 30][n]}deg)`, backgroundImage: `url(${slides[(active + n + 1) % 4].image})`, backgroundSize: "cover" }} />
-              ))}
-            </motion.div>
-          </AnimatePresence>
+      <div className="relative z-20 pt-[86px]">
+        <div ref={viewportRef} className="marble-viewport flex min-h-[700px] w-full overflow-x-auto md:min-h-[calc(100vh-150px)]" tabIndex={0} aria-label="Featured marble collections" role="region">
+          {slides.map((slide, index) => <figure key={slide.title} data-slide-index={index} className="marble-slide relative min-h-[700px] min-w-full md:min-h-[calc(100vh-150px)]"><img className="marble-image absolute inset-0 h-full w-full object-cover" src={slide.image} alt={slide.alt} loading={index === 0 ? "eager" : "lazy"}/><div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_45%,rgba(212,175,55,.2),transparent_23%)]" aria-hidden="true"/><div className="marble-vein pointer-events-none absolute inset-0 z-10" aria-hidden="true"/><figcaption className="absolute inset-0 z-20 mx-auto flex max-w-[1540px] items-center px-6 pb-28 pt-24 sm:px-10 lg:px-16"><div className="marble-hero-content max-w-[650px] rounded-[2px] border border-white/10 p-6 shadow-2xl backdrop-blur-sm sm:p-9 lg:p-11"><div className="mb-6 flex items-center gap-3 text-[10px] uppercase tracking-[.3em] text-white/75"><span className="h-px w-12 bg-[var(--gold)]"/> Featured Collection</div><h1 className="max-w-[610px] font-serif text-[52px] font-normal leading-[.92] tracking-[-.045em] text-white sm:text-[66px] lg:text-[82px]">{slide.title}</h1><p className="mt-6 max-w-[440px] text-[15px] leading-7 text-white/75 sm:text-[16px]">{slide.copy}</p><a href="#collections" className="marble-ripple marble-control mt-8 inline-flex min-h-12 items-center gap-8 bg-[#b8893d] px-6 py-4 text-[12px] font-medium text-white transition hover:bg-[var(--gold)]">Explore Collection <span className="text-xl">→</span></a></div></figcaption></figure>)}
         </div>
 
-        <div className="absolute bottom-24 left-6 right-6 z-30 md:bottom-20 md:left-12 md:right-12 lg:left-16 lg:right-16">
-          <div className="flex items-end justify-between gap-8">
-            <div className="flex min-w-[230px] flex-1 items-end gap-5">
-              <div className="text-[13px] font-light"><span className="text-white">0{active + 1}</span><span className="text-white/40"> / 0{slides.length}</span></div>
-              <div className="h-px max-w-[230px] flex-1 bg-white/25">
-                <motion.div key={active} initial={{ width: 0 }} animate={{ width: `${((active + 1) / slides.length) * 100}%` }} transition={{ duration: .5 }} className="h-px bg-[#d8b466]" />
-              </div>
-            </div>
-            <div className="hidden items-center gap-4 md:flex">
-              <span className="text-[11px] text-white/55">Drag to rotate</span>
-              <span className="grid h-8 w-8 place-items-center rounded-full border border-white/40 text-xs">⌁</span>
-            </div>
-          </div>
-          <div className="mt-5 flex justify-center gap-3">
-            {slides.map((_, index) => <button key={index} onClick={() => goTo(index)} aria-label={`Go to slide ${index + 1}`} className={`h-1.5 rounded-full transition-all ${index === active ? "w-7 bg-[#e1bf77]" : "w-1.5 bg-white/35"}`} />)}
-          </div>
-        </div>
+        <button type="button" aria-label="Previous marble slide" onClick={prev} className="marble-control marble-ripple absolute left-5 top-[50%] z-40 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-white/45 bg-black/10 text-2xl text-white backdrop-blur-sm transition hover:border-[var(--gold)] hover:bg-black/25 sm:left-8 sm:h-14 sm:w-14">←</button>
+        <button type="button" aria-label="Next marble slide" onClick={next} className="marble-control marble-ripple absolute right-5 top-[50%] z-40 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-white/45 bg-black/10 text-2xl text-white backdrop-blur-sm transition hover:border-[var(--gold)] hover:bg-black/25 sm:right-8 sm:h-14 sm:w-14">→</button>
 
-        <button onClick={() => { prev(); restart(); }} aria-label="Previous slide" className="absolute left-5 top-[48%] z-40 grid h-14 w-14 -translate-y-1/2 place-items-center rounded-full border border-white/35 text-2xl font-light transition hover:border-white hover:bg-white/10 md:left-10">←</button>
-        <button onClick={() => { next(); restart(); }} aria-label="Next slide" className="absolute right-5 top-[48%] z-40 grid h-14 w-14 -translate-y-1/2 place-items-center rounded-full border border-white/35 text-2xl font-light transition hover:border-white hover:bg-white/10 md:right-10">→</button>
+        <div className="absolute bottom-28 left-6 right-6 z-40 mx-auto flex max-w-[1200px] items-end justify-between gap-6 sm:left-10 sm:right-10 lg:left-16 lg:right-16"><div className="flex flex-1 items-center gap-4"><span className="min-w-[62px] text-[12px] text-white"><strong>{String(active + 1).padStart(2, "0")}</strong><span className="text-white/45"> / 0{slides.length}</span></span><div className="h-px w-full max-w-[265px] bg-white/25"><div className="h-full origin-left bg-[var(--gold)] transition-[width] duration-500" style={{ width: `${((active + 1) / slides.length) * 100}%` }}/></div></div><div className="hidden items-center gap-3 text-[11px] text-white/60 md:flex"><span className="grid h-8 w-8 place-items-center rounded-full border border-white/35">⌁</span> Drag to explore</div></div>
+        <div className="absolute bottom-20 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2" role="tablist" aria-label="Featured marble slides">{slides.map((slide,index)=><button key={slide.title} type="button" role="tab" aria-selected={active===index} aria-label={`Show ${slide.title}`} onClick={()=>scrollToSlide(index)} className="marble-control marble-dot h-1.5 rounded-full bg-white/45" data-active={active===index}/>)}</div>
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-50 h-1 bg-white/10"><div className="marble-autoplay h-full w-full bg-[var(--gold)]" aria-hidden="true"/></div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 z-40 border-t border-white/[.08] bg-[#03080a]/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-[1500px] items-stretch px-6 md:px-12 lg:px-16">
-          <div className="hidden w-[170px] shrink-0 items-center gap-5 border-r border-[#d8b466]/60 py-7 lg:flex">
-            <div><p className="text-[9px] uppercase leading-5 tracking-[.22em] text-white/70">Our<br />Collections</p><span className="mt-3 block h-px w-9 bg-[#d8b466]" /></div>
-          </div>
-          <div className="hide-scroll flex min-w-0 flex-1 snap-x overflow-x-auto">
-            {collections.map(([name, subtitle, image], index) => (
-              <button key={name} onClick={() => goTo(index)} className={`group relative min-w-[240px] flex-1 snap-start overflow-hidden border-r border-white/[.08] text-left md:min-w-[260px] ${active === index ? "opacity-100" : "opacity-80"}`}>
-                <div className="absolute inset-0 bg-cover bg-center transition duration-700 group-hover:scale-105" style={{ backgroundImage: `url(${image})` }} />
-                <div className="absolute inset-0 bg-black/35 transition group-hover:bg-black/20" />
-                <div className="relative z-10 flex min-h-[108px] flex-col justify-end p-5">
-                  <div className="text-[15px] font-medium text-white">{name}</div>
-                  <div className="mt-1 text-[12px] text-white/65">{subtitle}</div>
-                </div>
-              </button>
-            ))}
-          </div>
-          <button onClick={() => { next(); restart(); }} aria-label="Next collection" className="hidden w-16 shrink-0 place-items-center border-l border-white/[.08] text-2xl text-[#d8b466] transition hover:bg-white/5 lg:grid">→</button>
-        </div>
-      </div>
-
-      <div className="pointer-events-none absolute bottom-[145px] left-5 z-30 hidden md:block">
-        <div className="relative h-14 w-14 rounded-full border border-white/25 bg-white/10 p-1 shadow-[0_0_35px_rgba(232,191,100,.22)] backdrop-blur-md">
-          <div className="h-full w-full rounded-full bg-cover bg-center" style={{ backgroundImage: `url(${current.image})` }} />
-        </div>
-      </div>
+      <section id="collections" className="relative z-40 border-t border-white/10 bg-[var(--panel)] py-5 backdrop-blur-xl sm:py-7" aria-label="Our marble collections"><div className="mx-auto flex max-w-[1540px] items-stretch px-5 sm:px-8 lg:px-12"><div className="hidden w-[180px] shrink-0 items-center border-r border-[var(--gold)]/60 pr-8 lg:flex"><div><div className="text-[9px] uppercase leading-5 tracking-[.24em] opacity-70">Our<br/>Collections</div><div className="mt-3 h-px w-9 bg-[var(--gold)]"/></div></div><div className="marble-collections flex min-w-0 flex-1 gap-3 overflow-x-auto px-0 lg:px-6">{collections.map(([name,subtitle,image],index)=><button key={name} type="button" onClick={()=>scrollToSlide(index)} className="marble-card marble-control relative min-h-[120px] min-w-[82vw] overflow-hidden border border-white/10 text-left sm:min-w-[48%] lg:min-w-0"><img src={image} alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy"/><div className="relative z-10 flex min-h-[120px] flex-col justify-end p-5 text-white"><span className="text-[15px] font-medium">{name}</span><span className="mt-1 text-[12px] text-white/65">{subtitle}</span></div></button>)}</div><button type="button" aria-label="Next collection" onClick={next} className="marble-control hidden w-14 shrink-0 place-items-center border-l border-white/10 text-2xl text-[var(--gold)] lg:grid">→</button></div></section>
     </section>
   );
 }
