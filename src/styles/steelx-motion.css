@@ -1,0 +1,166 @@
+/* STEELX — premium motion layer. Additive only: preserves the existing showroom structure. */
+
+html { scroll-behavior: smooth; }
+
+/* Cinematic first impression */
+.sx-page .sx-hero-image {
+  transform: scale(1.08);
+  animation: sxHeroImage 1.8s cubic-bezier(.16,1,.3,1) .05s forwards;
+  will-change: transform;
+}
+.sx-page .sx-hero-shade { opacity: 0; animation: sxFadeIn 1.15s ease-out .15s forwards; }
+.sx-page .sx-hero-grid { opacity: 0; animation: sxFadeIn 1.2s ease-out .55s forwards; }
+.sx-page .sx-hero-copy .sx-kicker { opacity: 0; transform: translateY(18px); animation: sxReveal .8s cubic-bezier(.16,1,.3,1) .55s forwards; }
+.sx-page .sx-hero-copy h1 { overflow: hidden; opacity: 0; transform: translateY(45px); animation: sxHeroTitle 1.1s cubic-bezier(.16,1,.3,1) .68s forwards; }
+.sx-page .sx-hero-copy p { opacity: 0; transform: translateY(22px); animation: sxReveal .9s cubic-bezier(.16,1,.3,1) 1s forwards; }
+.sx-page .sx-hero-actions { opacity: 0; transform: translateY(18px); animation: sxReveal .8s cubic-bezier(.16,1,.3,1) 1.18s forwards; }
+.sx-page .sx-hero-meta, .sx-page .sx-hero-index { opacity: 0; animation: sxFadeIn .8s ease-out 1.45s forwards; }
+
+/* Mask-like editorial reveals. Modern browsers get view-timeline; fallback remains visible. */
+@supports (animation-timeline: view()) {
+  .sx-page .sx-intro-title,
+  .sx-page .sx-intro-copy,
+  .sx-page .sx-section-head,
+  .sx-page .sx-project-copy,
+  .sx-page .sx-tech-grid > div:first-child,
+  .sx-page .sx-profile-layout,
+  .sx-page .sx-custom,
+  .sx-page .sx-cta { animation: sxScrollReveal linear both; animation-timeline: view(); animation-range: entry 8% cover 30%; }
+  .sx-page .sx-showcase-image,
+  .sx-page .sx-selector-image,
+  .sx-page .sx-project-image,
+  .sx-page .sx-app-stage,
+  .sx-page .sx-profile-viewer { animation: sxImageReveal linear both; animation-timeline: view(); animation-range: entry 5% cover 32%; }
+  .sx-page .sx-finish-row,
+  .sx-page .sx-tech-row,
+  .sx-page .sx-profile-item { animation: sxRowReveal linear both; animation-timeline: view(); animation-range: entry 0% cover 18%; }
+}
+
+/* Material light sweep */
+.sx-page .sx-showcase-image,
+.sx-page .sx-selector-image,
+.sx-page .sx-project-image,
+.sx-page .sx-app-stage,
+.sx-page .sx-profile-viewer { position: relative; isolation: isolate; }
+.sx-page .sx-showcase-image::after,
+.sx-page .sx-selector-image::after,
+.sx-page .sx-project-image::after,
+.sx-page .sx-app-stage::after,
+.sx-page .sx-profile-viewer::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: -20%; left: -55%; width: 38%; height: 145%;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,.16) 48%, transparent 58%);
+  transform: translateX(0) skewX(-12deg);
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.sx-page .sx-showcase-image:hover::after,
+.sx-page .sx-selector-image:hover::after,
+.sx-page .sx-project-image:hover::after,
+.sx-page .sx-app-stage:hover::after,
+.sx-page .sx-profile-viewer:hover::before { opacity: 1; animation: sxMetalSweep 1.25s cubic-bezier(.16,1,.3,1); }
+
+/* Refined image hover — slightly different speeds to avoid a template feel. */
+.sx-page .sx-selector-image img { transition: transform 1.4s cubic-bezier(.16,1,.3,1), filter .8s ease; }
+.sx-page .sx-selector-image:hover img { transform: scale(1.035); filter: saturate(.9) contrast(1.04); }
+.sx-page .sx-showcase-image img { transition: transform 1.5s cubic-bezier(.16,1,.3,1); }
+.sx-page .sx-showcase-image:hover img { transform: scale(1.045); }
+.sx-page .sx-project-image.small img { transition-duration: 1s; }
+.sx-page .sx-project-image.large img { transition-duration: 1.6s; }
+.sx-page .sx-app-stage > img { transition: transform 1.8s cubic-bezier(.16,1,.3,1); }
+.sx-page .sx-app-stage:hover > img { transform: scale(1.025); }
+
+/* Finish selector: physical-sample feeling */
+.sx-page .sx-showcase-image img,
+.sx-page .sx-selector-image img { animation: sxMaterialSettle .8s cubic-bezier(.16,1,.3,1); }
+.sx-page .sx-finish-row { position: relative; overflow: hidden; }
+.sx-page .sx-finish-row::before { content:""; position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--sx-gold); transform:scaleY(0); transform-origin:center; transition:transform .55s cubic-bezier(.16,1,.3,1); }
+.sx-page .sx-finish-row.is-active::before { transform:scaleY(1); }
+.sx-page .sx-finish-row:hover .sx-finish-name { letter-spacing:-.02em; transition:letter-spacing .45s cubic-bezier(.16,1,.3,1); }
+
+/* Buttons: restrained agency-grade micro interaction */
+.sx-page .sx-button,
+.sx-page .sx-quote,
+.sx-page .sx-text-link { position: relative; overflow: hidden; }
+.sx-page .sx-button::before { content:""; position:absolute; inset:0; background:rgba(255,255,255,.12); transform:translateX(-105%); transition:transform .55s cubic-bezier(.16,1,.3,1); }
+.sx-page .sx-button:hover::before { transform:translateX(0); }
+.sx-page .sx-button > svg { transition:transform .5s cubic-bezier(.16,1,.3,1); }
+.sx-page .sx-button:hover > svg { transform:translate(4px,-4px); }
+.sx-page .sx-button:hover { transform:translateY(-1px); }
+.sx-page .sx-quote svg { transition:transform .45s cubic-bezier(.16,1,.3,1); }
+.sx-page .sx-quote:hover svg { transform:translate(4px,-4px); }
+
+/* Cursor — desktop only. The page itself supplies the visual dot; native cursor remains available for accessibility. */
+@media (min-width: 1025px) and (pointer:fine) {
+  .sx-page { cursor: crosshair; }
+  .sx-page a, .sx-page button { cursor: pointer; }
+  .sx-page .sx-showcase-image,
+  .sx-page .sx-selector-image,
+  .sx-page .sx-project-image,
+  .sx-page .sx-app-stage { cursor: none; }
+  .sx-page .sx-showcase-image::before,
+  .sx-page .sx-selector-image::before,
+  .sx-page .sx-project-image::before,
+  .sx-page .sx-app-stage::before {
+    content:"";
+    position:absolute;
+    z-index:8;
+    width:8px; height:8px; border-radius:50%;
+    left:var(--sx-cursor-x,50%); top:var(--sx-cursor-y,50%);
+    background:#fff; box-shadow:0 0 0 1px rgba(255,255,255,.25);
+    transform:translate(-50%,-50%) scale(1);
+    opacity:0; transition:width .3s ease,height .3s ease,opacity .25s ease;
+    pointer-events:none;
+  }
+  .sx-page .sx-showcase-image:hover::before,
+  .sx-page .sx-selector-image:hover::before,
+  .sx-page .sx-project-image:hover::before,
+  .sx-page .sx-app-stage:hover::before { width:72px;height:72px;opacity:.95; background:rgba(8,8,8,.5); box-shadow:inset 0 0 0 1px rgba(255,255,255,.55); }
+}
+
+/* Applications become more cinematic while retaining the existing content/navigation. */
+.sx-page .sx-app-stage { clip-path: inset(0); }
+.sx-page .sx-app-tabs button { position:relative; transition:color .4s ease, background .4s ease; }
+.sx-page .sx-app-tabs button::after { content:""; position:absolute; left:0; right:100%; bottom:0; height:2px; background:var(--sx-gold); transition:right .65s cubic-bezier(.16,1,.3,1); }
+.sx-page .sx-app-tabs button.is-active::after { right:0; }
+.sx-page .sx-app-content h3 { transition:transform .65s cubic-bezier(.16,1,.3,1), opacity .45s ease; }
+
+/* Navbar polish */
+.sx-page .sx-nav { transition:height .65s cubic-bezier(.16,1,.3,1), background .65s ease, backdrop-filter .65s ease, border-color .65s ease; }
+.sx-page .sx-nav-links a { position:relative; }
+.sx-page .sx-nav-links a::after { content:""; position:absolute; left:0; right:100%; bottom:-7px; height:1px; background:var(--sx-gold); transition:right .45s cubic-bezier(.16,1,.3,1); }
+.sx-page .sx-nav-links a:hover::after { right:0; }
+.sx-page .sx-mobile-menu { animation:sxMenuIn .65s cubic-bezier(.16,1,.3,1); }
+.sx-page .sx-mobile-menu a { animation:sxMenuItem .55s cubic-bezier(.16,1,.3,1) both; }
+.sx-page .sx-mobile-menu a:nth-child(1){animation-delay:.08s}.sx-page .sx-mobile-menu a:nth-child(2){animation-delay:.13s}.sx-page .sx-mobile-menu a:nth-child(3){animation-delay:.18s}.sx-page .sx-mobile-menu a:nth-child(4){animation-delay:.23s}.sx-page .sx-mobile-menu a:nth-child(5){animation-delay:.28s}.sx-page .sx-mobile-menu a:nth-child(6){animation-delay:.33s}
+
+/* CTA atmosphere */
+.sx-page .sx-cta::before { content:""; position:absolute; width:65vw; height:65vw; right:-25vw; top:-35vw; border-radius:50%; border:1px solid rgba(17,17,17,.14); box-shadow:0 0 0 80px rgba(17,17,17,.025),0 0 0 160px rgba(17,17,17,.018); animation:sxOrbit 18s linear infinite; pointer-events:none; }
+.sx-page .sx-cta-line { animation:sxLineDrift 9s ease-in-out infinite alternate; }
+
+@keyframes sxHeroImage { to { transform:scale(1); } }
+@keyframes sxFadeIn { from{opacity:0} to{opacity:1} }
+@keyframes sxReveal { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+@keyframes sxHeroTitle { from{opacity:0;transform:translateY(55px);clip-path:inset(100% 0 0 0)} to{opacity:1;transform:translateY(0);clip-path:inset(0 0 0 0)} }
+@keyframes sxScrollReveal { from{opacity:0;transform:translateY(55px);clip-path:inset(15% 0 0 0)} to{opacity:1;transform:translateY(0);clip-path:inset(0 0 0 0)} }
+@keyframes sxImageReveal { from{opacity:.2;transform:scale(1.055);clip-path:inset(8% 0 0 0)} to{opacity:1;transform:scale(1);clip-path:inset(0)} }
+@keyframes sxRowReveal { from{opacity:.25;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes sxMetalSweep { 0%{transform:translateX(0) skewX(-12deg)} 100%{transform:translateX(430%) skewX(-12deg)} }
+@keyframes sxMaterialSettle { from{opacity:.35;transform:scale(1.055)} to{opacity:1;transform:scale(1)} }
+@keyframes sxMenuIn { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes sxMenuItem { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes sxOrbit { to{transform:rotate(360deg)} }
+@keyframes sxLineDrift { from{transform:rotate(-35deg) translateX(-2vw)} to{transform:rotate(-35deg) translateX(2vw)} }
+
+@media (max-width: 1024px) {
+  .sx-page .sx-hero-image { animation-duration:1.25s; }
+  .sx-page .sx-cta::before { display:none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior:auto; }
+  .sx-page *, .sx-page *::before, .sx-page *::after { animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+}
