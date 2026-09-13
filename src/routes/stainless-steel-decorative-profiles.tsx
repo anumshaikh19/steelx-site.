@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SteelXShowroomPage } from "@/components/steelx-showroom-pages";
+import "@/styles/steelx-motion.css";
 
 export const Route = createFileRoute("/stainless-steel-decorative-profiles")({
   head: () => ({
