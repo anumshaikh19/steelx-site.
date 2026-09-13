@@ -1,4 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { VintexWebPage } from "../components/vintex-web-page";
+import { VintexWonderlandPage } from "../components/vintex-wonderland-page";
 
-export const Route = createFileRoute("/vintex-web")({ component: VintexWebPage });
+export const Route = createFileRoute("/vintex-web")({ component: VintexWonderlandPage });
