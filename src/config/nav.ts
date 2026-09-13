@@ -5,6 +5,7 @@
 export const navItems = [
   { label: "Collection", href: "/steel-collection" },
   { label: "PVD Surfaces", href: "/pvd-surfaces" },
+  { label: "MARBLE", href: "/marble" },
   { label: "Materials", href: "/materials" },
   { label: "Projects", href: "/projects" },
   { label: "Services", href: "/services" },
