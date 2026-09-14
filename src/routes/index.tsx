@@ -68,6 +68,38 @@ function HomePage() {
       </div></div><div className="absolute bottom-7 left-[4vw] right-[4vw] z-10 h-px bg-gradient-to-r from-champagne via-white/20 to-transparent" />
     </section>
 
+    <section className="relative overflow-hidden border-b border-border bg-[#10110f] text-white">
+      <div className="pointer-events-none absolute -right-16 top-8 select-none font-display text-[18vw] leading-none tracking-[-.08em] text-white/[.025]">STEELX</div>
+      <div className="mx-auto grid max-w-[1600px] gap-12 px-4 py-20 sm:px-8 lg:grid-cols-[1.02fr_.98fr] lg:gap-20 lg:px-10 lg:py-28">
+        <Reveal variant="up" className="flex flex-col justify-center">
+          <p className="text-[9px] uppercase tracking-[.34em] text-champagne">About SteelXDecor</p>
+          <h2 className="mt-5 max-w-3xl font-display text-[clamp(3rem,5.8vw,6.4rem)] leading-[.88] tracking-[-.045em]">We don't just finish steel. <span className="text-white/35">We engineer the surface.</span></h2>
+          <p className="mt-8 max-w-2xl text-sm leading-7 text-white/60">{content.about.story}</p>
+          <div className="mt-9 flex flex-wrap items-center gap-6">
+            <Link to="/about" className="group inline-flex items-center gap-3 border-b border-champagne/60 pb-3 text-[9px] uppercase tracking-[.24em] text-white transition hover:border-champagne hover:text-champagne">Discover SteelXDecor <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></Link>
+            <span className="text-[9px] uppercase tracking-[.2em] text-white/30">Rajkot · India · Global Projects</span>
+          </div>
+          <div className="mt-14 grid max-w-2xl grid-cols-2 border-l border-white/10 sm:grid-cols-4">
+            {stats.map((s, i) => <div key={s.label} className="border-r border-white/10 px-4 first:pl-0"><p className="font-display text-3xl text-champagne lg:text-4xl"><Counter to={s.value} suffix={s.suffix} /></p><p className="mt-2 text-[8px] uppercase tracking-[.18em] text-white/35">{s.label}</p></div>)}
+          </div>
+        </Reveal>
+        <Reveal variant="up" delay={120} className="relative min-h-[560px] lg:min-h-[680px]">
+          <div className="absolute right-0 top-0 h-[72%] w-[78%] overflow-hidden border border-white/10 bg-black/20 shadow-2xl shadow-black/40">
+            <img src={pvdChamber} alt="SteelXDecor PVD coating chamber" loading="lazy" className="h-full w-full object-cover transition duration-[1600ms] hover:scale-105" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/10" />
+            <div className="absolute bottom-6 left-6"><p className="text-[8px] uppercase tracking-[.28em] text-champagne">01 / PVD COATING</p><p className="mt-2 font-display text-2xl">Colour bonded in vacuum.</p></div>
+          </div>
+          <div className="absolute bottom-0 left-0 h-[45%] w-[56%] overflow-hidden border border-white/10 bg-[#191a17] shadow-2xl shadow-black/50 lg:w-[52%]">
+            <img src={polishing} alt="Precision stainless steel surface finishing" loading="lazy" className="h-full w-full object-cover transition duration-[1600ms] hover:scale-105" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/65 to-transparent" />
+            <div className="absolute bottom-5 left-5"><p className="text-[8px] uppercase tracking-[.28em] text-white/50">02 / FABRICATION</p><p className="mt-2 font-display text-xl">Precision at every edge.</p></div>
+          </div>
+          <div className="absolute bottom-[17%] right-[7%] hidden h-20 w-20 items-center justify-center rounded-full border border-champagne/50 bg-[#10110f]/80 backdrop-blur md:flex"><span className="text-[8px] uppercase tracking-[.18em] text-champagne">304<br/>SS</span></div>
+          <div className="absolute left-[46%] top-[11%] h-28 w-px bg-gradient-to-b from-champagne to-transparent opacity-60" />
+        </Reveal>
+      </div>
+    </section>
+
     <Section><SectionHeading eyebrow="Collections" title="Explore Our Product Range" /><p className="mt-6 max-w-3xl text-sm leading-7 text-muted-foreground">SteelXDecor supplies a curated range of PVD-coated stainless-steel surfaces and decorative metal products. Each category is engineered for specific architectural applications — from interior cladding and room dividers to exterior facades and lift jamb panels.</p><div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{content.products.map((p,i)=><Reveal key={p.name} variant="up" delay={(i%4)*70}><article className="group overflow-hidden border border-border bg-card"><Link to={p.url as any}><div className="aspect-[4/3] overflow-hidden"><img src={productImages[i]} alt={p.name} loading="lazy" className="h-full w-full object-cover transition duration-1000 group-hover:scale-105" /></div><div className="p-5"><h3 className="font-display text-2xl">{p.name}</h3><p className="mt-3 text-xs leading-6 text-muted-foreground">{p.description}</p><span className="mt-5 inline-flex items-center gap-2 text-[9px] uppercase tracking-[.2em] text-champagne">View Collection <ArrowUpRight className="h-3 w-3" /></span></div></Link></article></Reveal>)}</div></Section>
 
     <Section className="border-t border-border"><div className="grid gap-0 border border-border lg:grid-cols-2"><article className="p-8 lg:p-12"><p className="text-[9px] uppercase tracking-[.3em] text-champagne">Why PVD Over Alternatives?</p><h2 className="mt-4 font-display text-4xl">Colour bonded for architectural performance.</h2><p className="mt-6 text-sm leading-7 text-muted-foreground">PVD (Physical Vapour Deposition) bonds colour at an atomic level in a vacuum environment. Unlike electroplating, PVD coating is measured in microns, bonded to the substrate rather than sitting on top, and resists scratching, fading, and peeling under regular architectural use. The result is a consistent, durable finish that maintains colour integrity across large surface areas and long project timelines.</p></article><article className="border-t border-border bg-card p-8 lg:border-l lg:border-t-0 lg:p-12"><p className="text-[9px] uppercase tracking-[.3em] text-champagne">SS 304 Grade at a Glance</p><h2 className="mt-4 font-display text-4xl">A proven architectural substrate.</h2><p className="mt-6 text-sm leading-7 text-muted-foreground">SteelXDecor's primary material specification is SS 304 Grade stainless steel — an austenitic chromium-nickel alloy widely specified for architectural interiors. 304 Grade offers excellent formability, weldability, and corrosion resistance for indoor and sheltered applications. For exterior or high-corrosion environments, 316 Grade is available on request.</p></article></div></Section>
