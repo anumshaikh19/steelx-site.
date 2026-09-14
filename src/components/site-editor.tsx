@@ -87,58 +87,67 @@ export function SiteEditorProvider({
       window.location.hostname === "localhost" || window.location.hostname.includes("-preview--");
     setCanEditHost(hostAllowsEditing);
 
-    // Public production pages must never depend on the CMS/Supabase runtime.
-    // The editor is only available on localhost and Lovable preview hosts.
+    // The public production site must never depend on the CMS/Supabase runtime.
+    // The editor is only activated on local/Lovable preview hosts.
     if (!hostAllowsEditing) return;
 
     let active = true;
-    void supabase
-      .from("published_pages")
-      .select("content")
-      .eq("slug", slug)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (active && isPageDocument(data?.content)) setDocument(data.content);
-      })
-      .catch(() => {
-        // Keep the page's built-in defaults if the editor backend is unavailable.
+    try {
+      void supabase
+        .from("published_pages")
+        .select("content")
+        .eq("slug", slug)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (active && isPageDocument(data?.content)) setDocument(data.content);
+        })
+        .catch(() => undefined);
+
+      void supabase.auth
+        .getUser()
+        .then(({ data }) => {
+          if (active) setUserId(data.user?.id ?? null);
+        })
+        .catch(() => undefined);
+
+      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (active) setUserId(session?.user.id ?? null);
       });
-    void supabase.auth.getUser().then(({ data }) => {
-      if (active) setUserId(data.user?.id ?? null);
-    }).catch(() => {
-      if (active) setUserId(null);
-    });
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (active) setUserId(session?.user.id ?? null);
-    });
-    return () => {
+      return () => {
+        active = false;
+        data.subscription.unsubscribe();
+      };
+    } catch {
       active = false;
-      data.subscription.unsubscribe();
-    };
+      setCanEditHost(false);
+      return;
+    }
   }, [slug]);
 
   useEffect(() => {
-    if (!userId) {
+    if (!userId || !canEditHost) {
       setIsEditor(false);
       return;
     }
     let active = true;
-    void supabase
-      .from("user_roles")
-      .select("id")
-      .eq("user_id", userId)
-      .eq("role", "editor")
-      .maybeSingle()
-      .then(({ data }) => {
-        if (active) setIsEditor(Boolean(data));
-      })
-      .catch(() => {
-        if (active) setIsEditor(false);
-      });
+    try {
+      void supabase
+        .from("user_roles")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("role", "editor")
+        .maybeSingle()
+        .then(({ data }) => {
+          if (active) setIsEditor(Boolean(data));
+        })
+        .catch(() => undefined);
+    } catch {
+      setIsEditor(false);
+    }
     return () => {
       active = false;
     };
-  }, [userId]);
+  }, [userId, canEditHost]);
 
   const beginEditing = async () => {
     if (!userId) {
@@ -172,13 +181,14 @@ export function SiteEditorProvider({
   };
 
   useEffect(() => {
+    if (!canEditHost) return;
     const returnTo = sessionStorage.getItem("steelx-editor-return");
     if (userId && returnTo) {
       sessionStorage.removeItem("steelx-editor-return");
       if (window.location.pathname !== returnTo.split("?")[0]) window.location.assign(returnTo);
       else void beginEditing();
     }
-  }, [userId]);
+  }, [userId, canEditHost]);
 
   const updateOverrides = useCallback((id: string, overrides: SectionOverrides) => {
     setDocument((current) => ({
@@ -290,7 +300,7 @@ export function SiteEditorProvider({
         >
           {userId ? <Pencil /> : <LogIn />}
         </Button>
-      ) : (
+      ) : editing ? (
         <aside
           aria-label="Page editor"
           className={cn(
@@ -340,7 +350,7 @@ export function SiteEditorProvider({
             </ol>
           </div>
         </aside>
-      )}
+      ) : null}
     </EditorContext.Provider>
   );
 }
