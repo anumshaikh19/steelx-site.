@@ -18,22 +18,41 @@ function usePageSettings() {
 
 function designStyle(settings: PageSeo | null): React.CSSProperties {
   if (!settings) return {};
-  const spacing = { compact: "5rem", comfortable: "7rem", luxury: "9rem" };
   return {
     "--steelx-accent": settings.design.accent,
     "--steelx-heading-color": settings.design.headingColor,
     "--steelx-body-color": settings.design.bodyColor,
     "--steelx-heading-size": { small: "2.1rem", medium: "3.4rem", large: "6rem", xl: "8rem" }[settings.design.headingSize],
     "--steelx-body-size": { small: "0.92rem", medium: "1rem", large: "1.12rem" }[settings.design.bodySize],
-    "--steelx-section-space": spacing[settings.design.sectionSpacing],
+    "--steelx-section-space": { compact: "5rem", comfortable: "7rem", luxury: "9rem" }[settings.design.sectionSpacing],
     backgroundColor: settings.design.background,
   } as React.CSSProperties;
 }
 
+function useUniversalContent(settings: PageSeo | null) {
+  useEffect(() => {
+    if (!settings) return;
+    const root = document.querySelector("[data-steelx-page]");
+    if (!root) return;
+    const heading = root.querySelector("main h1") as HTMLElement | null;
+    if (heading && settings.content.heading) {
+      heading.textContent = settings.content.heading;
+      heading.classList.add("steelx-editable-heading");
+    }
+    const paragraphs = Array.from(root.querySelectorAll("main p")) as HTMLElement[];
+    const intro = paragraphs.find(p => p !== heading && p.textContent?.trim() && !p.className.includes("uppercase"));
+    if (intro && settings.content.intro) {
+      intro.textContent = settings.content.intro;
+      intro.classList.add("steelx-editable-body");
+    }
+  }, [settings]);
+}
+
 export function PageShell({ children, overlayHeader = false }: { children: ReactNode; overlayHeader?: boolean }) {
   const settings = usePageSettings();
+  useUniversalContent(settings);
   return <div className="min-h-screen bg-background" style={designStyle(settings)} data-steelx-page={settings?.path || undefined}>
-    {settings ? <style>{`[data-steelx-page] .steelx-editable-heading{font-family:${settings.design.headingFont === "sans" ? "inherit" : "var(--font-display, Georgia, serif)"};font-size:var(--steelx-heading-size);font-weight:${settings.design.headingWeight === "bold" ? 700 : settings.design.headingWeight === "medium" ? 500 : 400};color:var(--steelx-heading-color)}[data-steelx-page] .steelx-editable-body{font-size:var(--steelx-body-size);color:var(--steelx-body-color)}[data-steelx-page] .steelx-editable-accent{color:var(--steelx-accent)}[data-steelx-page] .steelx-editable-section{padding-block:var(--steelx-section-space)}`}</style> : null}
+    {settings ? <style>{`[data-steelx-page] main h1.steelx-editable-heading{font-family:${settings.design.headingFont === "sans" ? "inherit" : "var(--font-display, Georgia, serif)"};font-size:var(--steelx-heading-size);font-weight:${settings.design.headingWeight === "bold" ? 700 : settings.design.headingWeight === "medium" ? 500 : 400};line-height:.98;color:var(--steelx-heading-color)}[data-steelx-page] .steelx-editable-body{font-size:var(--steelx-body-size);color:var(--steelx-body-color)}[data-steelx-page] .steelx-editable-accent{color:var(--steelx-accent)}[data-steelx-page] .steelx-editable-section{padding-block:var(--steelx-section-space)}`}</style> : null}
     <SiteHeader overlay={overlayHeader} /><main>{children}</main><SiteFooter />
   </div>;
 }
