@@ -3,6 +3,8 @@
   "installCommand": "npm install",
   "buildCommand": "npm run build",
   "rewrites": [
+    { "source": "/pvd-surfaces", "destination": "/" },
+    { "source": "/pvd-surfaces/", "destination": "/" },
     { "source": "/karate/kihon/tachi", "destination": "/karate/index.html" },
     { "source": "/karate/kihon/tachi/", "destination": "/karate/index.html" },
     { "source": "/karate/kihon/uke", "destination": "/karate/index.html" },
