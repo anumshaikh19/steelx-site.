@@ -1,122 +1,126 @@
-import { createFileRoute } from "@tanstack/react-router";
-import type { ReactElement } from "react";
-
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowUpRight, Check, ChevronDown, Download, MoveRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ScrollProgress } from "@/components/motion";
-import {
-  EditableSection,
-  SiteEditorProvider,
-  type EditorSection,
-  type PageDocument,
-} from "@/components/site-editor";
-import {
-  ApplicationChapters,
-  ArchitectureReveal,
-  ChapterIndicator,
-  ColourChapter,
-  MacroToArchitecture,
-  PvdHero,
-  TextureChapter,
-  ToneTransformation,
-} from "@/components/pvd/act-one";
-import {
-  DeepDetail,
-  EngineeredPrecision,
-  FinalCta,
-  FinalMoment,
-  FinishComparison,
-  Longevity,
-  MaterialFinder,
-  MaterialLineup,
-  ProjectProof,
-  PvdScience,
-  SheetToSurface,
-  Specification,
-} from "@/components/pvd/act-two";
+import { pvdImages, tones, textures, applications } from "@/data/pvd";
+import { EditableSection, SiteEditorProvider, type EditorSection, type PageDocument } from "@/components/site-editor";
 
-const title = "PVD Surfaces — Architectural Stainless Steel | STEELX";
-const description =
-  "STEELX PVD surfaces: colour, texture and performance engineered into architectural stainless steel. Explore finishes, applications, the PVD process and request samples.";
+const title = "PVD Coated Stainless Steel Surfaces | SteelXDecor — Architectural Metal Specialist";
+const description = "Explore SteelXDecor's PVD-coated stainless steel surfaces. Champagne, Gold, Rose Gold, Bronze, Black, Gunmetal, Titanium and Silver tones. Vacuum-deposited colour bonded to SS 304/316 Grade. Custom fabrication and global installation.";
 
 export const Route = createFileRoute("/pvd-surfaces")({
   head: () => ({
     meta: [
       { title },
       { name: "description", content: description },
+      { name: "keywords", content: "PVD coated stainless steel surfaces, PVD stainless steel panels, architectural PVD finish, designer stainless steel surfaces, PVD coated metal for interiors, vacuum PVD stainless steel, SS 304 Grade" },
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "robots", content: "index,follow" },
     ],
   }),
   component: PvdSurfacesPage,
 });
 
-function PvdSurfacesPage() {
-  const defaultSections: EditorSection[] = [
-    { id: "hero", type: "hero", visible: true },
-    { id: "tone-transformation", type: "tone-transformation", visible: true },
-    { id: "colour", type: "colour", visible: true },
-    { id: "texture", type: "texture", visible: true },
-    { id: "macro-architecture", type: "macro-architecture", visible: true },
-    { id: "architecture", type: "architecture", visible: true },
-    { id: "applications", type: "applications", visible: true },
-    { id: "science", type: "science", visible: true },
-    { id: "sheet-to-surface", type: "sheet-to-surface", visible: true },
-    { id: "precision", type: "precision", visible: true },
-    { id: "lineup", type: "lineup", visible: true },
-    { id: "comparison", type: "comparison", visible: true },
-    { id: "finder", type: "finder", visible: true },
-    { id: "proof", type: "proof", visible: true },
-    { id: "detail", type: "detail", visible: true },
-    { id: "longevity", type: "longevity", visible: true },
-    { id: "specification", type: "specification", visible: true },
-    { id: "final-moment", type: "final-moment", visible: true },
-    { id: "final-cta", type: "final-cta", visible: true },
-  ];
-  const defaults: PageDocument = { sections: defaultSections, overrides: {} };
+const sections: EditorSection[] = [
+  "hero","introduction","overview","features","colours","textures","applications","grade","process","customization","buying","comparison","finder","alternatives","projects","specification","faqs","related","final"
+].map((id) => ({ id, type: id, visible: true }));
+const defaults: PageDocument = { sections, overrides: {} };
 
-  return (
-    <SiteEditorProvider slug="pvd-surfaces" defaults={defaults}>
-      {(page) => (
-        <div className="pvd-film min-h-screen bg-metal-black">
-          <span aria-hidden="true" className="pvd-grain" />
-          <span aria-hidden="true" className="pvd-vignette" />
-          <ScrollProgress />
-          <SiteHeader overlay />
-          <ChapterIndicator />
-          <main>
-            {page.sections.filter((section) => section.visible).map((section) => {
-              const Section = sectionRegistry[section.type];
-              return Section ? <EditableSection key={section.id} id={section.id}><Section /></EditableSection> : null;
-            })}
-          </main>
-          <SiteFooter />
-        </div>
-      )}
-    </SiteEditorProvider>
-  );
+const projects = [
+  ["The Vira Hotel Lobby", "Dubai, UAE", "Hospitality · 8,600 sq ft", "Champagne PVD — mirror, hairline, woven mesh", pvdImages.architecture],
+  ["Aurum Flagship Store", "Mumbai, India", "Retail · 3,200 sq ft", "Rose Gold PVD — mitred frames, invisible fixings", pvdImages.interiors],
+  ["Meridian Tower Facade", "Singapore", "Commercial · 64,000 sq ft", "Gunmetal PVD — bead-blasted, non-reflective", pvdImages.facade],
+  ["Nikhil Gupta Residence", "Rajkot, Gujarat", "Residential · 9,400 sq ft", "Black PVD — hairline finish", pvdImages.cta],
+  ["Atelier Nine Interiors", "London, UK", "Interiors · 5,100 sq ft", "Champagne / Vibration finish", pvdImages.lobby],
+  ["SS Decorative Mesh", "International", "Architectural Mesh", "PVD-coated woven wire mesh", pvdImages.mesh ?? pvdImages.architecture],
+];
+
+const faqs = [
+  ["What is PVD coating on stainless steel?", "PVD (Physical Vapour Deposition) is a vacuum-based process where vaporised metal condenses onto stainless-steel substrate and bonds at an atomic level. The resulting coating is measured in microns and is integral to the surface — not a paint, film, or electroplated layer."],
+  ["What grade of stainless steel is used for PVD surfaces?", "SteelXDecor's standard substrate is SS 304 Grade stainless steel. SS 316 Grade is available on request for exterior or high-corrosion environments. All standard PVD surfaces are manufactured on SS PVD Coated 304 Grade unless otherwise specified."],
+  ["Is PVD-coated stainless steel suitable for exterior use?", "SS 304 Grade PVD surfaces are suitable for sheltered exterior applications. For direct weather exposure, coastal environments, or high-humidity conditions, SS 316 Grade substrate is recommended."],
+  ["Can PVD finishes be customised?", "Yes. SteelXDecor offers eight standard PVD tones — Champagne, Gold, Rose Gold, Bronze, Black, Gunmetal, Titanium, and Silver — plus custom colour matching. Surface textures and dimensions can also be customized per project."],
+  ["How is PVD different from electroplating or painting?", "PVD deposits colour through physical vapour deposition in a vacuum chamber, bonding at an atomic level to the stainless-steel substrate. Electroplating and painting apply colour on top of the surface."],
+  ["Where are PVD surfaces commonly used in architecture?", "PVD-coated stainless-steel surfaces are used for facades, hospitality lobbies, retail interiors, residential feature walls, commercial ceilings, decorative screens, room dividers, lift jamb cladding, and joinery."],
+  ["How are PVD surfaces installed?", "SteelXDecor crates panels in installation sequence and deploys own in-house installation teams globally. Installation methodology is coordinated during the specification phase."],
+  ["How should PVD-coated stainless steel be maintained?", "Regular cleaning with non-abrasive methods preserves finish quality. Avoid chloride-based cleaners on 304 Grade stainless steel. Mirror finishes may require more frequent cleaning."],
+  ["Can PVD surfaces be custom fabricated after coating?", "Yes. Cutting, bending, welding, and edge finishing are performed after PVD coating to preserve colour continuity across joints and edges."],
+  ["What is the minimum order quantity for PVD surfaces?", "Project quantities range from single-room interiors to multi-site developments. Batch colour-matching is controlled against a signed sample for every project. Contact SteelXDecor for project-specific requirements and lead times."],
+];
+
+const schema = {
+  "@context": "https://schema.org", "@type": "WebPage", name: "PVD Coated Stainless Steel Surfaces", description,
+  url: "https://steelxdecor.com/pvd-surfaces", publisher: { "@type": "Organization", name: "SteelXDecor", url: "https://steelxdecor.com" },
+  mainEntity: { "@type": "ItemList", name: "PVD Surface Colour Range", itemListElement: tones.map((t, i) => ({ "@type": "ListItem", position: i + 1, item: { "@type": "Product", name: `${t.name} PVD Stainless Steel` } })) },
+  hasPart: { "@type": "FAQPage", mainEntity: faqs.map(([name, text]) => ({ "@type": "Question", name, acceptedAnswer: { "@type": "Answer", text } })) },
+};
+
+function Section({ id, children, dark = false }: { id: string; children: React.ReactNode; dark?: boolean }) {
+  return <EditableSection id={id}><section id={id} className={`pvd-seo-section ${dark ? "pvd-dark" : ""}`}>{children}</section></EditableSection>;
+}
+function Eyebrow({ children }: { children: React.ReactNode }) { return <p className="pvd-eyebrow">{children}</p>; }
+function Heading({ children }: { children: React.ReactNode }) { return <h2 className="pvd-heading">{children}</h2>; }
+function CTA({ href, children, filled = false }: { href: string; children: React.ReactNode; filled?: boolean }) { return <Link to={href} className={`pvd-button ${filled ? "pvd-button-filled" : ""}`}>{children}<ArrowUpRight size={15}/></Link>; }
+
+function PvdSurfacesPage() {
+  return <SiteEditorProvider slug="pvd-surfaces" defaults={defaults}>{(page) => <div className="pvd-category min-h-screen bg-background text-foreground">
+    <ScrollProgress /><SiteHeader />
+    <main>
+      <Section id="hero" dark><div className="pvd-hero-grid"><div className="pvd-hero-copy"><Eyebrow>STEELXDECOR · PVD SURFACES</Eyebrow><h1>PVD Coated<br/><span>Stainless Steel</span><br/>Surfaces</h1><p>Architectural stainless steel with colour, texture and performance engineered into every surface. Vacuum-deposited PVD finishes on SS 304 and 316 Grade substrate — for facades, interiors, screens, ceilings and bespoke metalwork worldwide.</p><div className="pvd-actions"><a href="#colours" className="pvd-button pvd-button-filled">Explore the Collection <MoveRight size={15}/></a><a href="#specification" className="pvd-button">Request Samples <ArrowUpRight size={15}/></a></div></div><div className="pvd-hero-media"><img src={pvdImages.hero} alt="PVD coated stainless steel architectural surface"/><div className="pvd-hero-chip"><strong>SS PVD Coated 304 Grade</strong><span>Vacuum deposition · architectural finishes</span></div></div></div></Section>
+
+      <Section id="introduction"><div className="pvd-narrow"><Eyebrow>01 · INTRODUCTION</Eyebrow><Heading>What Are PVD Surfaces?</Heading><p>PVD coating transforms bare stainless-steel sheet into an architectural surface with embedded colour. Unlike paint, electroplating, or film laminate, PVD bonds metal atoms directly to the stainless-steel substrate inside a vacuum chamber. The result is a finish measured in microns that behaves like the material it coats and performs at architectural scale — from a single hotel lobby panel to a 64,000 sq ft commercial facade.</p><p>SteelXDecor supplies PVD-coated stainless-steel surfaces designed for architects, interior designers, contractors, and fabricators who require colour consistency, material integrity, and technical specification at project scale. Every surface begins with mill-checked SS 304 or 316 Grade stainless steel, moves through precision surface preparation, and completes with vacuum PVD colour bonding controlled against a signed sample per batch.</p><CTA href="#final">Discuss Your Project Requirements</CTA></div></Section>
+
+      <Section id="overview" dark><div className="pvd-split"><div><Eyebrow>02 · PRODUCT OVERVIEW</Eyebrow><Heading>PVD Coated Stainless Steel Surfaces</Heading><p>PVD-coated stainless-steel surfaces are architectural panels, sheets, mesh, and profiles manufactured by depositing vapourised metal onto stainless-steel substrate in a vacuum environment. The PVD layer bonds atomically to the surface — it is not a paint, a film, or a coating applied on top.</p></div><ul className="pvd-spec-list">{["Substrate: SS 304 Grade stainless steel (316 available on request)","Process: Physical Vapour Deposition in vacuum chamber","Coating thickness: Measured in microns","Bond type: Atomic bond to substrate — not surface-applied","Base textures: Hairline, Mirror, Vibration, Bead Blast, Satin","Finish colours: Silver, Champagne, Gold, Rose Gold, Bronze, Gunmetal, Black, Titanium"].map(x=><li key={x}><Check size={16}/>{x}</li>)}</ul></div></Section>
+
+      <Section id="features"><Eyebrow>03 · KEY FEATURES</Eyebrow><Heading>Engineered From Substrate to Surface</Heading><div className="pvd-feature-grid">{[
+        ["Vacuum PVD Colour Bonding","Colour is deposited through vaporisation of solid metal inside a vacuum chamber, where ionised vapour condenses onto the stainless-steel panel and bonds at an atomic level."],
+        ["SS 304 Grade Stainless Steel Substrate","Every surface begins with mill-checked SS 304 Grade stainless steel. For exterior installations, SS 316 Grade is available on request."],
+        ["Nine Standard PVD Colour Tones","Eight standard tones — Champagne, Gold, Rose Gold, Bronze, Black, Gunmetal, Titanium, and Silver — plus custom colour matching."],
+        ["Five Surface Textures","Hairline, Mirror, Vibration, Bead Blast, and Satin change how light interacts with the same PVD colour."],
+        ["Custom Fabrication","Panels, sheets, mesh, profiles, and bespoke elements can be cut, bent, welded and finished for project requirements."],
+        ["Global Installation","Panels are crated in installation sequence and SteelXDecor deploys installation crews globally."],
+      ].map(([h,p],i)=><article className="pvd-feature" key={h}><span>0{i+1}</span><h3>{h}</h3><p>{p}</p></article>)}</div></Section>
+
+      <Section id="colours" dark><Eyebrow>04 · COLOUR COLLECTION</Eyebrow><Heading>PVD Finish Colours</Heading><p className="pvd-lead">SteelXDecor applies PVD colour across eight standard tones plus custom colour matching on request. Each tone carries distinct architectural characteristics — reflectivity, warmth, and visual reading at distance.</p><div className="pvd-colour-grid">{tones.map(t=><article className="pvd-colour-card" key={t.id}><img src={t.image} alt={`${t.name} PVD stainless steel finish`} loading="lazy"/><div className="pvd-colour-overlay"><span>SS PVD Coated 304 Grade</span><h3>{t.name}</h3><p>{t.note}</p><small>{t.textures.join(" · ")} · {t.applications.join(" · ")}</small></div></article>)}</div></Section>
+
+      <Section id="textures"><Eyebrow>05 · TEXTURE OPTIONS</Eyebrow><Heading>Surface Textures</Heading><p className="pvd-lead">Mechanical preparation before PVD deposition defines how light interacts with the finished surface.</p><div className="pvd-texture-grid">{textures.map(t=><article className="pvd-texture" key={t.id}><img src={t.image} alt={`${t.name} stainless steel texture`} loading="lazy"/><div><span>{t.name}</span><p>{({hairline:"Directional reflection. Light stretches along the grain, creating soft luminosity that moves with the viewer's angle.",mirror:"High-gloss reflection creating near-perfect reflective surface. Mirror finishes amplify light and space.",vibration:"Textured micro-reflection that breaks up light into subtle movement. Reduces glare while maintaining colour depth.","bead-blast":"Matte diffusion through spherical bead particle impact. Produces a uniform, non-directional surface.",satin:"A balanced sheen between hairline and mirror — enough reflectivity to feel polished, enough diffusion to remain understated."} as Record<string,string>)[t.id]}</p></div></article>)}</div></Section>
+
+      <Section id="applications" dark><Eyebrow>06 · APPLICATIONS</Eyebrow><Heading>Designed for Architecture</Heading><p className="pvd-lead">Each application requires different performance characteristics from a PVD surface — reflectivity, texture, corrosion resistance, and fabrication complexity vary by use case.</p><div className="pvd-application-grid">{applications.map(a=><article key={a.name}><img src={a.image} alt={a.alt} loading="lazy"/><div><span>{a.index}</span><h3>{a.name}</h3><p>{a.line}</p><small>{a.name === "Facades" ? "Exterior cladding for commercial buildings and hospitality exteriors; Bronze and Gunmetal are frequently specified for their architectural character." : a.name === "Hospitality" ? "Champagne and Gold finishes bring warmth to lobbies, restaurants, bars, wall panels and reception features." : `PVD surfaces engineered for ${a.name.toLowerCase()} applications with application-specific texture and fabrication.`}</small></div></article>)}</div></Section>
+
+      <Section id="grade"><div className="pvd-split pvd-grade"><div><Eyebrow>07 · MATERIAL & GRADE</Eyebrow><Heading>Material & Grade Specifications</Heading><h3>SS 304 Grade — Standard Substrate</h3><p>SteelXDecor's primary material specification is SS 304 Grade stainless steel — an austenitic chromium-nickel alloy widely specified for architectural interiors. 304 Grade offers excellent formability, weldability, and corrosion resistance for indoor and sheltered applications.</p></div><div><h3>SS 316 Grade — Available on Request</h3><p>For exterior or high-corrosion environments, SS 316 Grade stainless steel is available on request. 316 Grade contains molybdenum, which enhances corrosion resistance against chlorides and marine environments.</p><div className="pvd-callout"><strong>SS PVD Coated 304 Grade</strong><br/>All standard PVD surfaces are manufactured on SS PVD Coated 304 Grade stainless steel unless 316 Grade is explicitly requested.</div></div></div></Section>
+
+      <Section id="process" dark><Eyebrow>08 · HOW PVD WORKS</Eyebrow><Heading>The Process</Heading><p className="pvd-lead">PVD is a vacuum-based coating process that bonds metal colour directly to stainless-steel substrate. The process differs fundamentally from electroplating, painting, or film lamination.</p><div className="pvd-process">{[["01","Raw Steel","Mill sheet 304 or 316 Grade is selected and checked for flatness, surface condition, and material integrity."],["02","Surface Preparation","Hairline, Vibration, Bead Blast, or Mirror defines the base surface the PVD coating will bond to."],["03","Vacuum Chamber","The chamber is evacuated so nothing sits between the metal source and the panel surface."],["04","Vapourisation","Solid target metal is vaporised inside the vacuum chamber."],["05","Ionisation & Deposition","The vapour is ionised and directed toward the panel. PVD layer condenses and bonds atomically."],["06","Finished Surface","A coloured architectural surface — not a paint, not a film, not an electroplated layer."]].map(([n,h,p])=><article key={n}><b>{n}</b><h3>{h}</h3><p>{p}</p></article>)}</div><div className="pvd-why"><h3>Why PVD Over Electroplating?</h3><p>Electroplating deposits colour through an electrical chemical process onto the surface. PVD deposits colour through physical vapour deposition in vacuum — the coating bonds at an atomic level and is integral to the surface.</p></div></Section>
+
+      <Section id="customization"><Eyebrow>09 · DESIGN & CUSTOMIZATION</Eyebrow><Heading>Made to the Project</Heading><p className="pvd-lead">SteelXDecor fabricates PVD surfaces to project-specific requirements.</p><div className="pvd-detail-grid">{[["Pattern","Solid panels, perforated patterns, expanded mesh, woven wire mesh, and laser-cut designs"],["Dimensions","Panels and sheets fabricated to project-specific dimensions and fabrication tolerances"],["Finish","Five textures across eight PVD colour tones, plus custom colour matching on request"],["Frame & Edging","Panels with or without framing, mitred edges, concealed fixings, and integrated frame profiles"],["Fabrication","Cutting, bending, welding, and edge finishing performed after PVD coating"],["Application-Specific Customization","Facade panels, lift jamb cladding, ceiling baffles, room dividers, screens, and furniture elements"]].map(([h,p])=><article key={h}><h3>{h}</h3><p>{p}</p></article>)}</div></Section>
+
+      <Section id="buying" dark><Eyebrow>10 · BUYING CONSIDERATIONS</Eyebrow><Heading>Specify With Confidence</Heading><p className="pvd-lead">Before specifying PVD-coated stainless-steel surfaces for a project, consider the following factors:</p><div className="pvd-buying">{["Application","Indoor or Outdoor Use","Dimensions","Pattern & Opening","Material Grade","Finish & Texture","Frame Requirements","Installation Method","Maintenance","Project Quantity"].map((h,i)=><article key={h}><b>0{i+1}</b><h3>{h}</h3><p>{["Determine whether the surface is for interior or exterior use.","Outdoor installations require SS 316 Grade substrate.","Define panel dimensions and fabrication tolerances early.","Specify pattern type, opening size, and construction method.","Confirm SS 304 or SS 316 Grade for the project environment.","Select texture based on desired light interaction and maintenance requirements.","Determine whether panels will be supplied with or without framing.","Confirm on-site fabrication or pre-fabricated installation requirements.","PVD-coated surfaces are maintenance-friendly with non-abrasive cleaning.","Larger quantities require batch colour-matching against a signed control sample."][i]}</p></article>)}</div></Section>
+
+      <Section id="comparison"><Eyebrow>11 · COMPARISON</Eyebrow><Heading>Colour Comparison</Heading><div className="pvd-table-wrap"><table><thead><tr><th>Specification</th><th>Champagne</th><th>Gunmetal</th><th>Black</th></tr></thead><tbody>{[["Colour Character","Warm neutral","Cool graphite","Near-black"],["Reflectivity","Medium","Low","High or low"],["Texture Options","Hairline / Vibration","Bead blast / Hairline","Mirror / Bead blast / Satin"],["Key Applications","Hospitality, Luxury interiors","Commercial, Screens, Facades","Luxury interiors, Joinery, Screens"],["Best For","Quiet, luminous","Structural","Absolute"]].map(r=><tr key={r[0]}>{r.map(c=><td key={c}>{c}</td>)}</tr>)}</tbody></table></div></Section>
+
+      <Section id="finder" dark><div className="pvd-finder"><div><Eyebrow>12 · FINISH FINDER</Eyebrow><Heading>Find Your Finish</Heading><p>Answer the three questions below and we'll suggest three PVD surfaces worth sampling.</p></div>{[["Where is it going?","Façade · Hotel · Retail · Residence · Office · Screen · Ceiling · Feature wall"],["What should it feel like?","Warm · Reflective · Dark · Tactile · Quiet · Statement"],["How should light behave?","Soft · Directional · Reflective · Diffused"]].map(([h,p],i)=><div className="pvd-question" key={h}><span>0{i+1}</span><h3>{h}</h3><p>{p}</p><ChevronDown size={17}/></div>)}<div className="pvd-finder-result">Answer the three questions and we'll suggest three surfaces worth sampling.</div></div></Section>
+
+      <Section id="alternatives"><Eyebrow>13 · WHY PVD</Eyebrow><Heading>Why PVD Over Alternatives</Heading><div className="pvd-alternatives">{[["PVD vs Paint","Paint sits on the surface and can chip, peel, or fade. PVD colour bonds at an atomic level to the stainless-steel substrate."],["PVD vs Electroplating","Electroplating deposits colour through an electrical chemical process. PVD deposits colour through physical vapour deposition in vacuum."],["PVD vs Film Laminate","Film laminate applies a decorative film onto the substrate. PVD colour is deposited directly onto the stainless-steel surface."],["PVD vs Raw Stainless Steel","Raw stainless steel is naturally silver-toned. PVD adds the full colour spectrum while preserving the underlying material properties."]].map(([h,p])=><article key={h}><h3>{h}</h3><p>{p}</p></article>)}</div></Section>
+
+      <Section id="projects" dark><Eyebrow>14 · FEATURED PROJECTS</Eyebrow><Heading>Projects Completed Worldwide</Heading><p className="pvd-lead">SteelXDecor has delivered PVD-coated stainless-steel surfaces for commercial, hospitality, retail, residential, and institutional projects across India, UAE, UK, and Singapore.</p><div className="pvd-project-grid">{projects.map(([h,loc,meta,finish,img])=><article key={h}><img src={img} alt={`${h} PVD stainless steel project`} loading="lazy"/><div><span>{loc}</span><h3>{h}</h3><small>{meta}</small><p>{finish}</p></div></article>)}</div></Section>
+
+      <Section id="specification"><div className="pvd-spec-cta"><div><Eyebrow>15 · SPECIFICATION DOWNLOAD</Eyebrow><Heading>Download the Material Guide</Heading><p>A comprehensive material specification document covering substrate grades, PVD coating properties, texture options, colour references, fabrication tolerances, installation methodology, and maintenance protocols.</p></div><CTA href="#final" filled>Download Material Guide <Download size={15}/></CTA></div></Section>
+
+      <Section id="faqs" dark><Eyebrow>16 · FAQs</Eyebrow><Heading>Frequently Asked Questions</Heading><div className="pvd-faqs">{faqs.map(([q,a])=><details key={q}><summary>{q}<ChevronDown size={17}/></summary><p>{a}</p></details>)}</div></Section>
+
+      <Section id="related"><Eyebrow>17 · RELATED PRODUCTS</Eyebrow><Heading>Explore the Full Product Range</Heading><div className="pvd-related">{[["PVD Marble Collection","PVD-coated marble-effect panels for feature walls, reception counters, and luxury residential surfaces.","/marble"],["Vintex Web","Specialty woven wire mesh with PVD coating for architectural screens, partitions, and ceilings.","/vintex-web"],["Designer Sheets","Finished stainless-steel sheets in Mirror, Hairline, Vibration, and Bead Blast textures.","/designer-sheets"],["SS Decorative Mesh PVD","Woven wire mesh with vacuum PVD coating for decorative partitions and screens.","/ss-decorative-mesh-pvd"],["PVD Profiles — T, U & L Patti","Decorative stainless-steel profiles for edge detailing, cladding frames, and architectural trim.","/materials"],["PVD Lift Jamb & Cladding Panels","PVD-coated panels designed for lift jamb cladding and elevator interiors.","/materials"],["PVD Coated Pipes","Decorative stainless-steel pipes with PVD surface finishes for architectural railings and furniture frames.","/materials"],["TI-PVD Furniture Surfaces","Tabletops, consoles, showcases, and partition panels with full PVD surface treatment.","/materials"]].map(([h,p,to])=><Link to={to} key={h}><span>{h}</span><p>{p}</p><ArrowUpRight size={17}/></Link>)}</div></Section>
+
+      <Section id="final" dark><div className="pvd-final"><Eyebrow>18 · START A PROJECT</Eyebrow><Heading>Ready to Specify a PVD Surface?</Heading><p>Every project starts with a specification conversation. Share your dimensions, application, desired finish, and grade requirement and the SteelXDecor team will recommend the right material, construction, and PVD finish for your project.</p><div className="pvd-actions"><CTA href="/contact" filled>Start a Project Consultation</CTA><CTA href="/contact">Request Samples</CTA><CTA href="#specification">Download Material Guide</CTA></div></div></Section>
+    </main><SiteFooter /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+    <style>{css}</style>
+  </div>}</SiteEditorProvider>;
 }
 
-const sectionRegistry: Record<string, () => ReactElement> = {
-  hero: PvdHero,
-  "tone-transformation": ToneTransformation,
-  colour: ColourChapter,
-  texture: TextureChapter,
-  "macro-architecture": MacroToArchitecture,
-  architecture: ArchitectureReveal,
-  applications: ApplicationChapters,
-  science: PvdScience,
-  "sheet-to-surface": SheetToSurface,
-  precision: EngineeredPrecision,
-  lineup: MaterialLineup,
-  comparison: FinishComparison,
-  finder: MaterialFinder,
-  proof: ProjectProof,
-  detail: DeepDetail,
-  longevity: Longevity,
-  specification: Specification,
-  "final-moment": FinalMoment,
-  "final-cta": FinalCta,
-};
+const css = `
+.pvd-category{--gold:#c9a96e;--ink:#151515;--soft:#f5f4f1;--line:rgba(20,20,20,.12);--dark:#111;--dark2:#181818;overflow:hidden}.pvd-category *{box-sizing:border-box}.pvd-category{font-family:Inter,ui-sans-serif,system-ui,sans-serif}.pvd-category h1,.pvd-category h2,.pvd-category h3{font-family:"Cormorant Garamond",Georgia,serif}.pvd-seo-section{padding:clamp(72px,9vw,150px) clamp(20px,6vw,100px);background:#fff}.pvd-dark{background:var(--dark);color:#f5f4ef}.pvd-eyebrow{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin:0 0 24px}.pvd-heading{font-size:clamp(44px,6.4vw,92px);line-height:.92;font-weight:400;letter-spacing:-.035em;margin:0 0 30px}.pvd-lead,.pvd-narrow>p,.pvd-split p,.pvd-final>p{max-width:780px;font-size:clamp(15px,1.35vw,18px);line-height:1.8;color:rgba(20,20,20,.68)}.pvd-dark .pvd-lead,.pvd-dark .pvd-final>p{color:rgba(255,255,255,.66)}.pvd-narrow{max-width:1050px;margin:auto}.pvd-narrow>p{max-width:900px;margin:0 0 26px}.pvd-button{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(201,169,110,.7);padding:15px 20px;text-transform:uppercase;letter-spacing:.12em;font-size:10px;color:inherit;text-decoration:none;transition:.3s}.pvd-button:hover{background:var(--gold);color:#111;border-color:var(--gold)}.pvd-button-filled{background:var(--gold);color:#111}.pvd-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}.pvd-hero-grid{min-height:calc(100svh - 70px);display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:6vw;max-width:1500px;margin:auto}.pvd-hero-copy h1{font-size:clamp(62px,8.6vw,145px);line-height:.78;font-weight:400;letter-spacing:-.055em;margin:0}.pvd-hero-copy h1 span{color:var(--gold)}.pvd-hero-copy>p{font-size:clamp(15px,1.4vw,19px);line-height:1.7;color:rgba(255,255,255,.64);max-width:650px;margin:35px 0 0}.pvd-hero-media{position:relative;min-height:620px}.pvd-hero-media img{width:100%;height:620px;object-fit:cover;filter:saturate(.75)}.pvd-hero-media:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#111 0%,transparent 25%,transparent 80%,#111)}.pvd-hero-chip{position:absolute;z-index:2;left:25px;bottom:25px;background:rgba(10,10,10,.8);backdrop-filter:blur(12px);padding:15px 18px;display:grid;gap:4px;border-left:2px solid var(--gold);font-size:10px;letter-spacing:.08em}.pvd-hero-chip span{color:#aaa}.pvd-split{max-width:1350px;margin:auto;display:grid;grid-template-columns:1.1fr .9fr;gap:8vw;align-items:start}.pvd-spec-list{list-style:none;padding:0;margin:0;display:grid;gap:0;border-top:1px solid rgba(255,255,255,.12)}.pvd-spec-list li{display:flex;gap:14px;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:13px;line-height:1.6}.pvd-spec-list svg{color:var(--gold);flex:none;margin-top:2px}.pvd-feature-grid{max-width:1350px;margin:50px auto 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}.pvd-feature{padding:34px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-height:280px}.pvd-feature span{font-size:10px;color:var(--gold);letter-spacing:.2em}.pvd-feature h3{font-size:31px;font-weight:400;margin:38px 0 14px}.pvd-feature p,.pvd-texture p,.pvd-detail-grid p,.pvd-buying p,.pvd-alternatives p,.pvd-related p{font-size:13px;line-height:1.75;color:rgba(20,20,20,.64)}.pvd-dark .pvd-feature p{color:rgba(255,255,255,.58)}.pvd-colour-grid{max-width:1500px;margin:55px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.pvd-colour-card{height:480px;position:relative;overflow:hidden}.pvd-colour-card img{width:100%;height:100%;object-fit:cover;transition:transform .8s}.pvd-colour-card:hover img{transform:scale(1.07)}.pvd-colour-overlay{position:absolute;inset:auto 0 0;padding:28px 22px;background:linear-gradient(transparent,rgba(0,0,0,.88));min-height:190px}.pvd-colour-overlay>span{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}.pvd-colour-overlay h3{font-size:34px;margin:8px 0}.pvd-colour-overlay p{font-size:12px;line-height:1.6;color:#ddd}.pvd-colour-overlay small{font-size:9px;line-height:1.6;color:#aaa}.pvd-texture-grid{max-width:1350px;margin:55px auto 0;display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.pvd-texture{background:var(--soft);min-height:440px}.pvd-texture img{width:100%;height:220px;object-fit:cover}.pvd-texture>div{padding:24px}.pvd-texture span{font-family:Georgia,serif;font-size:28px}.pvd-texture p{margin-top:12px}.pvd-application-grid{max-width:1450px;margin:55px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.pvd-application-grid article{position:relative;min-height:420px;overflow:hidden}.pvd-application-grid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .7s}.pvd-application-grid article:hover img{transform:scale(1.06)}.pvd-application-grid article:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 20%,rgba(0,0,0,.9))}.pvd-application-grid article>div{position:absolute;z-index:1;bottom:0;padding:26px}.pvd-application-grid span{color:var(--gold);font-size:10px}.pvd-application-grid h3{font-size:35px;font-weight:400;margin:5px 0}.pvd-application-grid p{color:#ddd;font-size:13px}.pvd-application-grid small{color:#aaa;line-height:1.6}.pvd-grade h3{font-size:32px;font-weight:400;margin:35px 0 12px}.pvd-callout{border-left:2px solid var(--gold);padding:20px;background:var(--soft);font-size:13px;line-height:1.7}.pvd-process{max-width:1450px;margin:55px auto 0;display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid rgba(255,255,255,.15)}.pvd-process article{padding:25px 18px;border-right:1px solid rgba(255,255,255,.12);min-height:300px}.pvd-process b{font-size:11px;color:var(--gold)}.pvd-process h3{font-size:27px;font-weight:400;margin:45px 0 15px}.pvd-process p{font-size:12px;line-height:1.7;color:#aaa}.pvd-why{max-width:850px;margin:65px auto 0;border:1px solid rgba(201,169,110,.35);padding:35px}.pvd-why h3{font-size:34px;font-weight:400;margin:0 0 10px}.pvd-why p{color:#aaa;line-height:1.8;font-size:14px}.pvd-detail-grid{max-width:1350px;margin:50px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}.pvd-detail-grid article{background:#fff;padding:32px;min-height:210px}.pvd-detail-grid h3{font-size:29px;font-weight:400;margin:0 0 12px}.pvd-buying{max-width:1400px;margin:55px auto 0;display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid rgba(255,255,255,.15);border-left:1px solid rgba(255,255,255,.15)}.pvd-buying article{padding:25px;border-right:1px solid rgba(255,255,255,.15);border-bottom:1px solid rgba(255,255,255,.15);min-height:200px}.pvd-buying b{color:var(--gold);font-size:10px}.pvd-buying h3{font-size:23px;font-weight:400;margin:20px 0 8px}.pvd-buying p{color:#aaa}.pvd-table-wrap{overflow:auto;max-width:1200px;margin:50px auto 0}.pvd-table-wrap table{border-collapse:collapse;width:100%;min-width:750px}.pvd-table-wrap th,.pvd-table-wrap td{text-align:left;padding:18px;border-bottom:1px solid var(--line);font-size:13px}.pvd-table-wrap th{font-family:Georgia,serif;font-size:21px;font-weight:400}.pvd-table-wrap th:not(:first-child){color:#9f8050}.pvd-finder{max-width:1000px;margin:auto}.pvd-question{position:relative;padding:25px 45px 25px 55px;border-top:1px solid rgba(255,255,255,.15);min-height:100px}.pvd-question span{position:absolute;left:0;color:var(--gold);font-size:10px}.pvd-question h3{font-size:29px;font-weight:400;margin:0 0 5px}.pvd-question p{color:#999;font-size:12px}.pvd-question svg{position:absolute;right:0;top:35px;color:var(--gold)}.pvd-finder-result{margin-top:25px;border:1px solid rgba(201,169,110,.35);padding:24px;color:#ccc;font-size:13px}.pvd-alternatives{max-width:1350px;margin:50px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.pvd-alternatives article{padding:30px;background:var(--soft);min-height:260px}.pvd-alternatives h3{font-size:29px;font-weight:400}.pvd-project-grid{max-width:1450px;margin:55px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.pvd-project-grid article{background:#191919}.pvd-project-grid img{width:100%;height:280px;object-fit:cover}.pvd-project-grid article>div{padding:22px}.pvd-project-grid span,.pvd-project-grid small{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}.pvd-project-grid h3{font-size:29px;font-weight:400;margin:8px 0}.pvd-project-grid p{font-size:12px;color:#aaa}.pvd-spec-cta{max-width:1250px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:50px;padding:55px;border:1px solid var(--line);background:var(--soft)}.pvd-spec-cta p{max-width:700px;line-height:1.7;color:#666}.pvd-faqs{max-width:1050px;margin:45px auto 0}.pvd-faqs details{border-top:1px solid rgba(255,255,255,.15);padding:22px 0}.pvd-faqs details:last-child{border-bottom:1px solid rgba(255,255,255,.15)}.pvd-faqs summary{cursor:pointer;display:flex;justify-content:space-between;gap:20px;list-style:none;font-family:Georgia,serif;font-size:22px}.pvd-faqs summary::-webkit-details-marker{display:none}.pvd-faqs p{max-width:850px;color:#aaa;line-height:1.8;font-size:13px;margin:15px 0 0}.pvd-related{max-width:1400px;margin:50px auto 0;display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line)}.pvd-related a{position:relative;background:#fff;padding:28px 55px 28px 28px;text-decoration:none;color:inherit;min-height:160px;transition:.3s}.pvd-related a:hover{background:var(--soft)}.pvd-related a>span{font-family:Georgia,serif;font-size:25px}.pvd-related p{max-width:520px;margin:8px 0 0}.pvd-related svg{position:absolute;right:25px;top:30px;color:var(--gold)}.pvd-final{max-width:1100px;margin:auto}.pvd-final .pvd-heading{max-width:850px}.pvd-final>p{max-width:800px}
+@media(max-width:1050px){.pvd-hero-grid,.pvd-split{grid-template-columns:1fr}.pvd-hero-media{min-height:500px}.pvd-hero-media img{height:500px}.pvd-feature-grid,.pvd-detail-grid{grid-template-columns:repeat(2,1fr)}.pvd-colour-grid{grid-template-columns:repeat(2,1fr)}.pvd-texture-grid{grid-template-columns:repeat(2,1fr)}.pvd-application-grid{grid-template-columns:repeat(2,1fr)}.pvd-process{grid-template-columns:repeat(3,1fr)}.pvd-buying{grid-template-columns:repeat(2,1fr)}.pvd-alternatives{grid-template-columns:repeat(2,1fr)}.pvd-project-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.pvd-seo-section{padding:70px 20px}.pvd-hero-copy h1{font-size:58px}.pvd-hero-media,.pvd-hero-media img{min-height:380px;height:380px}.pvd-feature-grid,.pvd-colour-grid,.pvd-texture-grid,.pvd-application-grid,.pvd-detail-grid,.pvd-process,.pvd-buying,.pvd-alternatives,.pvd-project-grid,.pvd-related{grid-template-columns:1fr}.pvd-feature{min-height:220px}.pvd-colour-card{height:420px}.pvd-texture{min-height:0}.pvd-process article{min-height:220px}.pvd-spec-cta{padding:28px;display:block}.pvd-heading{font-size:50px}.pvd-related a{min-height:140px}}
+@media(prefers-reduced-motion:reduce){.pvd-colour-card img,.pvd-application-grid img{transition:none}}
+`;
