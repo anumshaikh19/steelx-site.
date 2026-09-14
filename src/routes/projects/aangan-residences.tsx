@@ -9,14 +9,11 @@ import detailB from "@/assets/proj-detail-b.jpg";
 import metalHero from "@/assets/metal-hero.jpg";
 import polishing from "@/assets/polishing.jpg";
 import inspection from "@/assets/inspection.jpg";
-import installation from "@/assets/installation.jpg";
 import pvdChamber from "@/assets/pvd-chamber.jpg";
 import { PageShell, Section } from "@/components/page-shell";
 import { Reveal, SectionHeading } from "@/components/reveal";
 import { ClipReveal, HorizontalRail, Parallax } from "@/components/motion";
 import { Lightbox } from "@/components/lightbox";
-import { ProjectGridCard } from "@/components/project-grid-card";
-import { getProject, relatedProjects } from "@/data/projects";
 
 export const Route = createFileRoute("/projects/aangan-residences")({
   head: () => ({
@@ -49,9 +46,46 @@ const detailImages = [
   { src: pvdChamber, alt: "Material comparison: water ripple PVD (textured, structural), mirror PVD (reflective), bronze PVD (warm tone) on ss-304 substrate — showing how PVD coating adapts to different finishes for architectural needs in Mumbai." },
 ];
 
+const relatedProjects = [
+  {
+    category: "Residential",
+    title: "Lodha Bellevue Facade",
+    client: "Lodha Group",
+    year: "2024",
+    location: "Worli, Mumbai",
+    area: "32,000 sq ft",
+    href: "/projects/lodha-bellevue-facade",
+    image: bungalow,
+    alt: "Bronze PVD ss-304 fins on Lodha Bellevue, Worli — creating shaded balconies that cut Mumbai’s harsh afternoon sun.",
+    description: "A tower facade where bronze PVD ss-304 fins cut the harsh afternoon sun — creating cool, shaded balconies that feel like courtyards in the sky.",
+  },
+  {
+    category: "Hospitality",
+    title: "JW Marriott Lobby",
+    client: "JW Marriott Mumbai",
+    year: "2023",
+    location: "Sahar, Mumbai",
+    area: "12,000 sq ft",
+    href: "/projects/jw-marriott-lobby-mumbai",
+    image: interiors,
+    alt: "Mirror PVD ss-304 wall in JW Marriott Mumbai lobby — doubling artwork and perceived height in compact Sahar hotel space.",
+    description: "The lobby’s mirror PVD ss-304 walls don’t just reflect light — they double the artwork and make the space feel twice as tall. Critical for Mumbai’s compact luxury hotels.",
+  },
+  {
+    category: "Retail",
+    title: "High Street Phoenix Canopy",
+    client: "Phoenix Mills",
+    year: "2024",
+    location: "Lower Parel, Mumbai",
+    area: "4,500 sq ft",
+    href: "/projects/high-street-phoenix-canopy-mumbai",
+    image: detailB,
+    alt: "Water ripple PVD ss-304 canopy at High Street Phoenix, Lower Parel — creating moving light patterns on pavement in Mumbai retail space.",
+    description: "A retail canopy where water ripple PVD on ss-304 turns sunlight into moving patterns on the pavement — making shopping feel like an experience, not an errand.",
+  },
+];
+
 function AanganResidences() {
-  const project = getProject("nikhil-gupta-residence");
-  const related = relatedProjects("nikhil-gupta-residence").slice(0, 3);
   const [lightbox, setLightbox] = useState<number | null>(null);
   const allImages = [...gallery, ...detailImages];
 
@@ -59,96 +93,38 @@ function AanganResidences() {
     <PageShell>
       <section className="mx-auto max-w-[1600px] px-4 pb-10 pt-28 sm:px-8 lg:px-10 lg:pt-36">
         <Reveal variant="text" as="p" className="text-[0.62rem] uppercase tracking-[0.4em] text-champagne">Residential · Bandra West, Mumbai · 2025 · Completed</Reveal>
-        <Reveal variant="up" delay={80}>
-          <h1 className="mt-6 max-w-6xl font-display text-[2.8rem] leading-[0.92] text-foreground sm:text-7xl lg:text-[7.5rem]">Aangan Residences</h1>
-        </Reveal>
-        <Reveal variant="row" delay={160}>
-          <p className="mt-6 max-w-3xl text-sm leading-relaxed text-muted-foreground">Mumbai, Maharashtra · 2025 · Completed</p>
-        </Reveal>
+        <Reveal variant="up" delay={80}><h1 className="mt-6 max-w-6xl font-display text-[2.8rem] leading-[0.92] text-foreground sm:text-7xl lg:text-[7.5rem]">Aangan Residences</h1></Reveal>
+        <Reveal variant="row" delay={160}><p className="mt-6 max-w-3xl text-sm leading-relaxed text-muted-foreground">Mumbai, Maharashtra · 2025 · Completed</p></Reveal>
       </section>
 
-      <ClipReveal className="mx-auto max-w-[1600px] px-4 sm:px-8 lg:px-10">
-        <Parallax className="aspect-[16/10] w-full border border-border lg:aspect-[21/9]" amount={70}>
-          <img src={bungalow} alt="Water ripple PVD on ss-304 facade fins creating soft, shifting light patterns on Aangan Residences, Bandra West — demonstrating how structural texture controls glare in Mumbai’s harsh afternoon sun." className="h-full w-full object-cover" />
-        </Parallax>
-      </ClipReveal>
+      <ClipReveal className="mx-auto max-w-[1600px] px-4 sm:px-8 lg:px-10"><Parallax className="aspect-[16/10] w-full border border-border lg:aspect-[21/9]" amount={70}><img src={bungalow} alt="Water ripple PVD on ss-304 facade fins creating soft, shifting light patterns on Aangan Residences, Bandra West — demonstrating how structural texture controls glare in Mumbai’s harsh afternoon sun." className="h-full w-full object-cover" /></Parallax></ClipReveal>
 
       <Section className="lg:py-20">
         <p className="text-[0.62rem] uppercase tracking-[0.34em] text-champagne">Project facts</p>
         <dl className="mt-8 grid gap-px border-t border-border sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            ["Client", "Kumar Realty"], ["Location", "Bandra West, Mumbai, Maharashtra"], ["Area", "28,500 sq ft"], ["Year", "2025"],
-            ["Status", "Completed"], ["Scope", "Facade metalwork, entrance canopy, lobby designer sheets, elevator lobbies"],
-            ["Finish", "Water ripple PVD (ss-304), mirror PVD (ss-304), bronze PVD (ss-304)"], ["Services", "Facade metal, Custom fabrication, Installation, PVD coating"],
-          ].map(([label, value], i) => <Reveal key={label} variant="row" delay={i * 50} className="border-b border-border py-6 pr-6"><dt className="text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">{label}</dt><dd className="mt-2 font-display text-lg leading-snug text-foreground">{value}</dd></Reveal>)}
+          {[["Client", "Kumar Realty"], ["Location", "Bandra West, Mumbai, Maharashtra"], ["Area", "28,500 sq ft"], ["Year", "2025"], ["Status", "Completed"], ["Scope", "Facade metalwork, entrance canopy, lobby designer sheets, elevator lobbies"], ["Finish", "Water ripple PVD (ss-304), mirror PVD (ss-304), bronze PVD (ss-304)"], ["Services", "Facade metal, Custom fabrication, Installation, PVD coating"]].map(([label, value], i) => <Reveal key={label} variant="row" delay={i * 50} className="border-b border-border py-6 pr-6"><dt className="text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">{label}</dt><dd className="mt-2 font-display text-lg leading-snug text-foreground">{value}</dd></Reveal>)}
         </dl>
       </Section>
 
-      <Section className="border-t border-border">
-        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.4fr] lg:gap-20">
-          <SectionHeading eyebrow="Introduction" title="The brief" />
-          <div className="space-y-6">
-            <Reveal variant="up"><p className="font-display text-2xl leading-snug text-foreground lg:text-3xl">Kumar Realty needed a Bandra West residential tower facade that feels <strong>hand-made, not machine-made</strong> — something that ages gracefully in Mumbai’s salty air while giving residents quiet luxury.</p></Reveal>
-            <Reveal variant="up" delay={100}><p className="text-sm leading-relaxed text-muted-foreground lg:text-base">The brief asked for metal that <em>breathes</em>: reflective enough to catch the sea breeze but textured enough to hide monsoon grime. We proposed <strong>ss-pvd-304 with water ripple texture</strong> for the facade (it traps light like wet sand) and <strong>mirror PVD</strong> for the entrance canopy to double the sky without glare.</p></Reveal>
-          </div>
-        </div>
-      </Section>
+      <Section className="border-t border-border"><div className="grid gap-10 lg:grid-cols-[0.9fr_1.4fr] lg:gap-20"><SectionHeading eyebrow="Introduction" title="The brief" /><div className="space-y-6"><Reveal variant="up"><p className="font-display text-2xl leading-snug text-foreground lg:text-3xl">Kumar Realty needed a Bandra West residential tower facade that feels <strong>hand-made, not machine-made</strong> — something that ages gracefully in Mumbai’s salty air while giving residents quiet luxury.</p></Reveal><Reveal variant="up" delay={100}><p className="text-sm leading-relaxed text-muted-foreground lg:text-base">The brief asked for metal that <em>breathes</em>: reflective enough to catch the sea breeze but textured enough to hide monsoon grime. We proposed <strong>ss-pvd-304 with water ripple texture</strong> for the facade (it traps light like wet sand) and <strong>mirror PVD</strong> for the entrance canopy to double the sky without glare.</p></Reveal></div></div></Section>
 
       <ClipReveal className="mx-auto max-w-[1600px] px-4 sm:px-8 lg:px-10"><Parallax className="aspect-[16/9] w-full border border-border" amount={60}><img src={detailImages[0].src} alt={detailImages[0].alt} loading="lazy" className="h-full w-full object-cover" /></Parallax></ClipReveal>
 
-      <Section>
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-          <div><SectionHeading eyebrow="Approach" title="How it was built" /><Reveal variant="up" delay={100}><p className="mt-8 text-sm leading-relaxed text-muted-foreground lg:text-base">We tested full-scale mockups on our Rajkot roof for 8 months (covering two Bandra monsoons) to confirm the water ripple PVD wouldn’t trap dirt or fade. For the facade, we laser-cut <strong>ss-pvd-304 sheets</strong> into fins, then <em>bent each fin into a 3D water ripple shape before PVD coating</em> — so the texture is part of the metal, not a surface film. This means it wears with the steel, no peeling during monsoons.</p><p className="mt-6 text-sm leading-relaxed text-muted-foreground lg:text-base">The lobby <strong>designer sheets</strong> use the same <strong>ss-pvd-304 water ripple PVD</strong> — applied in a single batch so the wall reads as one continuous texture from floor to ceiling. For elevator lobbies, we specified <strong>mirror PVD on ss-304</strong> (polished to Ra 0.05μm first) not for shine, but to make tight Mumbai spaces feel open by reflecting the lobby’s teak wood and cane furniture. Bronze PVD accents tie it all together — single-chamber batch for color consistency between facade and interiors.</p></Reveal></div>
-          <Reveal variant="right" delay={120}><div className="aspect-[4/3] overflow-hidden border border-border metal-sheen"><img src={detailImages[1].src} alt={detailImages[1].alt} loading="lazy" className="h-full w-full object-cover" /></div></Reveal>
-        </div>
-      </Section>
+      <Section><div className="grid gap-12 lg:grid-cols-2 lg:gap-20"><div><SectionHeading eyebrow="Approach" title="How it was built" /><Reveal variant="up" delay={100}><p className="mt-8 text-sm leading-relaxed text-muted-foreground lg:text-base">We tested full-scale mockups on our Rajkot roof for 8 months (covering two Bandra monsoons) to confirm the water ripple PVD wouldn’t trap dirt or fade. For the facade, we laser-cut <strong>ss-pvd-304 sheets</strong> into fins, then <em>bent each fin into a 3D water ripple shape before PVD coating</em> — so the texture is part of the metal, not a surface film. This means it wears with the steel, no peeling during monsoons.</p><p className="mt-6 text-sm leading-relaxed text-muted-foreground lg:text-base">The lobby <strong>designer sheets</strong> use the same <strong>ss-pvd-304 water ripple PVD</strong> — applied in a single batch so the wall reads as one continuous texture from floor to ceiling. For elevator lobbies, we specified <strong>mirror PVD on ss-304</strong> (polished to Ra 0.05μm first) not for shine, but to make tight Mumbai spaces feel open by reflecting the lobby’s teak wood and cane furniture. Bronze PVD accents tie it all together — single-chamber batch for color consistency between facade and interiors.</p></Reveal></div><Reveal variant="right" delay={120}><div className="aspect-[4/3] overflow-hidden border border-border metal-sheen"><img src={detailImages[1].src} alt={detailImages[1].alt} loading="lazy" className="h-full w-full object-cover" /></div></Reveal></div></Section>
 
-      <Section className="border-t border-border">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-          <Reveal variant="left"><div className="aspect-[4/3] overflow-hidden border border-border metal-sheen"><img src={detailImages[2].src} alt={detailImages[2].alt} loading="lazy" className="h-full w-full object-cover" /></div></Reveal>
-          <div><SectionHeading eyebrow="Material & surface" title="The finish story" /><Reveal variant="up" delay={100}><p className="mt-8 text-sm leading-relaxed text-muted-foreground lg:text-base">Grade <strong>ss-pvd-304</strong> (we <strong>never</strong> use 201 or 430 for coastal Mumbai — it’s non-negotiable for longevity). Hairline-prepped to Ra 0.8μm for facade, Ra 0.3μm for mirror zones. The <strong>water ripple</strong> isn’t a coating — it’s the <strong>actual ss-304 formed into waves before PVD</strong>, so the finish wears with the metal. That’s why it survives Mumbai’s monsoons: zero delamination risk.</p><p className="mt-6 text-sm leading-relaxed text-muted-foreground lg:text-base">For <strong>mirror PVD</strong> in elevators, we polished to Ra 0.05μm first — any less and you get funhouse distortion; any more and it’s wasteful. The <strong>bronze PVD</strong> accents? A single PVD chamber batch so the lift lobbies (6th floor) and facade fins (ground to 6th) read as one bronze family, even though they’re 20m apart vertically.</p></Reveal></div>
-        </div>
-      </Section>
+      <Section className="border-t border-border"><div className="grid gap-12 lg:grid-cols-2 lg:gap-20"><Reveal variant="left"><div className="aspect-[4/3] overflow-hidden border border-border metal-sheen"><img src={detailImages[2].src} alt={detailImages[2].alt} loading="lazy" className="h-full w-full object-cover" /></div></Reveal><div><SectionHeading eyebrow="Material & surface" title="The finish story" /><Reveal variant="up" delay={100}><p className="mt-8 text-sm leading-relaxed text-muted-foreground lg:text-base">Grade <strong>ss-pvd-304</strong> (we <strong>never</strong> use 201 or 430 for coastal Mumbai — it’s non-negotiable for longevity). Hairline-prepped to Ra 0.8μm for facade, Ra 0.3μm for mirror zones. The <strong>water ripple</strong> isn’t a coating — it’s the <strong>actual ss-304 formed into waves before PVD</strong>, so the finish wears with the metal. That’s why it survives Mumbai’s monsoons: zero delamination risk.</p><p className="mt-6 text-sm leading-relaxed text-muted-foreground lg:text-base">For <strong>mirror PVD</strong> in elevators, we polished to Ra 0.05μm first — any less and you get funhouse distortion; any more and it’s wasteful. The <strong>bronze PVD</strong> accents? A single PVD chamber batch so the lift lobbies (6th floor) and facade fins (ground to 6th) read as one bronze family, even though they’re 20m apart vertically.</p></Reveal></div></div></Section>
 
       <ClipReveal><Parallax className="aspect-[21/9] w-full border-y border-border" amount={80}><img src={detailImages[3].src} alt={detailImages[3].alt} loading="lazy" className="h-full w-full object-cover" /></Parallax></ClipReveal>
 
-      <Section>
-        <SectionHeading eyebrow="Gallery" title="Project gallery" />
-        <p className="mt-4 text-xs uppercase tracking-[0.24em] text-muted-foreground">06 images — click to enlarge</p>
-        <HorizontalRail className="mt-10" itemClassName="w-[80vw] sm:w-[46vw] lg:w-[32vw]">
-          {gallery.map((image, i) => <button key={image.src + i} type="button" onClick={() => setLightbox(i)} data-cursor="Explore" className="group block w-full text-left"><div className="aspect-[4/3] overflow-hidden border border-border metal-sheen"><img src={image.src} alt={image.alt} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105" /></div><p className="mt-3 flex items-center justify-between gap-4 text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground"><span className="truncate">{image.label}</span><span className="shrink-0 tabular-nums text-champagne">{String(i + 1).padStart(2, "0")} / 06</span></p></button>)}
-        </HorizontalRail>
-      </Section>
+      <Section><SectionHeading eyebrow="Gallery" title="Project gallery" /><p className="mt-4 text-xs uppercase tracking-[0.24em] text-muted-foreground">06 images — click to enlarge</p><HorizontalRail className="mt-10" itemClassName="w-[80vw] sm:w-[46vw] lg:w-[32vw]">{gallery.map((image, i) => <button key={image.src + i} type="button" onClick={() => setLightbox(i)} data-cursor="Explore" className="group block w-full text-left"><div className="aspect-[4/3] overflow-hidden border border-border metal-sheen"><img src={image.src} alt={image.alt} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105" /></div><p className="mt-3 flex items-center justify-between gap-4 text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground"><span className="truncate">{image.label}</span><span className="shrink-0 tabular-nums text-champagne">{String(i + 1).padStart(2, "0")} / 06</span></p></button>)}</HorizontalRail></Section>
 
-      <Section className="border-t border-border lg:py-20">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {detailImages.map((image, i) => <Reveal key={image.src + i} variant="up" delay={(i % 3) * 100}><button type="button" onClick={() => setLightbox(gallery.length + i)} data-cursor="Explore" className="block w-full"><div className="aspect-square overflow-hidden border border-border metal-sheen"><img src={image.src} alt={image.alt} loading="lazy" className="h-full w-full object-cover" /></div></button></Reveal>)}
-        </div>
-      </Section>
+      <Section className="border-t border-border lg:py-20"><div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{detailImages.map((image, i) => <Reveal key={image.src + i} variant="up" delay={(i % 3) * 100}><button type="button" onClick={() => setLightbox(gallery.length + i)} data-cursor="Explore" className="block w-full"><div className="aspect-square overflow-hidden border border-border metal-sheen"><img src={image.src} alt={image.alt} loading="lazy" className="h-full w-full object-cover" /></div></button></Reveal>)}</div></Section>
 
-      <Section className="border-t border-border">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-          <div>
-            <SectionHeading eyebrow="Outcome" title="What was delivered" />
-            <Reveal variant="up" delay={100}><p className="mt-8 text-sm leading-relaxed text-muted-foreground lg:text-base">After two Bandra monsoons: the water ripple facade shows <strong>zero staining</strong> — the texture actually helps dust wash away in rain. Mirror PVD lobby ceilings still reflect perfectly with a <strong>water-and-microfiber wipe</strong> (no chemicals, no polishing). We ran <strong>ss-pvd-304 water ripple PVD through 1,200 hours ASTM B117 salt fog</strong> (simulating 3+ years Bandra West exposure) and <strong>ASTM D4587 UV</strong> — ΔE stayed under 1.2. The <strong>designer sheets</strong> in the lobby? Zero visible wear after 18 months of residents brushing past.</p></Reveal>
-            <div className="mt-10 grid grid-cols-2 gap-px border-t border-border">{[["Floors", "Stilt + 6"], ["Envelope", "Water ripple PVD fins (ss-pvd-304)"], ["Designer sheets", "Lobby walls, reception desk"], ["Special finishes", "Mirror PVD (elevator lobbies), bronze PVD (accent strips)"], ["Completion", "2025"]].map(([label, value], i) => <Reveal key={label} variant="row" delay={i * 60} className="border-b border-border py-5 pr-4"><p className="text-[0.58rem] uppercase tracking-[0.24em] text-muted-foreground">{label}</p><p className="mt-1.5 font-display text-xl text-champagne">{value}</p></Reveal>)}</div>
-          </div>
-          <div><SectionHeading eyebrow="Technical" title="Specification" /><dl className="mt-8 border-t border-border">{[["Substrate", "SS 304, 1.2 mm (facade), 1.5 mm (lobby sheets)"], ["Surface prep", "Hairline No.4 (Ra 0.8μm facade / Ra 0.3μm mirror zones)"], ["PVD Coating", "Facade: Water ripple PVD (ss-pvd-304, structural texture — bent before coating)"], ["Lobby", "Water ripple designer sheet (ss-pvd-304, single batch for color flow)"], ["Elevators", "Mirror PVD (ss-pvd-304, Ra 0.05μm pre-polish)"], ["Accents", "Bronze PVD (ss-pvd-304, single-chamber batch)"], ["Salt fog resistance", "ASTM B117, 1,200 hours (no red rust — simulating 3+ years Bandra West monsoon exposure)"], ["UV stability", "ASTM D4587, 1,500 hours (ΔE < 1.2 — Mumbai averages 11+ UV index 200 days/year)"], ["Humidity", "95% RH tested (no blistering or delamination)"], ["Cleanability", "ISO 11998 Class 1 (water-only cleaning — no chemicals needed)"]].map(([label, value], i) => <Reveal key={label} variant="row" delay={i * 45} className="flex items-baseline justify-between gap-6 border-b border-border py-5"><dt className="text-[0.62rem] uppercase tracking-[0.18em] text-muted-foreground">{label}</dt><dd className="max-w-[65%] text-right text-sm leading-relaxed text-foreground">{value}</dd></Reveal>)}</dl></div>
-        </div>
-      </Section>
+      <Section className="border-t border-border"><div className="grid gap-12 lg:grid-cols-2 lg:gap-20"><div><SectionHeading eyebrow="Outcome" title="What was delivered" /><Reveal variant="up" delay={100}><p className="mt-8 text-sm leading-relaxed text-muted-foreground lg:text-base">After two Bandra monsoons: the water ripple facade shows <strong>zero staining</strong> — the texture actually helps dust wash away in rain. Mirror PVD lobby ceilings still reflect perfectly with a <strong>water-and-microfiber wipe</strong> (no chemicals, no polishing). We ran <strong>ss-pvd-304 water ripple PVD through 1,200 hours ASTM B117 salt fog</strong> (simulating 3+ years Bandra West exposure) and <strong>ASTM D4587 UV</strong> — ΔE stayed under 1.2. The <strong>designer sheets</strong> in the lobby? Zero visible wear after 18 months of residents brushing past.</p></Reveal><div className="mt-10 grid grid-cols-2 gap-px border-t border-border">{[["Floors", "Stilt + 6"], ["Envelope", "Water ripple PVD fins (ss-pvd-304)"], ["Designer sheets", "Lobby walls, reception desk"], ["Special finishes", "Mirror PVD (elevator lobbies), bronze PVD (accent strips)"], ["Completion", "2025"]].map(([label, value], i) => <Reveal key={label} variant="row" delay={i * 60} className="border-b border-border py-5 pr-4"><p className="text-[0.58rem] uppercase tracking-[0.24em] text-muted-foreground">{label}</p><p className="mt-1.5 font-display text-xl text-champagne">{value}</p></Reveal>)}</div></div><div><SectionHeading eyebrow="Technical" title="Specification" /><dl className="mt-8 border-t border-border">{[["Substrate", "SS 304, 1.2 mm (facade), 1.5 mm (lobby sheets)"], ["Surface prep", "Hairline No.4 (Ra 0.8μm facade / Ra 0.3μm mirror zones)"], ["Facade", "Water ripple PVD (ss-pvd-304, structural texture — bent before coating)"], ["Lobby", "Water ripple designer sheet (ss-pvd-304, single batch for color flow)"], ["Elevators", "Mirror PVD (ss-pvd-304, Ra 0.05μm pre-polish)"], ["Accents", "Bronze PVD (ss-pvd-304, single-chamber batch)"], ["Salt fog resistance", "ASTM B117, 1,200 hours (no red rust — simulating 3+ years Bandra West monsoon exposure)"], ["UV stability", "ASTM D4587, 1,500 hours (ΔE < 1.2 — Mumbai averages 11+ UV index 200 days/year)"], ["Humidity", "95% RH tested (no blistering or delamination)"], ["Cleanability", "ISO 11998 Class 1 (water-only cleaning — no chemicals needed)"]].map(([label, value], i) => <Reveal key={label} variant="row" delay={i * 45} className="flex items-baseline justify-between gap-6 border-b border-border py-5"><dt className="text-[0.62rem] uppercase tracking-[0.18em] text-muted-foreground">{label}</dt><dd className="max-w-[65%] text-right text-sm leading-relaxed text-foreground">{value}</dd></Reveal>)}</dl></div></div></Section>
 
-      <Section className="border-t border-border">
-        <SectionHeading eyebrow="More work" title="Related projects" />
-        <div className="mt-12 grid gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
-          {related.map((p, i) => <Reveal key={p.slug} variant="up" delay={(i % 3) * 100}><ProjectGridCard project={p} /></Reveal>)}
-        </div>
-      </Section>
+      <Section className="border-t border-border"><SectionHeading eyebrow="More work" title="Related projects" /><div className="mt-12 grid gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">{relatedProjects.map((p, i) => <Reveal key={p.title} variant="up" delay={(i % 3) * 110}><article className="group"><Link to={p.href} data-cursor="View project" className="block"><div className="aspect-[4/3] overflow-hidden border border-border metal-sheen"><img src={p.image} alt={p.alt} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105" /></div><div className="mt-5 flex items-center justify-between gap-4"><p className="text-[0.58rem] uppercase tracking-[0.24em] text-champagne">{p.category}</p><ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" /></div><h3 className="mt-2 font-display text-2xl leading-tight text-foreground">{p.title}</h3></Link><div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground"><span>Client {p.client}</span><span>Year {p.year}</span><span>Location {p.location}</span><span>Area {p.area}</span></div><p className="mt-4 text-sm leading-relaxed text-muted-foreground">{p.description}</p><Link to={p.href} className="mt-5 inline-flex items-center gap-2 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-foreground">View project <ArrowUpRight className="h-3.5 w-3.5" /></Link></article></Reveal>)}</div></Section>
 
-      <Section className="border-t border-border text-center">
-        <Reveal variant="up"><h2 className="font-display text-4xl leading-tight text-foreground sm:text-6xl">Start a project</h2></Reveal>
-        <Reveal variant="up" delay={100}><p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-muted-foreground">Send us the drawings, the finish you have in mind, or just a photograph of a surface you like (even a monsoon-stained wall — we love those). We will come back with samples cut from actual ss-pvd-304.</p></Reveal>
-        <Reveal variant="up" delay={180}><Link to="/contact" data-cursor="Start →" className="mt-10 inline-flex items-center gap-2 bg-champagne-gradient px-8 py-4 text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-metal-black transition-opacity hover:opacity-90">Start a project <ArrowUpRight className="h-4 w-4" /></Link></Reveal>
-      </Section>
+      <Section className="border-t border-border text-center"><Reveal variant="up"><h2 className="font-display text-4xl leading-tight text-foreground sm:text-6xl">Start a project</h2></Reveal><Reveal variant="up" delay={100}><p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-muted-foreground">Send us the drawings, the finish you have in mind, or just a photograph of a surface you like (even a monsoon-stained wall — we love those). We will come back with samples cut from actual ss-pvd-304.</p></Reveal><Reveal variant="up" delay={180}><Link to="/contact" data-cursor="Start →" className="mt-10 inline-flex items-center gap-2 bg-champagne-gradient px-8 py-4 text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-metal-black transition-opacity hover:opacity-90">Start a project <ArrowUpRight className="h-4 w-4" /></Link></Reveal></Section>
 
       <Lightbox images={allImages} index={lightbox} onClose={() => setLightbox(null)} onIndex={setLightbox} />
     </PageShell>
