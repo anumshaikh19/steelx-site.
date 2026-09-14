@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import bungalow from "@/assets/proj-bungalow.jpg";
 import commercial from "@/assets/proj-commercial.jpg";
+import interiors from "@/assets/proj-interiors.jpg";
 import detailA from "@/assets/proj-detail-a.jpg";
 import detailB from "@/assets/proj-detail-b.jpg";
 import inspection from "@/assets/inspection.jpg";
