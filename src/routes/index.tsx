@@ -5,6 +5,7 @@ import { PageShell, Section } from "@/components/page-shell";
 import { FeatureProjectCard, ProjectGridCard } from "@/components/project-grid-card";
 import { Reveal, SectionHeading } from "@/components/reveal";
 import { ClipReveal, Counter, HorizontalRail, Magnetic, Marquee, Parallax, StickyStory } from "@/components/motion";
+import { HomeProjectRotator } from "@/components/home-project-rotator";
 import { finishes } from "@/data/finishes";
 import { journalPosts, formatDate } from "@/data/journal";
 import { projects } from "@/data/projects";
@@ -111,6 +112,8 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      <HomeProjectRotator projects={projects} />
 
       <Marquee items={["PVD COATED STAINLESS", "DECORATIVE MESH", "FACADE SYSTEMS", "HOSPITALITY METAL", "RETAIL FABRICATION", "INTERNATIONAL DELIVERY"]} />
 
