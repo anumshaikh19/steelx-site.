@@ -3,10 +3,10 @@ export type PageDesign = {
   headingSize: "small" | "medium" | "large" | "xl";
   headingWeight: "normal" | "medium" | "bold";
   bodySize: "small" | "medium" | "large";
+  bodyColor: string;
   accent: string;
   background: string;
   headingColor: string;
-  bodyColor: string;
   sectionSpacing: "compact" | "comfortable" | "luxury";
 };
 export type BlockDesign = Partial<PageDesign> & { css?: string };
@@ -22,7 +22,7 @@ export type PageSeo = {
 export const PAGE_SEO_KEY = "steelx-page-seo-v1";
 export const SITE_ORIGIN = "https://steelxdecor.com";
 const routes = [
-  "/", "/capabilities", "/careers", "/contact", "/exhibitions", "/journal", "/material-light-space", "/materials", "/people", "/process", "/pvd-surfaces", "/services", "/ss-decorative-mesh-pvd", "/stainless-steel-designer-sheets", "/steel-collection", "/studio", "/marble", "/vintex-web", "/admin-seo", "/category/:slug", "/designer-sheets", "/designer-sheets/embossed", "/designer-sheets/hairline", "/designer-sheets/mirror", "/journal/:slug", "/product/:slug", "/projects", "/projects/:slug", "/tag/:slug", "/designer-sheets/:finish", "/designer-sheets/:finish/:product",
+  "/", "/capabilities", "/careers", "/contact", "/exhibitions", "/journal", "/material-light-space", "/materials", "/people", "/process", "/services", "/ss-decorative-mesh-pvd", "/stainless-steel-designer-sheets", "/steel-collection", "/studio", "/marble", "/vintex-web", "/admin-seo", "/category/:slug", "/designer-sheets", "/designer-sheets/embossed", "/designer-sheets/hairline", "/designer-sheets/mirror", "/journal/:slug", "/product/:slug", "/projects", "/projects/:slug", "/tag/:slug", "/designer-sheets/:finish", "/designer-sheets/:finish/:product",
 ];
 const humanize = (value: string) => value.replace(/^\/+/, "").replace(/[:$]/g, "").replace(/[-_]+/g, " ").trim().replace(/\b\w/g, c => c.toUpperCase()) || "Home";
 export const routePathCatalog = routes;
