@@ -14,8 +14,9 @@ export function CmsBlock({ blockId, label, children, className = "" }: { blockId
   const location = useLocation({ select: (l) => l.pathname });
   const ref = useRef<HTMLDivElement>(null);
   const seo = useMemo(() => getPageSeo(location), [location]);
-  const block = seo.blocks?.[blockId] || {};
-  const design: PageSeo["design"] = { ...seo.design, ...(block.design || {}) };
+  const block = seo.blocks?.[blockId];
+  const hasDesign = Boolean(block?.design && Object.keys(block.design).length);
+  const design: PageSeo["design"] = { ...seo.design, ...(block?.design || {}) };
   const cssVars = { "--cms-accent": design.accent, "--cms-bg": design.background, "--cms-heading": design.headingColor, "--cms-body": design.bodyColor, "--cms-heading-size": ({ small: "2.1rem", medium: "3.4rem", large: "6rem", xl: "8rem" } as const)[design.headingSize], "--cms-body-size": ({ small: ".92rem", medium: "1rem", large: "1.12rem" } as const)[design.bodySize], "--cms-section-gap": ({ compact: "3rem", comfortable: "5rem", luxury: "8rem" } as const)[design.sectionSpacing] } as CSSProperties;
 
   useEffect(() => {
@@ -26,38 +27,16 @@ export function CmsBlock({ blockId, label, children, className = "" }: { blockId
     const imageTargets = Array.from(root.querySelectorAll<HTMLImageElement>("img"));
     const linkTargets = Array.from(root.querySelectorAll<HTMLAnchorElement>("a"));
     const cleanups: (() => void)[] = [];
-
-    textTargets.forEach((el, index) => {
-      const key = textKey(location, blockId, index); const value = overrides[key];
-      if (typeof value === "string") el.textContent = value;
-      if (!editMode) return;
-      el.contentEditable = "true"; el.spellcheck = true; el.style.outline = "1px dashed rgba(201,169,110,.7)"; el.style.outlineOffset = "4px";
-      const handler = () => writeOverride(key, el.innerText); el.addEventListener("blur", handler); cleanups.push(() => el.removeEventListener("blur", handler));
-    });
-
-    imageTargets.forEach((img, index) => {
-      const key = assetKey(location, blockId, index); const value = overrides[key];
-      if (value && typeof value === "object") { if (value.src) img.src = value.src; if (value.alt !== undefined) img.alt = value.alt; }
-      if (!editMode) return;
-      img.style.outline = "1px dashed rgba(201,169,110,.7)"; img.style.outlineOffset = "4px"; img.title = "CMS: click to edit image URL / alt text";
-      const handler = (event: MouseEvent) => { event.preventDefault(); event.stopPropagation(); const src = window.prompt("Image URL", img.currentSrc || img.src || ""); if (src === null) return; const alt = window.prompt("Image alt text", img.alt || ""); writeOverride(key, { src, alt: alt ?? img.alt }); img.src = src; if (alt !== null) img.alt = alt; };
-      img.addEventListener("click", handler); cleanups.push(() => img.removeEventListener("click", handler));
-    });
-
-    linkTargets.forEach((link, index) => {
-      const key = linkKey(location, blockId, index); const value = overrides[key];
-      if (typeof value === "string") link.setAttribute("href", value);
-      if (!editMode) return;
-      const handler = (event: MouseEvent) => { event.preventDefault(); event.stopPropagation(); const href = window.prompt("Link URL", link.getAttribute("href") || ""); if (href !== null) { link.setAttribute("href", href); writeOverride(key, href); } };
-      link.addEventListener("click", handler); cleanups.push(() => link.removeEventListener("click", handler));
-    });
+    textTargets.forEach((el, index) => { const key = textKey(location, blockId, index); const value = overrides[key]; if (typeof value === "string") el.textContent = value; if (!editMode) return; el.contentEditable = "true"; el.spellcheck = true; el.style.outline = "1px dashed rgba(201,169,110,.7)"; el.style.outlineOffset = "4px"; const handler = () => writeOverride(key, el.innerText); el.addEventListener("blur", handler); cleanups.push(() => el.removeEventListener("blur", handler)); });
+    imageTargets.forEach((img, index) => { const key = assetKey(location, blockId, index); const value = overrides[key]; if (value && typeof value === "object") { if (value.src) img.src = value.src; if (value.alt !== undefined) img.alt = value.alt; } if (!editMode) return; img.style.outline = "1px dashed rgba(201,169,110,.7)"; img.style.outlineOffset = "4px"; img.title = "CMS: click to edit image URL / alt text"; const handler = (event: MouseEvent) => { event.preventDefault(); event.stopPropagation(); const src = window.prompt("Image URL", img.currentSrc || img.src || ""); if (src === null) return; const alt = window.prompt("Image alt text", img.alt || ""); writeOverride(key, { src, alt: alt ?? img.alt }); img.src = src; if (alt !== null) img.alt = alt; }; img.addEventListener("click", handler); cleanups.push(() => img.removeEventListener("click", handler)); });
+    linkTargets.forEach((link, index) => { const key = linkKey(location, blockId, index); const value = overrides[key]; if (typeof value === "string") link.setAttribute("href", value); if (!editMode) return; const handler = (event: MouseEvent) => { event.preventDefault(); event.stopPropagation(); const href = window.prompt("Link URL", link.getAttribute("href") || ""); if (href !== null) { link.setAttribute("href", href); writeOverride(key, href); } }; link.addEventListener("click", handler); cleanups.push(() => link.removeEventListener("click", handler)); });
     return () => { cleanups.forEach(fn => fn()); textTargets.forEach(el => { el.contentEditable = "false"; el.style.outline = ""; el.style.outlineOffset = ""; }); imageTargets.forEach(img => { img.style.outline = ""; img.style.outlineOffset = ""; img.title = ""; }); };
   }, [location, blockId, children]);
 
   const scoped = `[data-cms-block="${blockId}"]`;
-  return <div ref={ref} data-cms-block={blockId} data-cms-label={label || blockId} className={`relative cms-block ${className}`} style={{ ...cssVars, background: design.background }}>
-    <style>{`${scoped} h1,${scoped} h2,${scoped} h3,${scoped} h4,${scoped} h5,${scoped} h6{font-family:${design.headingFont === "sans" ? "inherit" : "var(--font-display, Georgia, serif)"};font-size:var(--cms-heading-size);font-weight:${design.headingWeight === "bold" ? 700 : design.headingWeight === "medium" ? 500 : 400};color:var(--cms-heading)}${scoped} p,${scoped} li,${scoped} blockquote{font-size:var(--cms-body-size);color:var(--cms-body)}${scoped} .text-champagne,${scoped} .text-gold{color:var(--cms-accent)}${scoped} .steelx-editable-section{padding-block:var(--cms-section-gap)}`}</style>
-    {block.design?.css ? <style>{`${scoped}{${block.design.css}}`}</style> : null}
+  return <div ref={ref} data-cms-block={blockId} data-cms-label={label || blockId} className={`relative cms-block ${className}`} style={hasDesign ? { ...cssVars, background: design.background } : undefined}>
+    {hasDesign ? <style>{`${scoped} h1,${scoped} h2,${scoped} h3,${scoped} h4,${scoped} h5,${scoped} h6{font-family:${design.headingFont === "sans" ? "inherit" : "var(--font-display, Georgia, serif)"};font-size:var(--cms-heading-size);font-weight:${design.headingWeight === "bold" ? 700 : design.headingWeight === "medium" ? 500 : 400};color:var(--cms-heading)}${scoped} p,${scoped} li,${scoped} blockquote{font-size:var(--cms-body-size);color:var(--cms-body)}${scoped} .text-champagne,${scoped} .text-gold{color:var(--cms-accent)}${scoped} .steelx-editable-section{padding-block:var(--cms-section-gap)}`}</style> : null}
+    {block?.design?.css ? <style>{`${scoped}{${block.design.css}}`}</style> : null}
     {children}
   </div>;
 }
