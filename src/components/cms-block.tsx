@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "@tanstack/react-router";
 import type { CSSProperties, ReactNode } from "react";
 import { getPageSeo, type PageSeo } from "@/lib/page-seo";
+import { CmsHistoryBar } from "@/components/cms-history";
 
 const TEXT_SELECTOR = "h1,h2,h3,h4,h5,h6,p,li,figcaption,blockquote,a,button";
 const IMAGE_KEY_PREFIX = "steelx-cms-image-v1";
@@ -51,7 +52,7 @@ export function CmsBlock({blockId,label,children,className=""}:{blockId:string;l
     const host=document.createElement("div");host.dataset.cmsAddedImagesHost="true";host.style.display="grid";host.style.gap="1rem";host.style.marginTop="1.5rem";
     readAdded(location,blockId).forEach(asset=>{const img=document.createElement("img");img.src=asset.src;img.alt=asset.alt;img.dataset.cmsImageName=asset.name;img.dataset.cmsAddedImage=asset.id;img.style.maxWidth="100%";img.style.height="auto";img.style.display="block";img.style.cursor="pointer";host.appendChild(img)});
     if(host.children.length)root.appendChild(host);cleanups.push(()=>host.remove());
-    return()=>{cleanups.forEach(f=>f());textTargets.forEach(el=>{el.contentEditable="false";el.style.outline="";el.style.outlineOffset=""});images.forEach(img=>{img.style.outline="";img.style.outlineOffset="";img.style.cursor="";img.title=""})};
+    return()=>{cleanups.forEach(f=>f());textTargets.forEach(el=>{el.contentEditable="false";el.style.outline="";el.style.outlineOffset=""});images.forEach(img=>{img.style.outline="";img.style.outlineOffset="";img.title=""})};
   },[location,blockId,children,mediaVersion,editMode]);
 
   const openAdded=(id:string)=>{const a=readAdded(location,blockId).find(x=>x.id===id);if(a)setEditor({img:null,index:-1,addedId:id,name:a.name,alt:a.alt,src:a.src})};
@@ -63,6 +64,7 @@ export function CmsBlock({blockId,label,children,className=""}:{blockId:string;l
 
   const scoped=`[data-cms-block="${blockId}"]`;
   return <>
+    {editMode&&blockId==="block-1"?<CmsHistoryBar/>:null}
     <div ref={ref} data-cms-block={blockId} data-cms-label={label||blockId} className={`relative cms-block ${className}`} style={hasDesign?{...cssVars,background:design.background}:undefined}>
       {hasDesign?<style>{`${scoped} h1,${scoped} h2,${scoped} h3,${scoped} h4,${scoped} h5,${scoped} h6{font-family:${design.headingFont==="sans"?"inherit":"var(--font-display, Georgia, serif)"};font-size:var(--cms-heading-size);font-weight:${design.headingWeight==="bold"?700:design.headingWeight==="medium"?500:400};color:var(--cms-heading)}${scoped} p,${scoped} li,${scoped} blockquote{font-size:var(--cms-body-size);color:var(--cms-body)}${scoped} .text-champagne,${scoped} .text-gold{color:var(--cms-accent)}${scoped} .steelx-editable-section{padding-block:var(--cms-section-gap)}`}</style>:null}
       {block?.design?.css?<style>{`${scoped}{${block.design.css}}`}</style>:null}
