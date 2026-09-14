@@ -124,14 +124,15 @@ export function CmsBlock({ blockId, label, children, className = "" }: { blockId
   };
 
   const scoped = `[data-cms-block="${blockId}"]`;
+  const editMode = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("cms-edit") === "1";
   return <>
     <div ref={ref} data-cms-block={blockId} data-cms-label={label || blockId} className={`relative cms-block ${className}`} style={hasDesign ? { ...cssVars, background: design.background } : undefined}>
       {hasDesign ? <style>{`${scoped} h1,${scoped} h2,${scoped} h3,${scoped} h4,${scoped} h5,${scoped} h6{font-family:${design.headingFont === "sans" ? "inherit" : "var(--font-display, Georgia, serif)"};font-size:var(--cms-heading-size);font-weight:${design.headingWeight === "bold" ? 700 : design.headingWeight === "medium" ? 500 : 400};color:var(--cms-heading)}${scoped} p,${scoped} li,${scoped} blockquote{font-size:var(--cms-body-size);color:var(--cms-body)}${scoped} .text-champagne,${scoped} .text-gold{color:var(--cms-accent)}${scoped} .steelx-editable-section{padding-block:var(--cms-section-gap)}`}</style> : null}
       {block?.design?.css ? <style>{`${scoped}{${block.design.css}}`}</style> : null}
       {children}
+      {editMode ? <label className="absolute right-5 top-5 z-[999] flex cursor-pointer items-center gap-2 rounded-full bg-[#c9a96e] px-4 py-2.5 text-[9px] font-semibold uppercase tracking-widest text-black shadow-xl"><span>+ Add image</span><input type="file" accept="image/*" className="hidden" onChange={e => { const file = e.target.files?.[0]; if (file) void addImage(file); e.currentTarget.value = ""; }} /></label> : null}
     </div>
     {imageEditor ? <ImageEditor editor={imageEditor} onChange={setImageEditor} onSave={saveImage} onDelete={deleteImage} /> : null}
-    {new URLSearchParams(typeof window !== "undefined" ? window.location.search : "").get("cms-edit") === "1" ? <label className="fixed bottom-6 right-5 z-[10000] flex cursor-pointer items-center gap-2 rounded-full bg-[#c9a96e] px-5 py-3 text-[10px] font-semibold uppercase tracking-widest text-black shadow-2xl"><span>+ Add image</span><input type="file" accept="image/*" className="hidden" onChange={e => { const file = e.target.files?.[0]; if (file) void addImage(file); e.currentTarget.value = ""; }} /></label> : null}
   </>;
 }
 
@@ -156,5 +157,5 @@ function ImageEditor({ editor, onChange, onSave, onDelete }: { editor: { img: HT
 export function CmsVisualEditorHint() {
   const location = useLocation({ select: (l) => l.pathname });
   if (typeof window === "undefined" || new URLSearchParams(window.location.search).get("cms-edit") !== "1") return null;
-  return <div className="fixed right-5 top-24 z-[9999] rounded-2xl border border-[#c9a96e]/40 bg-[#171715] p-4 text-white shadow-2xl" style={{ maxWidth: 320 }}><p className="text-[9px] uppercase tracking-[.2em] text-[#c9a96e]">Visual CMS · {location}</p><p className="mt-2 text-xs leading-5 text-white/65">Click text to edit. Click any image to replace it, rename it, change alt text or delete it. Use “Add image” to upload a new image into this block. Shift-click a link to change its destination. Each section remains independently styled.</p><a href={`/admin-seo?path=${encodeURIComponent(location)}`} className="mt-3 inline-flex rounded-full bg-[#c9a96e] px-4 py-2 text-[10px] font-semibold uppercase tracking-widest text-black">Back to Studio</a></div>;
+  return <div className="fixed right-5 top-24 z-[9999] rounded-2xl border border-[#c9a96e]/40 bg-[#171715] p-4 text-white shadow-2xl" style={{ maxWidth: 320 }}><p className="text-[9px] uppercase tracking-[.2em] text-[#c9a96e]">Visual CMS · {location}</p><p className="mt-2 text-xs leading-5 text-white/65">Click text to edit. Click any image to replace it, rename it, change alt text or delete it. Use “Add image” inside a block to upload a new image into that specific block. Shift-click a link to change its destination. Each section remains independently styled.</p><a href={`/admin-seo?path=${encodeURIComponent(location)}`} className="mt-3 inline-flex rounded-full bg-[#c9a96e] px-4 py-2 text-[10px] font-semibold uppercase tracking-widest text-black">Back to Studio</a></div>;
 }
