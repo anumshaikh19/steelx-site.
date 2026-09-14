@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const finishImages = [
   "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1800&q=90",
@@ -8,58 +7,76 @@ const finishImages = [
 ];
 
 export function ColorsExperiences() {
-  return <div className="colors-experiences"><Gallery /><Factory /><Monolith /></div>;
-}
-
-function Gallery() {
-  const ref = useRef<HTMLElement>(null);
-  const [p, setP] = useState({ x: 0, y: 0 });
-  useEffect(() => {
-    const move = (e: MouseEvent) => setP({ x: (e.clientX / innerWidth - .5) * 2, y: (e.clientY / innerHeight - .5) * 2 });
-    addEventListener("mousemove", move, { passive: true }); return () => removeEventListener("mousemove", move);
-  }, []);
-  return <section ref={ref} className="cx-gallery">
-    <div className="cx-gallery-light" style={{ transform: `translate3d(${p.x * 24}px,${p.y * 18}px,0)` }} />
-    <div className="cx-gallery-sheet"><div className="cx-sheet-glow" /><div className="cx-sheet-brush" /></div>
-    <div className="cx-gallery-title">PVD<br /><span>SURFACES</span></div>
-    <div className="cx-annotation cx-a1">SS 304</div><div className="cx-annotation cx-a2">SS 316</div><div className="cx-annotation cx-a3">PVD / VACUUM DEPOSITION</div><div className="cx-annotation cx-a4">ARCHITECTURAL FINISHES</div>
-    <a className="cx-text-cta" href="#library">EXPLORE FINISHES <ArrowRight /></a>
-    <div className="cx-gallery-index">01 / THE GALLERY</div><div className="cx-gallery-spec">0.8–3.0 MM<br />BRUSHED / PVD</div>
-  </section>;
+  return <div className="colors-experiences"><Factory /></div>;
 }
 
 function Factory() {
-  const ref = useRef<HTMLElement>(null); const [x, setX] = useState(0); const [active, setActive] = useState(0);
-  useEffect(() => { const move = (e: MouseEvent) => setX((e.clientX / innerWidth - .5) * 2); addEventListener("mousemove", move, { passive: true }); return () => removeEventListener("mousemove", move); }, []);
-  useEffect(() => { const id = setInterval(() => setActive(v => (v + 1) % 3), 5200); return () => clearInterval(id); }, []);
-  return <section ref={ref} className="cx-factory">
-    <img className="cx-factory-surface" src={finishImages[active]} alt="Macro architectural metal surface" style={{ transform: `scale(1.14) translate3d(${x * 1.5}%,0,0)`, filter: `saturate(.45) contrast(1.35) hue-rotate(${active * 10}deg)` }} />
-    <div className="cx-factory-vignette" /><div className="cx-factory-scan" />
-    <div className="cx-factory-title"><span>PRECISION.</span><span>SURFACE.</span><span>ARCHITECTURE.</span></div>
-    <div className="cx-tech cx-tech-1">PVD COATING<br /><b>01.842 / 0.8 MM</b></div><div className="cx-tech cx-tech-2">VACUUM DEPOSITION<br /><b>±0.02 / PROCESS</b></div><div className="cx-tech cx-tech-3">ARCHITECTURAL GRADE<br /><b>SS 304 / SS 316</b></div>
-    <div className="cx-measure cx-m1"><i /> 316L / 0.8</div><div className="cx-measure cx-m2"><i /> 304 / 1.5</div><div className="cx-measure cx-m3"><i /> PVD / 3.0</div>
-    <div className="cx-factory-bottom"><span>02 / THE METAL FACTORY</span><span>FINISH {String(active + 1).padStart(2,"0")} / CHAMPAGNE → GUNMETAL → BRONZE</span></div>
-  </section>;
-}
+  const [x, setX] = useState(0);
+  const [active, setActive] = useState(0);
 
-function Monolith() {
-  const [scroll, setScroll] = useState(0); const [p, setP] = useState({ x: 0, y: 0 });
-  useEffect(() => { const onScroll = () => setScroll(Math.min(1, Math.max(0, (scrollY - innerHeight * 2.1) / (innerHeight * 1.2)))); const move = (e: MouseEvent) => setP({ x: (e.clientX / innerWidth - .5) * 2, y: (e.clientY / innerHeight - .5) * 2 }); addEventListener("scroll", onScroll, { passive: true }); addEventListener("mousemove", move, { passive: true }); onScroll(); return () => { removeEventListener("scroll", onScroll); removeEventListener("mousemove", move); }; }, []);
-  const rotate = -12 + scroll * 26 + p.x * 4; const finish = scroll < .34 ? "CHAMPAGNE" : scroll < .67 ? "BRONZE" : "GUNMETAL";
-  return <section className="cx-monolith">
-    <div className="cx-atmosphere" /><div className="cx-beam" style={{ transform: `translateX(${p.x * 14}px) rotate(-17deg)` }} />
-    <div className="cx-monolith-object" style={{ transform: `translate3d(${p.x * 10}px,${p.y * 6}px,0) rotateY(${rotate}deg) rotateX(${p.y * -3}deg)` }}><div className="cx-monolith-face" /><div className="cx-monolith-edge" /><div className="cx-monolith-reflection" /></div>
-    <div className="cx-monolith-copy"><span className="cx-monolith-line">SURFACES</span><span className="cx-monolith-line">THAT DEFINE</span><span className="cx-monolith-line">SPACE.</span></div>
-    <div className="cx-monolith-brand">STEEL × DECOR / PVD SURFACES</div>
-    <a className="cx-monolith-cta" href="#library">DISCOVER THE COLLECTION <ArrowRight /></a>
-    <div className="cx-monolith-spec">SS 304 / SS 316<br />PVD COATING<br />ARCHITECTURAL FINISHES</div>
-    <div className="cx-monolith-finish">FINISH / {finish}</div><div className="cx-monolith-index">03 / THE ARCHITECTURAL MONOLITH</div>
-    <div className="cx-finish-track"><span className={finish === "CHAMPAGNE" ? "active" : ""}>CHAMPAGNE</span><span className={finish === "BRONZE" ? "active" : ""}>BRONZE</span><span className={finish === "GUNMETAL" ? "active" : ""}>GUNMETAL</span></div>
-  </section>;
+  useEffect(() => {
+    const move = (e: MouseEvent) => setX((e.clientX / innerWidth - 0.5) * 2);
+    addEventListener("mousemove", move, { passive: true });
+    return () => removeEventListener("mousemove", move);
+  }, []);
+
+  useEffect(() => {
+    const id = setInterval(() => setActive((v) => (v + 1) % 3), 5200);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <section className="cx-factory">
+      <img
+        className="cx-factory-surface"
+        src={finishImages[active]}
+        alt="Macro architectural metal surface"
+        style={{
+          transform: `scale(1.14) translate3d(${x * 1.5}%,0,0)`,
+          filter: `saturate(.45) contrast(1.35) hue-rotate(${active * 10}deg)`,
+        }}
+      />
+      <div className="cx-factory-vignette" />
+      <div className="cx-factory-scan" />
+      <div className="cx-factory-title">
+        <span>PRECISION.</span>
+        <span>SURFACE.</span>
+        <span>ARCHITECTURE.</span>
+      </div>
+      <div className="cx-tech cx-tech-1">PVD COATING<br /><b>01.842 / 0.8 MM</b></div>
+      <div className="cx-tech cx-tech-2">VACUUM DEPOSITION<br /><b>±0.02 / PROCESS</b></div>
+      <div className="cx-tech cx-tech-3">ARCHITECTURAL GRADE<br /><b>SS 304 / SS 316</b></div>
+      <div className="cx-measure cx-m1"><i /> 316L / 0.8</div>
+      <div className="cx-measure cx-m2"><i /> 304 / 1.5</div>
+      <div className="cx-measure cx-m3"><i /> PVD / 3.0</div>
+      <div className="cx-factory-bottom">
+        <span>01 / THE METAL FACTORY</span>
+        <span>FINISH {String(active + 1).padStart(2, "0")} / CHAMPAGNE → GUNMETAL → BRONZE</span>
+      </div>
+    </section>
+  );
 }
 
 const css = `
-.colors-experiences{background:#090908;color:#eee9df}.cx-gallery,.cx-factory,.cx-monolith{position:relative;min-height:100svh;overflow:hidden;border-top:1px solid rgba(255,255,255,.08);isolation:isolate}.cx-gallery{background:#080807}.cx-gallery:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(194,153,86,.08),transparent 31%),radial-gradient(circle at 50% 120%,#181510,transparent 52%)}.cx-gallery-light{position:absolute;width:60vw;height:60vw;left:20%;top:10%;border-radius:50%;background:radial-gradient(circle,rgba(239,204,137,.12),transparent 62%);filter:blur(25px);transition:transform 1.5s cubic-bezier(.16,1,.3,1)}.cx-gallery-sheet{position:absolute;width:min(44vw,650px);height:130vh;left:50%;top:-14vh;transform:translateX(-50%) rotateY(-17deg) rotateZ(-1.5deg);background:linear-gradient(104deg,#3a3023 0%,#9d8053 19%,#f1d39a 38%,#8d7049 51%,#d6b77f 68%,#40372a 100%);box-shadow:-45px 0 90px rgba(0,0,0,.65),38px 0 80px rgba(0,0,0,.55),0 0 80px rgba(211,170,95,.13);border-left:1px solid rgba(255,246,215,.38);border-right:1px solid rgba(255,255,255,.12)}.cx-sheet-glow{position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,245,214,.48) 46%,transparent 57%);animation:cxLight 9s ease-in-out infinite}.cx-sheet-brush{position:absolute;inset:0;opacity:.3;background:repeating-linear-gradient(92deg,transparent 0,transparent 2px,rgba(255,255,255,.08) 2.5px,transparent 4px)}.cx-gallery-title{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);font:400 clamp(5rem,15vw,15rem)/.72 Georgia,serif;letter-spacing:-.07em;text-align:center;color:rgba(242,238,228,.94);mix-blend-mode:screen;white-space:nowrap}.cx-gallery-title span{font-style:italic;background:linear-gradient(100deg,#eee7d9,#d8b878,#fff4d2);-webkit-background-clip:text;background-clip:text;color:transparent}.cx-annotation,.cx-gallery-index,.cx-gallery-spec{position:absolute;z-index:4;font:8px/1.7 Inter,sans-serif;letter-spacing:.28em;text-transform:uppercase;color:rgba(236,229,214,.46)}.cx-a1{left:8%;top:31%}.cx-a2{right:9%;top:43%}.cx-a3{left:7%;bottom:25%}.cx-a4{right:7%;bottom:19%}.cx-text-cta{position:absolute;z-index:4;left:50%;bottom:9%;transform:translateX(-50%);display:flex;align-items:center;gap:12px;color:#e4d4b2;font:9px Inter,sans-serif;letter-spacing:.3em;text-decoration:none}.cx-text-cta svg,.cx-monolith-cta svg{width:14px}.cx-gallery-index{left:5%;bottom:5%}.cx-gallery-spec{right:5%;bottom:5%;text-align:right}.cx-factory{background:#070707}.cx-factory-surface{position:absolute;inset:-10%;width:120%;height:120%;object-fit:cover;opacity:.62;transition:transform 1.5s cubic-bezier(.16,1,.3,1),filter 2s}.cx-factory-vignette{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,transparent 15%,rgba(0,0,0,.82) 82%),linear-gradient(90deg,rgba(0,0,0,.5),transparent 40%,rgba(0,0,0,.4))}.cx-factory-scan{position:absolute;left:0;right:0;top:46%;height:1px;background:linear-gradient(90deg,transparent,#d6b878,transparent);box-shadow:0 0 25px rgba(215,183,120,.7);animation:cxScan 6s ease-in-out infinite}.cx-factory-title{position:absolute;z-index:3;left:7%;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;font:400 clamp(4rem,11vw,12rem)/.78 Georgia,serif;letter-spacing:-.065em;white-space:nowrap}.cx-factory-title span:nth-child(2){margin-left:8vw;font-style:italic;color:#d5b477}.cx-factory-title span:nth-child(3){margin-left:3vw}.cx-tech,.cx-measure,.cx-factory-bottom{position:absolute;z-index:4;font:8px/1.6 Inter,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:rgba(241,234,219,.48)}.cx-tech b{font-weight:400;color:#d4b77d}.cx-tech-1{right:7%;top:25%}.cx-tech-2{right:11%;top:52%}.cx-tech-3{left:7%;bottom:18%}.cx-measure{color:rgba(222,196,143,.65);display:flex;gap:8px;align-items:center}.cx-measure i{display:block;width:55px;height:1px;background:#c9a96e}.cx-m1{left:9%;top:34%}.cx-m2{left:13%;top:62%}.cx-m3{right:9%;bottom:28%}.cx-factory-bottom{left:5%;right:5%;bottom:5%;display:flex;justify-content:space-between}.cx-monolith{background:#050504;min-height:120svh}.cx-atmosphere{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 65%,rgba(170,128,62,.12),transparent 36%),radial-gradient(circle at 50% 20%,rgba(255,255,255,.03),transparent 34%)}.cx-beam{position:absolute;width:32vw;height:150vh;left:36%;top:-25%;background:linear-gradient(90deg,transparent,rgba(255,236,189,.12),rgba(255,247,222,.2),transparent);filter:blur(8px);transform-origin:center;transition:transform 1s}.cx-monolith-object{position:absolute;width:min(31vw,500px);height:118vh;left:50%;top:-5vh;transform-origin:center;transition:transform 1.2s cubic-bezier(.16,1,.3,1);background:linear-gradient(96deg,#2c261d,#b9975c 18%,#ead19c 35%,#7e6541 50%,#c9a96b 71%,#30291f);box-shadow:-55px 0 100px rgba(0,0,0,.75),35px 0 100px rgba(0,0,0,.8),0 0 100px rgba(205,163,85,.12);clip-path:polygon(11% 0,89% 0,100% 100%,0 100%)}.cx-monolith-face{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0,transparent 2px,rgba(255,255,255,.075) 2.6px,transparent 4px);opacity:.55}.cx-monolith-edge{position:absolute;right:-1px;top:0;width:3px;height:100%;background:linear-gradient(#fff2c9,#7f623b,#fff0c0);filter:blur(.2px)}.cx-monolith-reflection{position:absolute;inset:-20% -60%;background:linear-gradient(105deg,transparent 42%,rgba(255,245,212,.5) 49%,transparent 55%);animation:cxLight 8s ease-in-out infinite}.cx-monolith-copy{position:absolute;z-index:5;left:7%;top:44%;display:flex;flex-direction:column;font:400 clamp(3.8rem,10vw,10rem)/.77 Georgia,serif;letter-spacing:-.065em}.cx-monolith-line:nth-child(2){margin-left:4vw}.cx-monolith-line:nth-child(3){margin-left:9vw;font-style:italic;color:#d9bc83}.cx-monolith-brand,.cx-monolith-cta,.cx-monolith-spec,.cx-monolith-finish,.cx-monolith-index,.cx-finish-track{position:absolute;z-index:6;font:8px/1.7 Inter,sans-serif;letter-spacing:.26em;text-transform:uppercase}.cx-monolith-brand{left:5%;top:7%;color:rgba(240,232,215,.55)}.cx-monolith-cta{right:6%;bottom:10%;display:flex;align-items:center;gap:12px;color:#dfc48d;text-decoration:none}.cx-monolith-spec{right:5%;bottom:5%;color:rgba(240,232,215,.4);text-align:right}.cx-monolith-finish{right:6%;top:31%;color:#d5b477}.cx-monolith-index{left:5%;bottom:5%;color:rgba(240,232,215,.35)}.cx-finish-track{left:50%;bottom:5%;transform:translateX(-50%);display:flex;gap:22px;color:rgba(240,232,215,.28)}.cx-finish-track .active{color:#e0c48c}.colors-experiences a{transition:opacity .4s,transform .4s}.colors-experiences a:hover{opacity:.72;transform:translateX(4px)}@keyframes cxLight{0%,35%{transform:translateX(-42%)}65%,100%{transform:translateX(42%)}}@keyframes cxScan{0%,20%{transform:translateY(-32vh);opacity:0}35%{opacity:1}75%,100%{transform:translateY(32vh);opacity:0}}@media(max-width:800px){.cx-gallery,.cx-factory,.cx-monolith{min-height:100svh}.cx-gallery-sheet{width:72vw;top:-10vh}.cx-gallery-title{font-size:clamp(4rem,19vw,8rem);white-space:normal;width:100%;text-align:center}.cx-annotation{font-size:7px}.cx-a3{left:5%;bottom:30%}.cx-a4{right:5%;bottom:22%}.cx-factory-title{left:5%;font-size:clamp(3.7rem,16vw,7rem)}.cx-factory-title span:nth-child(2){margin-left:5vw}.cx-tech-1,.cx-tech-2{right:5%}.cx-monolith-object{width:58vw;left:50%;height:108vh}.cx-monolith-copy{left:5%;top:46%;font-size:clamp(3.1rem,14vw,6rem)}.cx-monolith-line:nth-child(2){margin-left:2vw}.cx-monolith-line:nth-child(3){margin-left:5vw}.cx-finish-track{gap:8px;font-size:7px}.cx-monolith-spec{right:5%;bottom:16%}.cx-monolith-cta{right:5%;bottom:9%}.cx-gallery-spec{display:none}.cx-factory-bottom{flex-direction:column;gap:7px}.cx-factory-bottom span:last-child{align-self:flex-end;text-align:right}}@media(prefers-reduced-motion:reduce){.cx-sheet-glow,.cx-sheet-brush,.cx-monolith-reflection,.cx-factory-scan{animation:none!important}.cx-gallery-light,.cx-factory-surface,.cx-monolith-object{transition:none!important}}
+.colors-experiences{background:#090908;color:#eee9df}
+.cx-factory{position:relative;min-height:100svh;overflow:hidden;border-top:1px solid rgba(255,255,255,.08);isolation:isolate;background:#070707}
+.cx-factory-surface{position:absolute;inset:-10%;width:120%;height:120%;object-fit:cover;opacity:.62;transition:transform 1.5s cubic-bezier(.16,1,.3,1),filter 2s;will-change:transform,filter}
+.cx-factory-vignette{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,transparent 15%,rgba(0,0,0,.82) 82%),linear-gradient(90deg,rgba(0,0,0,.5),transparent 40%,rgba(0,0,0,.4))}
+.cx-factory-scan{position:absolute;z-index:2;left:0;right:0;top:46%;height:1px;background:linear-gradient(90deg,transparent,#d6b878,transparent);box-shadow:0 0 25px rgba(215,183,120,.7);animation:cxScan 6s ease-in-out infinite}
+.cx-factory-title{position:absolute;z-index:3;left:7%;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;font:400 clamp(4rem,11vw,12rem)/.78 Georgia,serif;letter-spacing:-.065em;white-space:nowrap}
+.cx-factory-title span:nth-child(2){margin-left:8vw;font-style:italic;color:#d5b477}.cx-factory-title span:nth-child(3){margin-left:3vw}
+.cx-tech,.cx-measure,.cx-factory-bottom{position:absolute;z-index:4;font:8px/1.6 Inter,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:rgba(241,234,219,.48)}
+.cx-tech b{font-weight:400;color:#d4b77d}.cx-tech-1{right:7%;top:25%}.cx-tech-2{right:11%;top:52%}.cx-tech-3{left:7%;bottom:18%}
+.cx-measure{color:rgba(222,196,143,.65);display:flex;gap:8px;align-items:center}.cx-measure i{display:block;width:55px;height:1px;background:#c9a96e}.cx-m1{left:9%;top:34%}.cx-m2{left:13%;top:62%}.cx-m3{right:9%;bottom:28%}
+.cx-factory-bottom{left:5%;right:5%;bottom:5%;display:flex;justify-content:space-between;gap:20px}
+@keyframes cxScan{0%,100%{transform:translateY(-30vh);opacity:0}20%,75%{opacity:1}50%{transform:translateY(30vh);opacity:.9}}
+@media (max-width:800px){.cx-factory{min-height:92svh}.cx-factory-title{left:6%;top:47%;font-size:clamp(3rem,14vw,6rem)}.cx-tech-1{right:6%;top:20%}.cx-tech-2{right:6%;top:66%}.cx-tech-3{left:6%;bottom:18%}.cx-m1{left:6%;top:31%}.cx-m2{left:6%;top:60%}.cx-m3{right:6%;bottom:28%}.cx-factory-bottom{left:6%;right:6%;font-size:7px;letter-spacing:.14em}.cx-factory-bottom span:last-child{display:none}}
+@media (prefers-reduced-motion:reduce){.cx-factory-scan{animation:none}.cx-factory-surface{transition:none}}
 `;
 
-if (typeof document !== "undefined") { const id = "colors-experiences-css"; if (!document.getElementById(id)) { const style = document.createElement("style"); style.id = id; style.textContent = css; document.head.appendChild(style); } }
+if (typeof document !== "undefined" && !document.getElementById("colors-experiences-css")) {
+  const style = document.createElement("style");
+  style.id = "colors-experiences-css";
+  style.textContent = css;
+  document.head.appendChild(style);
+}
