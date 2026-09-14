@@ -10,24 +10,20 @@ export type PageDesign = {
   sectionSpacing: "compact" | "comfortable" | "luxury";
 };
 export type BlockDesign = Partial<PageDesign> & { css?: string };
-
 export type PageSeo = {
   path: string; title: string; description: string; keywords: string; canonical: string; robots: string;
   ogTitle: string; ogDescription: string; ogImage: string; schema: string; tags: string[];
   content: { eyebrow: string; heading: string; intro: string; primaryCta: string; secondaryCta: string };
-  design: PageDesign;
-  blocks: Record<string, { label?: string; design?: BlockDesign }>;
+  design: PageDesign; blocks: Record<string, { label?: string; design?: BlockDesign }>;
 };
-
 export const PAGE_SEO_KEY = "steelx-page-seo-v1";
 export const SITE_ORIGIN = "https://steelxdecor.com";
 const routes = [
-  "/", "/capabilities", "/careers", "/contact", "/exhibitions", "/journal", "/material-light-space", "/materials", "/people", "/process", "/services", "/ss-decorative-mesh-pvd", "/stainless-steel-designer-sheets", "/steel-collection", "/studio", "/marble", "/vintex-web", "/admin-seo", "/category/:slug", "/designer-sheets", "/designer-sheets/embossed", "/designer-sheets/hairline", "/designer-sheets/mirror", "/journal/:slug", "/product/:slug", "/projects", "/projects/:slug", "/tag/:slug", "/designer-sheets/:finish", "/designer-sheets/:finish/:product",
+  "/", "/capabilities", "/careers", "/contact", "/exhibitions", "/journal", "/material-light-space", "/materials", "/people", "/process", "/services", "/ss-decorative-mesh-pvd", "/stainless-steel-designer-sheets", "/steel-collection", "/studio", "/marble", "/vintex-web", "/colors", "/admin-seo", "/category/:slug", "/designer-sheets", "/designer-sheets/embossed", "/designer-sheets/hairline", "/designer-sheets/mirror", "/journal/:slug", "/product/:slug", "/projects", "/projects/:slug", "/tag/:slug", "/designer-sheets/:finish", "/designer-sheets/:finish/:product",
 ];
 const humanize = (value: string) => value.replace(/^\/+/, "").replace(/[:$]/g, "").replace(/[-_]+/g, " ").trim().replace(/\b\w/g, c => c.toUpperCase()) || "Home";
 export const routePathCatalog = routes;
 const defaultDesign: PageDesign = { headingFont: "display", headingSize: "large", headingWeight: "normal", bodySize: "medium", accent: "#c9a96e", background: "#f4f3ef", headingColor: "#181817", bodyColor: "#5d5b55", sectionSpacing: "luxury" };
-
 export function defaultPageSeo(path: string): PageSeo {
   const label = path === "/" ? "SteelXDecor" : humanize(path.split("/").filter(Boolean).pop() || path);
   const title = path === "/" ? "Architectural Stainless Steel Surfaces Manufacturer | SteelXDecor" : `${label} | SteelXDecor`;
