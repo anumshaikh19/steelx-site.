@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ScrollProgress } from "@/components/motion";
-import { PvdHeroRebuilt } from "@/components/pvd-hero-rebuilt";
+import { PvdMonolithHero } from "@/components/pvd-monolith-hero";
 import { tones } from "@/data/pvd";
 import "@/pvd-finishes.css";
 
@@ -32,7 +32,7 @@ function PvdFinishesPage() {
       <ScrollProgress />
       <SiteHeader />
       <main>
-        <PvdHeroRebuilt />
+        <PvdMonolithHero />
 
         <section className="pvd-finishes-collection" id="finishes" aria-labelledby="finishes-title">
           <div className="pvd-finishes-collection__intro">
@@ -40,11 +40,8 @@ function PvdFinishesPage() {
               <p className="pvd-finishes-kicker">02 · THE COLLECTION</p>
               <h2 id="finishes-title">Colour, captured in metal.</h2>
             </div>
-            <p>
-              Eight architectural tones. One material language. Every finish is deposited onto stainless steel through vacuum PVD, allowing colour and surface texture to work as part of the architecture rather than as decoration applied afterward.
-            </p>
+            <p>Eight architectural tones. One material language. Every finish is deposited onto stainless steel through vacuum PVD, allowing colour and surface texture to work as part of the architecture rather than as decoration applied afterward.</p>
           </div>
-
           <div className="pvd-finishes-grid">
             {tones.map((tone, index) => (
               <article className="pvd-finish-specimen" key={tone.id}>
@@ -53,12 +50,7 @@ function PvdFinishesPage() {
                   <span className="pvd-finish-specimen__shine" aria-hidden="true" />
                   <span className="pvd-finish-specimen__grain" aria-hidden="true" />
                 </div>
-                <div className="pvd-finish-specimen__meta">
-                  <span>0{index + 1}</span>
-                  <h3>{tone.name}</h3>
-                  <p>{tone.note}</p>
-                  <small>{tone.textures.join(" · ")}</small>
-                </div>
+                <div className="pvd-finish-specimen__meta"><span>0{index + 1}</span><h3>{tone.name}</h3><p>{tone.note}</p><small>{tone.textures.join(" · ")}</small></div>
               </article>
             ))}
           </div>
