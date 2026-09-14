@@ -3,10 +3,10 @@ export type PageDesign = {
   headingSize: "small" | "medium" | "large" | "xl";
   headingWeight: "normal" | "medium" | "bold";
   bodySize: "small" | "medium" | "large";
-  bodyColor: string;
   accent: string;
   background: string;
   headingColor: string;
+  bodyColor: string;
   sectionSpacing: "compact" | "comfortable" | "luxury";
 };
 export type BlockDesign = Partial<PageDesign> & { css?: string };
