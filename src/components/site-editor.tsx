@@ -83,9 +83,14 @@ export function SiteEditorProvider({
   const defaultsRef = useRef(defaults);
 
   useEffect(() => {
-    setCanEditHost(
-      window.location.hostname === "localhost" || window.location.hostname.includes("-preview--"),
-    );
+    const hostAllowsEditing =
+      window.location.hostname === "localhost" || window.location.hostname.includes("-preview--");
+    setCanEditHost(hostAllowsEditing);
+
+    // Public production pages must never depend on the CMS/Supabase runtime.
+    // The editor is only available on localhost and Lovable preview hosts.
+    if (!hostAllowsEditing) return;
+
     let active = true;
     void supabase
       .from("published_pages")
@@ -94,9 +99,14 @@ export function SiteEditorProvider({
       .maybeSingle()
       .then(({ data }) => {
         if (active && isPageDocument(data?.content)) setDocument(data.content);
+      })
+      .catch(() => {
+        // Keep the page's built-in defaults if the editor backend is unavailable.
       });
     void supabase.auth.getUser().then(({ data }) => {
       if (active) setUserId(data.user?.id ?? null);
+    }).catch(() => {
+      if (active) setUserId(null);
     });
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       if (active) setUserId(session?.user.id ?? null);
@@ -121,6 +131,9 @@ export function SiteEditorProvider({
       .maybeSingle()
       .then(({ data }) => {
         if (active) setIsEditor(Boolean(data));
+      })
+      .catch(() => {
+        if (active) setIsEditor(false);
       });
     return () => {
       active = false;
