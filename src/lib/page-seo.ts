@@ -1,10 +1,21 @@
-export type BlockDesign = Partial<PageSeo["design"]> & { css?: string };
+export type PageDesign = {
+  headingFont: "display" | "sans";
+  headingSize: "small" | "medium" | "large" | "xl";
+  headingWeight: "normal" | "medium" | "bold";
+  bodySize: "small" | "medium" | "large";
+  accent: string;
+  background: string;
+  headingColor: string;
+  bodyColor: string;
+  sectionSpacing: "compact" | "comfortable" | "luxury";
+};
+export type BlockDesign = Partial<PageDesign> & { css?: string };
 
 export type PageSeo = {
   path: string; title: string; description: string; keywords: string; canonical: string; robots: string;
   ogTitle: string; ogDescription: string; ogImage: string; schema: string; tags: string[];
   content: { eyebrow: string; heading: string; intro: string; primaryCta: string; secondaryCta: string };
-  design: { headingFont: "display" | "sans"; headingSize: "small" | "medium" | "large" | "xl"; headingWeight: "normal" | "medium" | "bold"; bodySize: "small" | "medium" | "large"; accent: string; background: string; headingColor: string; bodyColor: string; sectionSpacing: "compact" | "comfortable" | "luxury" };
+  design: PageDesign;
   blocks: Record<string, { label?: string; design?: BlockDesign }>;
 };
 
@@ -15,7 +26,7 @@ const routes = [
 ];
 const humanize = (value: string) => value.replace(/^\/+/, "").replace(/[:$]/g, "").replace(/[-_]+/g, " ").trim().replace(/\b\w/g, c => c.toUpperCase()) || "Home";
 export const routePathCatalog = routes;
-const defaultDesign: PageSeo["design"] = { headingFont: "display", headingSize: "large", headingWeight: "normal", bodySize: "medium", accent: "#c9a96e", background: "#f4f3ef", headingColor: "#181817", bodyColor: "#5d5b55", sectionSpacing: "luxury" };
+const defaultDesign: PageDesign = { headingFont: "display", headingSize: "large", headingWeight: "normal", bodySize: "medium", accent: "#c9a96e", background: "#f4f3ef", headingColor: "#181817", bodyColor: "#5d5b55", sectionSpacing: "luxury" };
 
 export function defaultPageSeo(path: string): PageSeo {
   const label = path === "/" ? "SteelXDecor" : humanize(path.split("/").filter(Boolean).pop() || path);
