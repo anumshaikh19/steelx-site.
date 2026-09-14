@@ -10,6 +10,24 @@ export type PageSeo = {
   ogImage: string;
   schema: string;
   tags: string[];
+  content: {
+    eyebrow: string;
+    heading: string;
+    intro: string;
+    primaryCta: string;
+    secondaryCta: string;
+  };
+  design: {
+    headingFont: "display" | "sans";
+    headingSize: "small" | "medium" | "large" | "xl";
+    headingWeight: "normal" | "medium" | "bold";
+    bodySize: "small" | "medium" | "large";
+    accent: string;
+    background: string;
+    headingColor: string;
+    bodyColor: string;
+    sectionSpacing: "compact" | "comfortable" | "luxury";
+  };
 };
 
 export const PAGE_SEO_KEY = "steelx-page-seo-v1";
@@ -30,6 +48,18 @@ const humanize = (value: string) => value.replace(/^\/+/, "").replace(/[:$]/g, "
 
 export const routePathCatalog = routes;
 
+const defaultDesign: PageSeo["design"] = {
+  headingFont: "display",
+  headingSize: "large",
+  headingWeight: "normal",
+  bodySize: "medium",
+  accent: "#c9a96e",
+  background: "#f4f3ef",
+  headingColor: "#181817",
+  bodyColor: "#5d5b55",
+  sectionSpacing: "luxury",
+};
+
 export function defaultPageSeo(path: string): PageSeo {
   const label = path === "/" ? "SteelXDecor" : humanize(path.split("/").filter(Boolean).pop() || path);
   const title = path === "/"
@@ -46,6 +76,23 @@ export function defaultPageSeo(path: string): PageSeo {
     ogTitle: title, ogDescription: description, ogImage: "",
     schema: JSON.stringify({ "@context": "https://schema.org", "@type": "WebPage", name: title, description, url: `${SITE_ORIGIN}${path}` }, null, 2),
     tags: ["PVD", "stainless steel", "architectural metal", "luxury interiors"],
+    content: {
+      eyebrow: path === "/" ? "STEELXDECOR / ARCHITECTURAL SURFACES" : label.toUpperCase(),
+      heading: path === "/" ? "Architectural surfaces engineered to last." : label,
+      intro: path === "/" ? "Designed, PVD-coated, fabricated and installed for demanding interiors." : description,
+      primaryCta: "Start a project",
+      secondaryCta: "Explore collection",
+    },
+    design: { ...defaultDesign },
+  };
+}
+
+function mergePageSeo(base: PageSeo, value: Partial<PageSeo>): PageSeo {
+  return {
+    ...base,
+    ...value,
+    content: { ...base.content, ...(value.content || {}) },
+    design: { ...base.design, ...(value.design || {}) },
   };
 }
 
@@ -56,7 +103,8 @@ export function readPageSeo(): Record<string, PageSeo> {
 
 export function getPageSeo(path: string): PageSeo {
   const stored = readPageSeo();
-  return stored[path] || stored[normalizeTemplatePath(path)] || defaultPageSeo(path);
+  const value = stored[path] || stored[normalizeTemplatePath(path)];
+  return value ? mergePageSeo(defaultPageSeo(path), value) : defaultPageSeo(path);
 }
 
 export function normalizeTemplatePath(path: string): string {
