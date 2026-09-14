@@ -104,9 +104,31 @@ export function CmsHistoryBar() {
   useEffect(() => {
     install();
     const update = () => { refresh((v) => v + 1); };
+    const keyboard = (event: KeyboardEvent) => {
+      if (!(event.metaKey || event.ctrlKey) || event.altKey) return;
+      if (event.key.toLowerCase() === "z") {
+        event.preventDefault();
+        if (event.shiftKey) {
+          const history = readHistory();
+          const index = Math.min(cursor, history.length);
+          if (index < history.length) { restore(history[index]); setCursor(index + 1); }
+        } else {
+          const history = readHistory();
+          const index = Math.min(cursor, history.length);
+          if (index > 1) { restore(history[index - 2]); setCursor(index - 1); }
+        }
+      }
+      if (event.key.toLowerCase() === "y") {
+        event.preventDefault();
+        const history = readHistory();
+        const index = Math.min(cursor, history.length);
+        if (index < history.length) { restore(history[index]); setCursor(index + 1); }
+      }
+    };
     listeners.add(update);
-    return () => { listeners.delete(update); };
-  }, []);
+    window.addEventListener("keydown", keyboard);
+    return () => { listeners.delete(update); window.removeEventListener("keydown", keyboard); };
+  }, [cursor]);
 
   const history = readHistory();
   const undo = () => {
