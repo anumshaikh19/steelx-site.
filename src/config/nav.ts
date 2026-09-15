@@ -29,8 +29,6 @@ export type NavItem = (typeof navItems)[number];
 
 /** Product / material pages surfaced alongside the main navigation. */
 export const materialItems = [
-  { label: "Designer Sheets", href: "/designer-sheets" },
-  { label: "SS Designer Sheets", href: "/stainless-steel-designer-sheets" },
   { label: "SS Decorative Mesh PVD", href: "/ss-decorative-mesh-pvd" },
   { label: "Material / Light / Space", href: "/material-light-space" },
 ] as const;
