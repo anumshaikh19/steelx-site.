@@ -6,7 +6,6 @@ export const navItems = [
   { label: "Collection", href: "/steel-collection" },
   { label: "MARBLE", href: "/marble" },
   { label: "VINTEX WEB", href: "/vintex-web" },
-  { label: "Colors", href: "/colors" },
   { label: "Materials", href: "/materials" },
   { label: "Projects", href: "/projects" },
   { label: "Services", href: "/services" },
