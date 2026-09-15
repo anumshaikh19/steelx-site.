@@ -32,6 +32,6 @@ export function PageHero({ eyebrow, title, lead, meta, className }: { eyebrow: s
   </section>;
 }
 
-export function Section({ children, className }: { children: ReactNode; className?: string | undefined }) {
-  return <section className={cn("mx-auto max-w-[1600px] px-4 py-20 sm:px-8 lg:px-10 lg:py-28", className)}>{children}</section>;
+export function Section({ children, className, id }: { children: ReactNode; className?: string | undefined; id?: string }) {
+  return <section id={id} className={cn("mx-auto max-w-[1600px] px-4 py-20 sm:px-8 lg:px-10 lg:py-28", className)}>{children}</section>;
 }
