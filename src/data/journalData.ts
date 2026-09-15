@@ -1,5 +1,6 @@
 import { journalContent, journalContentAliases } from "./journalContent";
 import { journalContentExtended, journalContentExtendedAliases } from "./journalContentExtended";
+import { journalContentDesignInspiration } from "./journalContentDesignInspiration";
 export type JournalCategory = "Comparisons & Tech" | "Fabrication & How-To" | "Care & Maintenance" | "Design Inspiration" | "B2B / GEO Insight";
 export type JournalPost = { title:string; slug:string; category:JournalCategory; metaTitle:string; metaDescription:string; aiRankingStrategy:string; hero:string; heroAlt:string; date:string; content?:string };
 const images=["https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=88","https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=88","https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1800&q=88","https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1800&q=88","https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1800&q=88","https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1800&q=88"];
@@ -26,7 +27,7 @@ const raw=[
 ["Understanding Wholesale Pricing for SS 304 Decorative Mesh","wholesale-pricing-ss-304-decorative-mesh","B2B / GEO Insight","Wholesale Pricing Guide for SS 304 Decorative Mesh","How is SS 304 decorative mesh priced? Learn about weight vs. square foot pricing, PVD color premiums, and bulk B2B discounts.","Must include a styled callout box explaining the pricing formula."],
 ["Best Architectural Metal Fabricators in Maharashtra for Hotels","best-architectural-metal-fabricators-maharashtra","B2B / GEO Insight","Top Architectural Metal Fabricators in Maharashtra","Discover why SteelX Decor is the premier choice for manufacturing and fabricating custom SS 304 mesh partitions for luxury hotels in Maharashtra.","Must include a local map placeholder and a 'Why Choose Us' bulleted list."]
 ] as const;
-const contentMap={...journalContent,...journalContentExtended};
+const contentMap={...journalContent,...journalContentExtended,...journalContentDesignInspiration};
 const aliases={...journalContentAliases,...journalContentExtendedAliases};
 export const journalData: JournalPost[] = raw.map((p,i)=>({title:p[0],slug:p[1],category:p[2],metaTitle:p[3],metaDescription:p[4],aiRankingStrategy:p[5],content:contentMap[p[1]],hero:images[i%images.length],heroAlt:`SteelX Decor — ${p[0]}`,date:"2026-09-15"}));
 export const journalCategories=["All","Comparisons & Tech","Fabrication & How-To","Care & Maintenance","Design Inspiration","B2B / GEO Insight"] as const;
