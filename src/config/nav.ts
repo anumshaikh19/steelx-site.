@@ -21,6 +21,7 @@ export const secondaryItems = [
   { label: "People", href: "/people" },
   { label: "Exhibitions", href: "/exhibitions" },
   { label: "Careers", href: "/careers" },
+  { label: "Workfront", href: "/workfront" },
   { label: "Email Builder", href: "/email-template-builder" },
 ] as const;
 
