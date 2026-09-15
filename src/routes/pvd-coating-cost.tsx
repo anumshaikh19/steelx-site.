@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowUpRight, Boxes, Palette, Grid3X3 } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Boxes, Check, Grid3X3, Palette, Sparkles } from "lucide-react";
 
 import { PageShell, Section } from "@/components/page-shell";
-import { Reveal, SectionHeading } from "@/components/reveal";
+import { Reveal } from "@/components/reveal";
 import { img } from "@/data/mesh";
 
 const title = "PVD Coating Cost for SS 304 Mesh | Price Guide & Estimator";
@@ -10,10 +10,10 @@ const description =
   "Discover the exact PVD coating cost for SS 304 decorative mesh in India. Learn how colors, surface area, and batch sizes affect your architectural pricing.";
 
 const costRows = [
-  ["Natural Silver / Hairline", "₹350 - ₹550", "₹0 (No PVD)", "₹350 - ₹550"],
-  ["PVD Bright Gold", "₹350 - ₹550", "+ ₹250 - ₹400", "₹600 - ₹950"],
-  ["PVD Rose Gold / Copper", "₹350 - ₹550", "+ ₹300 - ₹500", "₹650 - ₹1,050"],
-  ["PVD Titanium Black", "₹350 - ₹550", "+ ₹350 - ₹600", "₹700 - ₹1,150"],
+  ["Natural Silver / Hairline", "₹350 – ₹550", "₹0", "₹350 – ₹550", "Standard stainless finish"],
+  ["PVD Bright Gold", "₹350 – ₹550", "+ ₹250 – ₹400", "₹600 – ₹950", "Most requested"],
+  ["PVD Rose Gold / Copper", "₹350 – ₹550", "+ ₹300 – ₹500", "₹650 – ₹1,050", "Warm architectural tone"],
+  ["PVD Titanium Black", "₹350 – ₹550", "+ ₹350 – ₹600", "₹700 – ₹1,150", "Deep statement finish"],
 ];
 
 export const Route = createFileRoute("/pvd-coating-cost")({
@@ -34,147 +34,185 @@ export const Route = createFileRoute("/pvd-coating-cost")({
 function PvdCoatingCostPage() {
   return (
     <PageShell>
-      <section className="relative isolate min-h-[680px] overflow-hidden border-b border-white/10 bg-gray-950 text-white">
+      <section className="group relative isolate min-h-[760px] overflow-hidden border-b border-white/10 bg-[#080807] text-white">
         <img
           src={img.pvdSteel}
           alt="PVD coated stainless steel mesh surface in a luxury metallic finish"
-          className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+          className="absolute inset-0 -z-30 h-full w-full object-cover object-center opacity-80 transition-transform duration-[1800ms] ease-out group-hover:scale-[1.025]"
         />
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,7,10,.97)_0%,rgba(5,7,10,.86)_42%,rgba(5,7,10,.48)_100%)]" />
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_78%_45%,rgba(201,169,110,.24),transparent_34%)]" />
-        <div className="mx-auto flex min-h-[680px] max-w-[1600px] items-end px-4 pb-20 pt-32 sm:px-8 lg:px-10 lg:pb-28">
-          <div className="max-w-4xl">
-            <Reveal variant="text" as="p" className="text-xs uppercase tracking-[0.34em] text-[#e5c98f]">
-              Commercial Pricing / PVD / SS 304 Mesh
-            </Reveal>
-            <Reveal variant="up" delay={100}>
-              <h1 className="mt-6 max-w-4xl font-display text-5xl leading-[.94] tracking-tight sm:text-7xl lg:text-[6.5rem]">
-                PVD Coating Cost for SS 304 Mesh
-              </h1>
-            </Reveal>
-            <Reveal variant="up" delay={180}>
-              <p className="mt-8 max-w-2xl text-base leading-relaxed text-white/75 sm:text-lg">
-                A transparent commercial price guide for architects, interior designers, fabricators and procurement teams specifying PVD-finished stainless steel architectural mesh in India.
-              </p>
-            </Reveal>
-            <Reveal variant="up" delay={260} className="mt-10 flex flex-wrap gap-3">
-              <a href="#pricing" className="inline-flex items-center gap-2 rounded-full bg-[#c9a96e] px-6 py-3 text-sm font-semibold text-gray-950 transition-transform hover:-translate-y-0.5">
-                View pricing matrix <ArrowUpRight className="h-4 w-4" />
-              </a>
-              <Link to="/contact" className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm hover:bg-white/10">
-                Request a project quote <ArrowUpRight className="h-4 w-4" />
-              </Link>
-            </Reveal>
+        <div className="absolute inset-0 -z-20 bg-[linear-gradient(100deg,rgba(5,6,7,.98)_0%,rgba(5,6,7,.9)_34%,rgba(5,6,7,.54)_68%,rgba(5,6,7,.35)_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_76%_42%,rgba(218,181,108,.3),transparent_24%),radial-gradient(circle_at_82%_80%,rgba(255,255,255,.08),transparent_28%)]" />
+        <div className="absolute right-[7%] top-[24%] -z-10 hidden h-64 w-64 rounded-full border border-[#d8b775]/20 lg:block" />
+        <div className="absolute right-[10%] top-[28%] -z-10 hidden h-48 w-48 rounded-full border border-[#d8b775]/15 lg:block" />
+
+        <div className="mx-auto flex min-h-[760px] max-w-[1600px] items-end px-4 pb-16 pt-32 sm:px-8 lg:px-10 lg:pb-24">
+          <div className="w-full">
+            <div className="mb-12 flex items-center gap-4 text-[10px] uppercase tracking-[0.32em] text-white/45">
+              <span>SteelX Decor</span><span className="h-px w-10 bg-[#c9a96e]/60" /><span>Commercial Pricing</span><span className="hidden sm:inline">/</span><span className="hidden sm:inline">SS 304 Mesh</span>
+            </div>
+            <div className="grid items-end gap-12 lg:grid-cols-[1fr_360px]">
+              <div>
+                <Reveal variant="text" as="p" className="flex items-center gap-3 text-xs uppercase tracking-[0.34em] text-[#e5c98f]">
+                  <span className="h-px w-8 bg-[#e5c98f]" /> PVD Finish Intelligence
+                </Reveal>
+                <Reveal variant="up" delay={100}>
+                  <h1 className="mt-6 max-w-5xl font-display text-5xl leading-[.9] tracking-[-.035em] sm:text-7xl lg:text-[6.7rem]">
+                    PVD Coating Cost<br /><span className="text-white/45">for SS 304 Mesh</span>
+                  </h1>
+                </Reveal>
+                <Reveal variant="up" delay={180}>
+                  <p className="mt-8 max-w-2xl text-base leading-relaxed text-white/68 sm:text-lg">
+                    A transparent commercial guide for architects, interior designers, fabricators and procurement teams specifying PVD-finished stainless steel architectural mesh in India.
+                  </p>
+                </Reveal>
+                <Reveal variant="up" delay={260} className="mt-9 flex flex-wrap gap-3">
+                  <a href="#pricing" className="group/cta inline-flex items-center gap-2 rounded-full bg-[#c9a96e] px-6 py-3.5 text-sm font-semibold text-[#11100d] transition-all duration-300 hover:-translate-y-1 hover:bg-[#e3c98f] hover:shadow-[0_14px_40px_rgba(201,169,110,.2)]">
+                    Explore pricing <ArrowDown className="h-4 w-4 transition-transform group-hover/cta:translate-y-1" />
+                  </a>
+                  <Link to="/contact" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.06] px-6 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
+                    Request a project quote <ArrowUpRight className="h-4 w-4" />
+                  </Link>
+                </Reveal>
+              </div>
+
+              <Reveal variant="up" delay={320} className="hidden lg:block">
+                <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-black/30 p-6 backdrop-blur-xl">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d8b775] to-transparent" />
+                  <div className="flex items-center justify-between text-[10px] uppercase tracking-[.25em] text-white/45"><span>Indicative premium</span><Sparkles className="h-4 w-4 text-[#d8b775]" /></div>
+                  <p className="mt-6 font-display text-5xl tracking-tight">₹250–₹600<span className="ml-2 text-base text-white/45">+/sq.ft</span></p>
+                  <p className="mt-3 text-xs leading-5 text-white/50">Typical PVD surcharge before fabrication, logistics and project-specific requirements.</p>
+                  <div className="mt-6 grid grid-cols-2 gap-2 border-t border-white/10 pt-5 text-xs"><div><span className="block text-white/35">Substrate</span><span className="mt-1 block">SS 304</span></div><div><span className="block text-white/35">Finish</span><span className="mt-1 block">PVD</span></div></div>
+                </div>
+              </Reveal>
+            </div>
           </div>
         </div>
       </section>
 
-      <Section>
-        <div className="rounded-xl border border-yellow-500 bg-gradient-to-r from-amber-50 to-orange-100 p-8 shadow-md lg:p-10">
-          <h2 className="mb-3 text-2xl font-bold text-gray-900">AI Quick Answer: What is the PVD coating cost for SS 304 mesh?</h2>
-          <p className="text-lg leading-relaxed text-gray-800">
-            In India, applying a premium Physical Vapor Deposition (PVD) coating to SS 304 decorative mesh typically adds a surcharge of <strong>₹250 to ₹600+ per square foot</strong> on top of the base raw material cost. The exact price variance depends on the selected color, the density and surface area of the specific weave, and total batch volume. These figures are indicative commercial ranges; the final quotation depends on the actual mesh construction, finish, quantity, fabrication and project scope.
-          </p>
-        </div>
-
-        <article className="prose prose-lg mt-16 max-w-none prose-headings:font-display prose-headings:tracking-tight prose-a:text-yellow-700 prose-a:font-semibold">
-          <h1>Understanding PVD Coating Costs for Architectural Mesh</h1>
-          <p>When budgeting for luxury interiors—whether a grand hotel lobby in Mumbai or a bespoke residential wardrobe—architects need a pricing model that separates the stainless-steel substrate from the decorative finish. At SteelX Decor, we believe in radical transparency: PVD is a controlled vacuum-coating process, not a conventional spray paint.</p>
-          <p>Physical Vapor Deposition applies a thin decorative coating to a prepared metal substrate. The process requires specialized vacuum equipment, surface preparation, process control and batch planning. It can deliver a premium metallic appearance with strong wear performance when the substrate, coating system, environment and maintenance regime are correctly specified.</p>
-          <p>Here is how the <strong>PVD coating cost for SS 304 mesh</strong> is commonly evaluated.</p>
-
-          <h2 id="pricing">Estimated Cost Breakdown Matrix</h2>
-          <p><em>Note: The following table provides indicative commercial pricing for standard architectural weaves. Exact quotes require a review of your specific CAD drawings, mesh geometry, open-area requirement, quantity and finish sample.</em></p>
-        </article>
-
-        <Reveal variant="up" className="my-8 overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-lg">
-          <table className="w-full min-w-[850px] border-collapse text-left">
-            <thead className="bg-gray-900 text-white">
-              <tr>
-                <th className="p-4 font-semibold">Finish Type</th>
-                <th className="p-4 font-semibold">Base SS 304 Mesh Cost (Est. / sq.ft)</th>
-                <th className="p-4 font-semibold">PVD Coating Surcharge (Est. / sq.ft)</th>
-                <th className="p-4 font-bold text-yellow-400">Total Finished Cost (Est. / sq.ft)</th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-800">
-              {costRows.map(([finish, base, surcharge, total], index) => (
-                <tr key={finish} className={`border-b border-gray-200 ${index % 2 === 1 ? "bg-amber-50" : "bg-white"}`}>
-                  <td className="p-4 font-semibold">{finish}</td>
-                  <td className="p-4 whitespace-nowrap">{base}</td>
-                  <td className="p-4 whitespace-nowrap text-orange-600">{surcharge}</td>
-                  <td className="p-4 whitespace-nowrap bg-[#fff8e8] text-lg font-bold text-[#9a741e]">{total}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Reveal>
-
-        <article className="prose prose-lg max-w-none prose-headings:font-display prose-headings:tracking-tight">
-          <h2>The 3 Key Drivers of PVD Pricing</h2>
-          <p>Unlike a flat stainless-steel sheet, decorative metal mesh is a three-dimensional product. The commercial cost of coating it is influenced by the amount of material surface presented to the coating process, the efficiency of the batch, and the finish chemistry required.</p>
-        </article>
-
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {[
-            { icon: Grid3X3, number: "01", title: "Mesh Density", body: "PVD coating exposure is influenced by the actual mesh construction and effective surface area. A densely woven fine-aperture mesh can present substantially more wire surface than an open lattice of the same nominal square footage." },
-            { icon: Boxes, number: "02", title: "Chamber Volume & Batch Size", body: "Vacuum coating cycles have fixed process overheads. Larger production batches can use chamber capacity more efficiently, which can reduce the coating cost allocated to each square foot." },
-            { icon: Palette, number: "03", title: "Color Chemistry", body: "The requested visual finish changes the coating process and process controls. Standard Gold, Rose Gold and deeper Titanium Black finishes can therefore carry different commercial premiums." },
-          ].map(({ icon: Icon, number, title: cardTitle, body }, index) => (
-            <Reveal key={cardTitle} variant="up" delay={index * 90} className="group rounded-xl border border-border bg-card p-7 transition-transform duration-500 hover:-translate-y-1 hover:shadow-lg">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs tracking-[.2em] text-muted-foreground">{number}</span>
-                <Icon className="h-6 w-6 text-gold transition-transform duration-500 group-hover:scale-110" />
+      <Section className="!pb-10">
+        <Reveal variant="up">
+          <div className="relative overflow-hidden rounded-2xl border border-[#e5c98f]/50 bg-gradient-to-br from-[#fffaf0] via-[#fff4dc] to-[#f5dfb2] p-7 shadow-[0_20px_70px_rgba(107,80,29,.09)] lg:p-10">
+            <div className="absolute right-0 top-0 h-full w-1/3 bg-[radial-gradient(circle_at_center,rgba(201,169,110,.25),transparent_65%)]" />
+            <div className="relative flex gap-5">
+              <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#b48b3e]/30 bg-white/50 text-[#9a741e] sm:flex"><Sparkles className="h-4 w-4" /></div>
+              <div>
+                <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.28em] text-[#9a741e]"><span>AI Quick Answer</span><span className="h-px w-8 bg-[#c9a96e]" /></div>
+                <h2 className="mt-3 font-display text-2xl tracking-tight text-[#171511] sm:text-3xl">What is the PVD coating cost for SS 304 mesh?</h2>
+                <p className="mt-4 max-w-5xl text-base leading-7 text-[#4a4030]">In India, applying a premium Physical Vapor Deposition (PVD) coating to SS 304 decorative mesh typically adds a surcharge of <strong className="text-[#7e5c16]">₹250 to ₹600+ per square foot</strong> on top of the base raw material cost. The exact price depends on the selected color, mesh construction, effective surface area, batch volume, fabrication and project scope.</p>
               </div>
-              <h3 className="mt-8 font-display text-2xl text-foreground">{cardTitle}</h3>
-              <p className="mt-4 text-sm leading-7 text-muted-foreground">{body}</p>
+            </div>
+          </div>
+        </Reveal>
+      </Section>
+
+      <Section id="pricing" className="!pt-16">
+        <div className="grid gap-12 lg:grid-cols-[.72fr_1.28fr] lg:gap-20">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <Reveal variant="text" as="p" className="text-xs uppercase tracking-[.3em] text-gold">01 / Price architecture</Reveal>
+            <Reveal variant="up" delay={80}><h2 className="mt-5 font-display text-4xl leading-[.98] tracking-tight text-foreground sm:text-5xl">A clearer way to price the finish.</h2></Reveal>
+            <Reveal variant="up" delay={150}><p className="mt-6 max-w-md text-base leading-7 text-muted-foreground">Separate the stainless substrate from the PVD finish, then understand what changes the final number. This keeps early design budgets realistic without hiding the variables.</p></Reveal>
+            <div className="mt-8 space-y-3">
+              {["Base SS 304 mesh", "PVD color surcharge", "Fabrication & framing", "Quantity / batch efficiency"].map((item, i) => (
+                <Reveal key={item} variant="row" delay={i * 55} className="flex items-center gap-3 border-t border-border pt-3 text-sm text-muted-foreground"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-[10px] font-bold text-foreground">0{i + 1}</span>{item}</Reveal>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <Reveal variant="up" className="mb-5 flex items-end justify-between gap-4"><div><p className="text-xs uppercase tracking-[.2em] text-muted-foreground">Indicative India market guide</p><p className="mt-1 text-sm text-muted-foreground">Per square foot · standard architectural applications</p></div><span className="hidden text-[10px] uppercase tracking-[.2em] text-muted-foreground sm:block">2026 guide</span></Reveal>
+            <Reveal variant="up" className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_18px_60px_rgba(0,0,0,.07)]">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[850px] border-collapse text-left">
+                  <thead className="bg-[#11110f] text-white">
+                    <tr>
+                      <th className="p-5 text-[10px] font-medium uppercase tracking-[.18em]">Finish</th>
+                      <th className="p-5 text-[10px] font-medium uppercase tracking-[.18em]">Base SS 304</th>
+                      <th className="p-5 text-[10px] font-medium uppercase tracking-[.18em]">PVD surcharge</th>
+                      <th className="bg-[#9d7931] p-5 text-[10px] font-semibold uppercase tracking-[.18em] text-white">Finished / sq.ft</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-sm text-gray-800">
+                    {costRows.map(([finish, base, surcharge, total, note], index) => (
+                      <tr key={finish} className={`group border-b border-gray-200 transition-colors hover:bg-[#f8f0df] ${index % 2 === 1 ? "bg-[#faf8f3]" : "bg-white"}`}>
+                        <td className="p-5"><span className="block font-semibold text-gray-950">{finish}</span><span className="mt-1 block text-xs text-gray-500">{note}</span></td>
+                        <td className="whitespace-nowrap p-5 text-gray-600">{base}</td>
+                        <td className="whitespace-nowrap p-5 text-[#9a741e]">{surcharge}</td>
+                        <td className="whitespace-nowrap bg-[#fff7e6] p-5 font-display text-xl font-semibold text-[#8c691f] transition-colors group-hover:bg-[#f8edcf]">{total}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-secondary/40 px-5 py-4 text-[11px] leading-5 text-muted-foreground"><span>Indicative only — final quotation follows specification review.</span><Link to="/contact" className="font-semibold text-foreground hover:text-gold">Get project pricing <ArrowUpRight className="ml-1 inline h-3 w-3" /></Link></div>
+            </Reveal>
+          </div>
+        </div>
+      </Section>
+
+      <Section className="border-t border-border">
+        <div className="mb-12 max-w-3xl"><Reveal variant="text" as="p" className="text-xs uppercase tracking-[.3em] text-gold">02 / What moves the number</Reveal><Reveal variant="up" delay={80}><h2 className="mt-5 font-display text-4xl leading-tight tracking-tight text-foreground sm:text-6xl">Three variables. One final finish.</h2></Reveal></div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            { icon: Grid3X3, number: "01", title: "Mesh density", body: "A dense fine-aperture weave can present significantly more exposed wire surface than an open lattice occupying the same nominal area." },
+            { icon: Boxes, number: "02", title: "Batch volume", body: "Vacuum coating cycles carry setup and process overhead. Larger production batches can use chamber capacity more efficiently." },
+            { icon: Palette, number: "03", title: "Color chemistry", body: "Gold, Rose Gold, Champagne and deeper Titanium Black finishes can require different process recipes and colour controls." },
+          ].map(({ icon: Icon, number, title: cardTitle, body }, index) => (
+            <Reveal key={cardTitle} variant="up" delay={index * 90} className="group relative overflow-hidden rounded-2xl border border-border bg-card p-7 transition-all duration-500 hover:-translate-y-2 hover:border-[#c9a96e]/50 hover:shadow-[0_22px_70px_rgba(0,0,0,.09)] lg:p-8">
+              <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-[#c9a96e]/[.08] blur-2xl transition-transform duration-700 group-hover:scale-150" />
+              <div className="relative flex items-center justify-between"><span className="font-mono text-xs tracking-[.2em] text-muted-foreground">{number}</span><Icon className="h-6 w-6 text-gold transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110" /></div>
+              <h3 className="relative mt-16 font-display text-3xl tracking-tight text-foreground">{cardTitle}</h3>
+              <p className="relative mt-4 text-sm leading-7 text-muted-foreground">{body}</p>
+              <div className="mt-8 h-px w-8 bg-[#c9a96e] transition-all duration-500 group-hover:w-16" />
             </Reveal>
           ))}
         </div>
+      </Section>
 
-        <article className="prose prose-lg mt-16 max-w-none prose-headings:font-display prose-headings:tracking-tight prose-a:text-yellow-700 prose-a:font-semibold">
-          <h3>1. Mesh Density (Surface Area)</h3>
-          <p>PVD coating economics are not determined only by the visible flat area of the finished panel. Mesh geometry creates additional exposed wire surface, curves and intersections that the coating system must process. A heavy, densely woven cabinet mesh can therefore require more coating exposure than a wide-open 25mm lattice screen occupying the same nominal square footage.</p>
+      <Section className="!pt-8">
+        <div className="grid gap-14 lg:grid-cols-[.7fr_1.3fr]">
+          <Reveal variant="up" className="lg:sticky lg:top-28 lg:self-start"><div className="flex items-center gap-3 text-xs uppercase tracking-[.28em] text-gold"><span className="h-px w-8 bg-gold" /> Specification notes</div><h2 className="mt-5 font-display text-4xl leading-tight tracking-tight sm:text-5xl">Price is only useful when the specification is clear.</h2></Reveal>
+          <article className="prose prose-lg max-w-none prose-headings:font-display prose-headings:tracking-tight prose-a:text-yellow-700 prose-a:font-semibold">
+            <h2>Understanding PVD coating costs for architectural mesh</h2>
+            <p>When budgeting for luxury interiors—from a grand hotel lobby in Mumbai to a bespoke residential wardrobe—architects need a pricing model that separates the stainless-steel substrate from the decorative finish. PVD is a controlled vacuum-coating process requiring specialized equipment, surface preparation, process control and batch planning.</p>
+            <p>It can deliver a premium metallic appearance with strong wear performance when the substrate, coating system, environment and maintenance regime are correctly specified. The actual commercial cost should therefore be treated as a project-specific estimate, not a universal rate.</p>
+            <h3>1. Mesh density / effective surface area</h3>
+            <p>Decorative mesh is a three-dimensional product. Geometry creates additional exposed wire surface, curves and intersections that the coating system must process. A heavy, densely woven cabinet mesh can therefore require more coating exposure than a wide-open lattice screen occupying the same nominal square footage.</p>
+            <h3>2. Chamber volume &amp; batch size</h3>
+            <p>PVD is executed inside sealed vacuum chambers. Each cycle carries setup, preparation, energy and process overhead. Larger production quantities can make better use of available chamber capacity, although the actual economics depend on chamber dimensions, loading geometry and production schedule.</p>
+            <h3>3. Color chemistry</h3>
+            <p>The requested PVD color influences the process recipe and control requirements. For specification-grade projects, approve a physical finish sample rather than relying only on a screen-rendered colour.</p>
+            <h2>The long-term ROI</h2>
+            <p>For many premium interiors, the decision should be evaluated as a lifecycle specification rather than simply a first-cost comparison. Mild steel with a powder coating can have a lower initial purchase price, while SS 304 with PVD offers a corrosion-resistant stainless substrate and a durable decorative finish when correctly specified.</p>
+            <p>In humid or coastal environments such as Mumbai or Chennai, the underlying material, edge treatment, cleaning regime and exposure all matter. A project-specific lifecycle model should include initial material, fabrication, maintenance, potential recoating and replacement exposure.</p>
+            <h2>What should be included in a PVD mesh quote?</h2>
+            <ol>
+              <li><strong>Mesh construction:</strong> woven, crimped, spiral, cable/rod or another specified geometry.</li>
+              <li><strong>Stainless grade:</strong> SS 304 or an alternative grade selected for the project environment.</li>
+              <li><strong>Wire diameter and aperture:</strong> the physical parameters that define density, appearance and performance.</li>
+              <li><strong>Finish:</strong> PVD Gold, Rose Gold, Champagne, Bronze, Titanium Black or an approved custom reference.</li>
+              <li><strong>Quantity and panel schedule:</strong> total area, individual panel dimensions and production batches.</li>
+              <li><strong>Fabrication:</strong> raw rolls versus cut, edged, framed or fully assembled panels.</li>
+              <li><strong>Logistics and installation:</strong> packing, delivery location, site access and installation scope where applicable.</li>
+            </ol>
+          </article>
+        </div>
+      </Section>
 
-          <h3>2. Chamber Volume &amp; Batch Size</h3>
-          <p>PVD is executed inside sealed vacuum chambers. Each cycle carries setup, preparation, energy and process overhead. A small 10 sq. ft. partition may still consume a meaningful portion of a chamber cycle, whereas larger production quantities can make better use of available chamber capacity. The actual commercial break-even point depends on the coating facility, chamber dimensions, loading geometry and production schedule.</p>
-
-          <h3>3. Color Chemistry</h3>
-          <p>The requested PVD color influences the process recipe and control requirements. Standard Gold can follow a well-established production route, while deeper black or precisely matched rose-gold tones may require different process parameters and tighter colour control. For specification-grade projects, approve a physical finish sample rather than relying on a screen-rendered colour.</p>
-
-          <h2>The Long-Term ROI</h2>
-          <p>Is the PVD coating cost worth it? For many premium interiors, the decision should be evaluated as a lifecycle specification rather than simply a first-cost comparison. Mild steel with a powder coating can have a lower initial purchase price, while SS 304 with PVD offers a corrosion-resistant stainless substrate and a durable decorative finish when correctly specified.</p>
-          <p>In humid or coastal environments such as Mumbai or Chennai, the underlying material, edge treatment, cleaning regime and exposure all matter. It is not technically accurate to guarantee that every powder-coated mild-steel partition will fail within three years or that every PVD finish will last forever. A project-specific lifecycle model should include initial material, fabrication, maintenance, potential recoating and replacement exposure.</p>
-
-          <h2>What Should Be Included in a PVD Mesh Quote?</h2>
-          <ol>
-            <li><strong>Mesh construction:</strong> woven, crimped, spiral, cable/rod or other specified geometry.</li>
-            <li><strong>Stainless grade:</strong> SS 304 or an alternative grade selected for the project environment.</li>
-            <li><strong>Wire diameter and aperture:</strong> the physical parameters that define density, appearance and performance.</li>
-            <li><strong>Finish:</strong> PVD Gold, Rose Gold, Champagne, Bronze, Titanium Black or an approved custom reference.</li>
-            <li><strong>Quantity and panel schedule:</strong> total area, individual panel dimensions and production batches.</li>
-            <li><strong>Fabrication:</strong> raw rolls versus cut, edged, framed or fully assembled panels.</li>
-            <li><strong>Logistics and installation:</strong> packing, delivery location, site access and installation scope where applicable.</li>
-          </ol>
-
-          <h2>Get a Custom Quotation</h2>
-          <p>Because every architectural mesh specification is different, a standard price range only tells half the story. Send your dimensions, wire gauge, mesh construction, quantity and chosen PVD finish to the SteelX Decor B2B estimation team. For the most accurate review, include AutoCAD/PDF drawings and any approved finish reference or physical sample requirement.</p>
-        </article>
-
-        <section className="relative mt-20 overflow-hidden rounded-2xl bg-gray-950 px-7 py-14 text-white sm:px-10 lg:px-14 lg:py-16">
-          <div className="absolute right-0 top-0 h-full w-1/2 bg-[radial-gradient(circle_at_center,rgba(201,169,110,.22),transparent_65%)]" />
-          <div className="relative flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
-            <div>
-              <p className="text-xs uppercase tracking-[.28em] text-[#d9b978]">B2B Estimation Desk</p>
-              <h2 className="mt-4 max-w-3xl font-display text-3xl leading-tight sm:text-5xl">Upload Drawings for a Custom Quote</h2>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/65 sm:text-base">Share your project dimensions, mesh construction, wire gauge and PVD finish requirement. Our team can then price the actual specification instead of applying a generic per-square-foot assumption.</p>
+      <Section className="!pt-10">
+        <Reveal variant="up">
+          <section className="relative overflow-hidden rounded-[1.5rem] bg-[#0b0b09] px-7 py-14 text-white shadow-[0_25px_90px_rgba(0,0,0,.16)] sm:px-10 lg:px-14 lg:py-16">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,rgba(201,169,110,.25),transparent_30%),linear-gradient(120deg,transparent,rgba(255,255,255,.025))]" />
+            <div className="absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-[#d8b775] to-transparent" />
+            <div className="relative flex flex-col items-start justify-between gap-9 lg:flex-row lg:items-center">
+              <div><p className="flex items-center gap-3 text-xs uppercase tracking-[.28em] text-[#d9b978]"><span className="h-px w-8 bg-[#d9b978]" /> B2B Estimation Desk</p><h2 className="mt-5 max-w-3xl font-display text-4xl leading-[.98] tracking-tight sm:text-6xl">Turn drawings into a real number.</h2><p className="mt-5 max-w-2xl text-sm leading-7 text-white/55 sm:text-base">Share your dimensions, mesh construction, wire gauge and PVD finish requirement. Price the actual specification instead of applying a generic per-square-foot assumption.</p></div>
+              <Link to="/contact" className="group inline-flex shrink-0 items-center gap-3 rounded-full bg-[#c9a96e] px-7 py-4 text-sm font-semibold text-[#11100d] transition-all duration-300 hover:-translate-y-1 hover:bg-[#e1c48a] hover:shadow-[0_15px_45px_rgba(201,169,110,.22)]">Upload Drawings for a Custom Quote <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></Link>
             </div>
-            <Link to="/contact" className="group inline-flex shrink-0 items-center gap-3 rounded-full bg-[#c9a96e] px-7 py-4 text-sm font-semibold text-gray-950 transition-all hover:-translate-y-1 hover:bg-[#e0c48d]">
-              Upload Drawings for a Custom Quote
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-            </Link>
-          </div>
-        </section>
+          </section>
+        </Reveal>
+      </Section>
+
+      <Section className="!py-10">
+        <div className="flex flex-col justify-between gap-4 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row"><span>SteelX Decor · Architectural stainless steel &amp; PVD finishes</span><span className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-gold" /> Indicative pricing · Final quote on specification</span></div>
       </Section>
     </PageShell>
   );
