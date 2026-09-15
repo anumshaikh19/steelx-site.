@@ -103,5 +103,5 @@ export function App() {
   if (pathname === "/karate/kata/taikyoku-sandan" || pathname === "/karate/kata/taikyoku-sandan/") return <TaikyokuSandanPage />;
   if (pathname === "/karate/kata/ten-no-kata" || pathname === "/karate/kata/ten-no-kata/") return <TenNoKataPage />;
   if (reference) return <ReferencePage kind={reference.kind} slug={reference.slug} />;
-  return <><Cursor /><div aria-hidden className="grain-overlay" /><Nav /><main><h1 className="sr-only">Dhanurveda — Martial Arts &amp; Calisthenics academy in Nagpada, Mumbai</h1><Hero /><TitleTransition /><DojoStatement /><Arts /><KihonSection /><KataSection /><KumiteSection /><OneStrike /><Calisthenics /><Belts /><Philosophy /><Timings /><Gallery /><Reviews /><FirstClass /><Trainers /><Location /></main>;
+  return <><Cursor /><div aria-hidden className="grain-overlay" /><Nav /><main><h1 className="sr-only">Dhanurveda — Martial Arts &amp; Calisthenics academy in Nagpada, Mumbai</h1><Hero /><TitleTransition /><DojoStatement /><Arts /><KihonSection /><KataSection /><KumiteSection /><OneStrike /><Calisthenics /><Belts /><Philosophy /><Timings /><Gallery /><Reviews /><FirstClass /><Trainers /><Location /></main></>;
 }
