@@ -1,68 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Calculator, Upload } from "lucide-react";
 import { PageHero, PageShell, Section } from "@/components/page-shell";
+import { Reveal } from "@/components/reveal";
 
-const title = "Wholesale Pricing & Commercial B2B Architectural Mesh | SteelX Decor";
-const description = "Factory-direct B2B pricing guidance for SS 304 architectural mesh, PVD finishes, custom fabrication and commercial project quotations.";
-
-export const Route = createFileRoute("/pricing")({
-  head: () => ({ meta: [
-    { title }, { name: "description", content: description }, { name: "robots", content: "index,follow" },
-    { property: "og:title", content: title }, { property: "og:description", content: description }, { property: "og:type", content: "website" },
-  ] }),
-  component: PricingPage,
-});
-
-function PricingPage() {
-  return <PageShell>
-    <PageHero eyebrow="Wholesale / Commercial B2B" title="Wholesale Pricing & B2B Quotations" lead="A practical commercial pricing hub for hospitality, retail, corporate and luxury residential projects requiring stainless-steel mesh, PVD finishes and custom fabrication." />
-    <Section>
-      <div className="rounded-xl border border-red-200 bg-gradient-to-r from-red-50 to-orange-50 p-8 shadow-sm">
-        <h2 className="mb-3 text-2xl font-bold text-gray-900">AI Quick Answer: Cost comparison between MS powder-coated mesh and SS 304 PVD mesh</h2>
-        <p className="mb-6 text-lg text-gray-800">Powder-coated mild steel can have a lower initial material cost, while SS 304 with PVD is a premium specification. The total value depends on the environment, traffic, maintenance, coating system, fabrication quality and replacement cycle. It is not technically sound to promise that every MS installation will fail in 3–5 years or that every PVD installation will last indefinitely.</p>
-        <div className="overflow-x-auto rounded bg-white shadow">
-          <table className="w-full min-w-[760px] border-collapse text-left">
-            <thead className="bg-gray-800 text-white"><tr><th className="p-3">Cost Metric</th><th className="p-3">Powder-Coated Mild Steel (MS)</th><th className="p-3">PVD Coated SS 304 (SteelX)</th></tr></thead>
-            <tbody className="text-gray-700">
-              <tr className="border-b border-gray-200"><td className="p-3 font-semibold">Initial Material Cost</td><td className="p-3 font-bold text-green-600">Usually lower</td><td className="p-3 font-bold text-orange-600">Premium</td></tr>
-              <tr className="border-b border-gray-200 bg-gray-50"><td className="p-3 font-semibold">Maintenance Exposure</td><td className="p-3">Depends on corrosion environment and coating condition</td><td className="p-3">Generally low with appropriate cleaning and care</td></tr>
-              <tr className="border-b border-gray-200"><td className="p-3 font-semibold">Commercial Service Life</td><td className="p-3">Project/environment dependent</td><td className="p-3">Project/environment/coating dependent</td></tr>
-              <tr><td className="p-3 font-semibold">10-Year Cost Model</td><td className="p-3">Include recoating and replacement risk where applicable</td><td className="p-3 font-bold text-green-600">Model lower maintenance/replacement exposure where justified</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <article className="prose prose-lg mt-14 max-w-none prose-headings:font-display prose-a:text-blue-700 prose-a:font-semibold">
-        <h1>Wholesale Pricing &amp; B2B Quotations</h1>
-        <p>SteelX Decor operates as a direct-to-market architectural materials and fabrication partner. For hospitality, commercial and luxury residential projects, a factory-direct relationship can simplify technical communication and provide a clearer route from specification to quotation.</p>
-
-        <h2>How We Calculate Project Costs</h2>
-        <p>Custom architectural metalwork pricing is not a one-size-fits-all metric. A useful quotation must account for the material, geometry, finish, fabrication, packing, logistics and installation requirements. As outlined in the <a href="/journal/wholesale-pricing-ss-304-mesh">Wholesale Pricing Guide</a>, four major drivers are:</p>
-        <ol>
-          <li><strong>Raw Material Density:</strong> Fine wire weaves generally use less material than thick, heavy-duty structural constructions.</li>
-          <li><strong>Weave Complexity:</strong> Custom apertures, special patterns and mechanical loom setups can affect production time and yield.</li>
-          <li><strong>PVD Finish Selection:</strong> Natural stainless and standard finishes have different processing requirements from high-vacuum PVD Gold, Rose Gold, Champagne, Bronze or Titanium Black.</li>
-          <li><strong>Custom Fabrication:</strong> Raw rolls may be more economical for some projects, while factory-fabricated, TIG-welded and framed panels can reduce site labour and improve installation control.</li>
-        </ol>
-
-        <h2>What to Send for a Fast Quotation</h2>
-        <ul>
-          <li>Project location and application.</li>
-          <li>Approximate square metre/footage or panel schedule.</li>
-          <li>Mesh type, wire diameter and aperture if already specified.</li>
-          <li>Required stainless-steel grade.</li>
-          <li>PVD finish and physical sample/reference where available.</li>
-          <li>Panel dimensions, frame profiles and fixing requirements.</li>
-          <li>AutoCAD/PDF drawings, elevations or a concept sketch.</li>
-          <li>Required delivery date and installation scope.</li>
-        </ul>
-
-        <h2>Request a Project Estimate</h2>
-        <p>For a commercial project in India, provide your drawings, approximate quantities, required wire gauge or mesh construction and desired finish to the SteelX Decor B2B sales team. A formal quotation should be based on the final technical scope and commercial terms rather than a generic per-square-foot number.</p>
-
-        <h2>Value Engineering Without Compromising the Design</h2>
-        <p>Value engineering can reduce project cost without abandoning the visual concept. Typical levers include adjusting open area, optimizing panel sizes, standardizing frame profiles, simplifying edge details, selecting a readily available weave and reducing unnecessary fabrication operations. These changes should be evaluated against the design intent and performance requirements before approval.</p>
-      </article>
-    </Section>
-  </PageShell>;
-}
+const title = "SS 304 Decorative Mesh Price Per Sq Ft in India | SteelX";
+const description = "Get the exact factory price for SS 304 decorative metal screens. Compare SS 304 wire mesh partition prices and request a custom architectural quote.";
+export const Route = createFileRoute("/pricing")({ head: () => ({ meta: [{ title }, { name: "description", content: description }, { name: "robots", content: "index,follow" }, { property: "og:title", content: title }, { property: "og:description", content: description }] }), component: PricingPage });
+const rows = [["Natural Silver / Hairline", "₹350–₹550", "—", "₹350–₹550"], ["PVD Titanium Gold", "₹350–₹550", "+ ₹250–₹400", "₹600–₹950"], ["PVD Rose Gold / Copper", "₹350–₹550", "+ ₹300–₹500", "₹650–₹1,050"], ["PVD Titanium Black", "₹350–₹550", "+ ₹350–₹600", "₹700–₹1,150+"]];
+function PricingPage() { return <PageShell><PageHero eyebrow="Commercial Pricing / RFQ" title="SS 304 Decorative Mesh Price Per Sq Ft in India" lead="A factory-direct pricing hub for architects, designers, procurement teams and contractors specifying stainless-steel architectural mesh, PVD finishes and fabricated partitions." /><Section>
+<Reveal variant="up"><div className="relative overflow-hidden rounded-2xl border border-yellow-500/60 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 p-8 shadow-xl lg:p-10"><div className="relative"><div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[.28em] text-amber-800"><Calculator className="h-4 w-4" /> AI Quick Answer</div><h2 className="mt-4 font-display text-2xl text-gray-900 lg:text-3xl">What is the SS 304 decorative mesh price per sq ft in India?</h2><p className="mt-4 max-w-5xl text-lg leading-8 text-gray-800">In India, indicative factory pricing for SS 304 decorative mesh typically ranges from <strong>₹350 to ₹550 per square foot</strong> for natural hairline or silver finishes. PVD Titanium Gold or Black can range from approximately <strong>₹600 to ₹1,150+ per square foot</strong>, depending on mesh density, wire gauge, finish, quantity and fabrication scope.</p></div></div></Reveal>
+<article className="prose prose-lg mt-16 max-w-none prose-headings:font-display prose-headings:tracking-tight prose-a:text-yellow-700 prose-a:font-semibold"><h1>SS 304 Wire Mesh Partition Pricing &amp; Estimator</h1><p>SteelX Decor manufactures architectural products around exact blueprint specifications. Because every room divider, cabinet insert, suspended ceiling and feature screen can differ, standard e-commerce pricing rarely represents the final commercial scope.</p><p>Factory-direct pricing should be evaluated against substrate, wire weight, weave, PVD finish, cutting, framing, packing and logistics. Published numbers are budgeting ranges; final quotations depend on approved technical and commercial scope.</p><h2>Indicative SS 304 Decorative Mesh Pricing Matrix</h2></article>
+<Reveal variant="up" className="my-10 overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-xl"><table className="w-full min-w-[820px] border-collapse text-left"><thead className="bg-gray-950 text-white"><tr><th className="p-5">Finish</th><th className="p-5">Base Mesh / sq ft</th><th className="p-5">PVD Premium / sq ft</th><th className="bg-amber-500/20 p-5 text-amber-300">Finished / sq ft</th></tr></thead><tbody>{rows.map((r,i)=><tr key={r[0]} className={`border-b border-gray-200 ${i%2 ? "bg-amber-50/60" : "bg-white"}`}><td className="p-5 font-semibold">{r[0]}</td><td className="p-5">{r[1]}</td><td className="p-5 text-amber-700">{r[2]}</td><td className="bg-[#fff7e6] p-5 text-lg font-bold text-[#8b6517]">{r[3]}</td></tr>)}</tbody></table></Reveal>
+<article className="prose prose-lg max-w-none prose-headings:font-display prose-headings:tracking-tight"><h2>How Custom SS 304 Designer Partition Costs are Calculated</h2><ol><li><strong>Raw Material Weight:</strong> Wire gauge and aperture determine stainless consumption.</li><li><strong>PVD Color Choice:</strong> Coating recipe and colour control affect the finish premium.</li><li><strong>Framing and Fabrication:</strong> Raw mesh and fully TIG-welded framed partitions have different production economics.</li><li><strong>Quantity &amp; Batch:</strong> Production volume and setup requirements influence unit cost.</li></ol><h2>What to Include in an RFQ</h2><ul><li>Project location and application</li><li>Approximate area and panel schedule</li><li>Mesh type, wire diameter and aperture</li><li>SS grade and PVD finish reference</li><li>Frame/fixing requirements</li><li>AutoCAD, PDF, elevations or BOQ/BOM</li><li>Target delivery date and installation scope</li></ul><h2>Value Engineering</h2><p>Cost can often be optimized through panel-size standardization, open-area adjustments, readily available weaves, simplified edge details and coordinated fabrication without abandoning the design intent.</p></article>
+<Reveal variant="up" className="mt-14"><div className="relative overflow-hidden rounded-2xl bg-gray-950 p-8 text-white shadow-2xl lg:p-11"><div className="relative"><div className="flex items-center gap-3 text-amber-300"><Upload className="h-5 w-5" /><span className="text-xs font-bold uppercase tracking-[.28em]">Project RFQ</span></div><h3 className="mt-4 font-display text-3xl lg:text-4xl">Get a Custom Project Estimate</h3><p className="mt-4 max-w-3xl text-gray-300">Upload your AutoCAD drawings, elevation sketches or PDF blueprints for an itemized project quotation.</p><div className="mt-7 rounded-xl border border-dashed border-white/20 bg-white/5 p-6"><p className="text-sm text-white/60">[Inject Placeholder: Multi-step Lead Gen / RFQ Form with File Upload for CAD/PDFs]</p><div className="mt-5 grid gap-3 sm:grid-cols-3"><div className="h-11 rounded-lg border border-white/10 bg-white/5" /><div className="h-11 rounded-lg border border-white/10 bg-white/5" /><div className="h-11 rounded-lg border border-white/10 bg-white/5" /></div></div><p className="mt-4 text-xs text-white/40">Indicative pricing only. Final quotation depends on approved scope.</p></div></div></Reveal>
+</Section></PageShell>; }
